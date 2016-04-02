@@ -8,12 +8,12 @@ class Tenant extends Model
 {
     public function User()
     {
-    	return $this->hasOne('App\User');
+    	return $this->belongsTo('App\User');
     }
 
     public function Property()
     {
-    	return $this->hasOne('App\Property');
+    	return $this->belongsTo('App\Property');
     }
 
     public function WorkOrder()

@@ -8,7 +8,7 @@ class Property extends Model
 {
     public function Tenant()
     {
-    	return $this->hasOne('App\Tenant');
+    	return $this->hasMany('App\Tenant');
     }
 
     public function Manager()

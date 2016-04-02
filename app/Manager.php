@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Manager extends Model
 {
+
+	protected $table = 'property_manager';
+
+
     public function User()
     {
     	return $this->hasOne('App\User');

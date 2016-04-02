@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
@@ -23,4 +24,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    use EntrustUserTrait;
+
+    // public function Role()
+    // {
+    //     return $this->belongsToMany('App\Role');    
+    // }
+
+    public function Manger()
+    {
+        return $this->belongsTo('App\Manager');
+    }   
 }

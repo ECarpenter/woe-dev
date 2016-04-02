@@ -8,12 +8,12 @@ class WorkOrder extends Model
 {
     public function Tenant()
     {
-    	return $this->hasOne('App\Tenant');
+    	return $this->belongsTo('App\Tenant');
     }
 
     public function Property()
     {
-    	return $this->hasOne('App\Property');
+    	return $this->belongsTo('App\Property');
     }
 
     public function ProblemType()

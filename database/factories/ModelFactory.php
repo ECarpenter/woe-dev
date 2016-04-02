@@ -15,7 +15,31 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->safeEmail,
-        'password' => bcrypt(str_random(10)),
+        'password' => bcrypt('password'),
         'remember_token' => str_random(10),
     ];
 });
+
+
+$factory->define(App\Tenant::class, function (Faker\Generator $faker) {
+
+	$user = factory(App\User::class)->create();
+	$role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
+    $user->Roles()->attach($role);
+
+
+    return [
+        'unit' => $faker->buildingNumber,
+        'company_name' => $faker->company,
+        'job_title' => $faker->title,
+        'property_id' => rand(1,10),
+        'user_id' => $user->id,
+        
+    ];
+});
+
+// $factory->define(App\Property::class, function (Faker\Generator $faker) {
+//     return [
+        
+//     ];
+// });

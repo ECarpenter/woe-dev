@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProblemType extends Model
 {
+
+
     public function WorkOrder()
     {
-    	return $this->hasMany('App\WorkOrder');
+    	return $this->belongsTo('App\WorkOrder');
     }
 }

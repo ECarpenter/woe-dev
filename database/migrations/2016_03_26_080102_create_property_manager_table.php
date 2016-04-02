@@ -12,9 +12,9 @@ class CreatePropertyManagerTable extends Migration
      */
     public function up()
     {
-        Schema::create('managers', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('property_manager', function (Blueprint $table) {
             $table->integer('users_id')->unsigned()->index();
+            $table->integer('property_id')->unsigned()->index();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ class CreatePropertyManagerTable extends Migration
      */
     public function down()
     {
-        Schema::drop('managers');
+        Schema::drop('property_manager');
     }
 }
