@@ -12,7 +12,7 @@ class CreateProblemTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('problem', function (Blueprint $table) {
+        Schema::create('problem_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
             $table->timestamps();

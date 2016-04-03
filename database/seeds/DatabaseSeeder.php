@@ -19,8 +19,13 @@ class DatabaseSeeder extends Seeder
         $this->call('RolesTableSeeder');
         $this->call('UsersTableSeeder');
         $this->call('TenantsTableSeeder');
-        //$this->call('PropertiesTableSeeder');
-
+        $this->call('PropertiesTableSeeder');
+        $this->call('ManagerUserSeeder');
+        $this->call('ManagerUserSeeder');
+        $this->call('ManagerUserSeeder');
+        $this->call('ManagerUserSeeder');
+        $this->call('ManagerUserSeeder');
+        $this->call('ProblemTypeTableSeeder');
 
         Model::reguard();
     }

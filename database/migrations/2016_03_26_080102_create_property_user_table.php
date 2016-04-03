@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePropertyManagerTable extends Migration
+class CreatePropertyUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,9 @@ class CreatePropertyManagerTable extends Migration
      */
     public function up()
     {
-        Schema::create('property_manager', function (Blueprint $table) {
-            $table->integer('users_id')->unsigned()->index();
+        Schema::create('property_user', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->index();
             $table->integer('property_id')->unsigned()->index();
-            $table->timestamps();
         });
     }
 
@@ -26,6 +25,6 @@ class CreatePropertyManagerTable extends Migration
      */
     public function down()
     {
-        Schema::drop('property_manager');
+        Schema::drop('property_user');
     }
 }

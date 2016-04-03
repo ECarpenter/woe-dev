@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class TenantsTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed sample tenants
      *
      * @return void
      */

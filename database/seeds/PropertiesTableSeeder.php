@@ -5,13 +5,13 @@ use Illuminate\Database\Seeder;
 class PropertiesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed test properties
      *
      * @return void
      */
     public function run()
     {
-      //  factory(App\Property::class, 10)->create();
+    	factory(App\Property::class, 10)->create();
 
     }
 }

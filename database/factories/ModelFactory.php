@@ -27,7 +27,6 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
 	$role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
     $user->Roles()->attach($role);
 
-
     return [
         'unit' => $faker->buildingNumber,
         'company_name' => $faker->company,
@@ -38,8 +37,13 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
     ];
 });
 
-// $factory->define(App\Property::class, function (Faker\Generator $faker) {
-//     return [
-        
-//     ];
-// });
+$factory->define(App\Property::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->streetName,
+        'client_system_id' => $faker->buildingNumber,
+        'address' => $faker->streetAddress,
+        'owner' =>$faker->company,
+    ];
+});
+
+

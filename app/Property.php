@@ -11,11 +11,10 @@ class Property extends Model
     	return $this->hasMany('App\Tenant');
     }
 
-    public function Manager()
+    public function User()
     {
-    	return $this->hasMany('App\Manager');
+        return $this->belongsToMany('App\User');
     }
-
     public function WorkOrder()
     {
     	return $this->hasMany('App\WorkOrder');
