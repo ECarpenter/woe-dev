@@ -23,6 +23,7 @@
         .fa-btn {
             margin-right: 6px;
         }
+        
     </style>
 </head>
 <body id="app-layout">
@@ -48,6 +49,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
+                    <li><a href="{{ url('/submit') }}">Submit Work Order</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
