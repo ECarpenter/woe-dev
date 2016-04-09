@@ -6,17 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkOrder extends Model
 {
-    public function Tenant()
+    public function Tenants()
     {
     	return $this->belongsTo('App\Tenant');
     }
 
-    public function Property()
-    {
-    	return $this->belongsTo('App\Property');
-    }
-
-    public function ProblemType()
+    public function ProblemTypes()
     {
     	return $this->hasOne('App\ProblemType');
     }

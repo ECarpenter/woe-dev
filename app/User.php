@@ -32,9 +32,14 @@ class User extends Authenticatable
     //     return $this->belongsToMany('App\Role');    
     // }
 
-    public function Property()
+    public function Properties()
     {
         return $this->belongsToMany('App\Property');
+    }
+
+    public function Tenants()
+    {
+        return $this->hasOne('App\Tenant');
     }
  
 }

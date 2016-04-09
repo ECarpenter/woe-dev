@@ -8,7 +8,7 @@ class ProblemType extends Model
 {
 
 
-    public function WorkOrder()
+    public function WorkOrders()
     {
     	return $this->belongsTo('App\WorkOrder');
     }

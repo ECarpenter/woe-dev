@@ -4,14 +4,25 @@
 
 <div class="container">
 	<div class="row">
-		<form method="POST" action="/submit/">
+		<form method="POST" action="/submit-tenant">
 			{{csrf_field()}}
-			
-				<div class="col-md-6 col-md-offset-3">	
+			<div class="col-md-6 col-md-offset-3">	
+				@role('admin','manager','accountant')
+					<select name = 'tenant' class="form-control">
+						@foreach ($tenants as $tenant)
+							<option value={{$tenant->id}}> {{ $tenant->company_name }} </option>
+						@endforeach
+					</select>
+					<hr>
+
+
+				@endrole
+
 				
-					<select class="form-control">
+				
+					<select name = 'type' class="form-control">
 						@foreach ($problemTypes as $problemType)
-							<option>{{ $problemType->type }}</option>
+							<option value={{$problemType->id}}> {{ $problemType->type }} </option>
 						@endforeach
 					</select>
 				
@@ -24,10 +35,19 @@
 					<div class="form-group">
 						<button type='submit' class="btn btn primary">Submit</button>
 					</div>
-				</div>
 
 			</div>		
 		</form> 
+			@if (count($errors))
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+
+				</ul>
+
+			@endif
+
 	</div>
 </div>
 

@@ -14,9 +14,7 @@ class CreateWorkOrderTable extends Migration
     {
         Schema::create('work_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('work_orders_id')->unsigned()->index();
-            $table->integer('tenants_id')->unsigned()->index();
-            $table->integer('properties_id')->unsigned()->index();
+            $table->integer('tenant_id')->unsigned()->index();
             $table->integer('problem_id')->unsigned()->index();
             $table->text('description');
             $table->string('status');

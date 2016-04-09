@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
 {
-    public function Tenant()
+    public function Tenants()
     {
     	return $this->hasMany('App\Tenant');
     }
 
-    public function User()
+    public function Users()
     {
         return $this->belongsToMany('App\User');
     }
-    public function WorkOrder()
+    public function WorkOrders()
     {
-    	return $this->hasMany('App\WorkOrder');
+    	return $this->hasManyThrough('App\WorkOrder', 'App\User');
     }
 }

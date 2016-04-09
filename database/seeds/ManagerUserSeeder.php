@@ -20,6 +20,6 @@ class ManagerUserSeeder extends Seeder
 	    $prop = App\Property::first();
 		
 		$user->Roles()->attach($role);
-	    $user->Property()->attach($prop);
+	    $user->Properties()->attach($prop);
     }
 }

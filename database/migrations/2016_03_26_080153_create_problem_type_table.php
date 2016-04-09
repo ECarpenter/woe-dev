@@ -26,6 +26,6 @@ class CreateProblemTypeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('problem');
+        Schema::drop('problem_types');
     }
 }

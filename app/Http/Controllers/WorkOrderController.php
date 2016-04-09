@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use DB;
+use Auth;
+
 use App\Http\Requests;
 use App\ProblemType;
+use App\WorkOrder;
+use App\Tenant;
 
 class WorkOrderController extends Controller
 {
@@ -21,13 +26,41 @@ class WorkOrderController extends Controller
 
     public function submit()
     {
-    	$typeList = array();
     	$problemTypes = ProblemType::all();
-    	foreach ($problemTypes as $problemType) 
-    	{
-    		array_push($typeList, $problemType->type);
-    	}
+    	
+
+        $tenants = Tenant::all();
+
     	 
-        return view('wo.submit', compact('problemTypes'));
+        return view('wo.submit', compact('problemTypes','tenants'));
+    }
+
+    public function save(Request $request)
+    {
+        $this->validate($request, [
+            'description' => 'required|min:10'
+            ]);
+
+        $newWorkOrder = new WorkOrder;
+        $newWorkOrder->description = $request->description;
+        $newWorkOrder->status = "Open";
+        $newWorkOrder->problem_id = $request->type;
+        
+        if (Auth::user()->hasRole('tenant'))
+        {
+            $newWorkOrder->tenant_id = Auth::user()->Tenants()->first()->id;
+
+        }
+        else
+        {
+            $newWorkOrder->tenant_id = $request->tenant;
+        }
+
+        $newWorkOrder->save();
+
+
+        return view('thankyou');
     }
 }
+
+

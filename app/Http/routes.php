@@ -24,4 +24,5 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('/home', 'HomeController@index');
     Route::get('/submit', 'WorkOrderController@submit');
+    Route::post('/submit-tenant', 'WorkOrderController@save');
 });
