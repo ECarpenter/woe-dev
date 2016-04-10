@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\ProblemType;
 use App\WorkOrder;
 use App\Tenant;
+use App\Property;
 
 class WorkOrderController extends Controller
 {
@@ -38,7 +39,9 @@ class WorkOrderController extends Controller
     public function save(Request $request)
     {
         $this->validate($request, [
-            'description' => 'required|min:10'
+            'description' => 'required|min:10',
+            'tenant' => 'required',
+            'type' => 'required',
             ]);
 
         $newWorkOrder = new WorkOrder;
@@ -60,6 +63,23 @@ class WorkOrderController extends Controller
 
 
         return view('thankyou');
+    }
+
+    public function viewlist()
+    {
+        $workorders = WorkOrder::all();
+        $properties = Property::all();
+        $tenants = Tenant::all();
+
+
+        return view('wo.viewlist',compact('workorders','properties','tenants'));
+    }
+
+    public function show(WorkOrder $workorder)
+    {
+        $workorder->load('tenant.property');
+
+        return view('wo.show', compact('workorder'));
     }
 }
 

@@ -26,3 +26,11 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/submit', 'WorkOrderController@submit');
     Route::post('/submit-tenant', 'WorkOrderController@save');
 });
+
+
+Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
+	Route::auth();
+
+	Route::get('/workorders','WorkOrderController@viewlist');
+	Route::get('workorders/{workorder}', 'WorkOrderController@show');
+});

@@ -50,6 +50,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
                     <li><a href="{{ url('/submit') }}">Submit Work Order</a></li>
+                    @permission('manage-wo')
+                        <li><a href="{{ url('/workorders') }}">View Work Order</a></li>
+                    @endpermission
                 </ul>
 
                 <!-- Right Side Of Navbar -->

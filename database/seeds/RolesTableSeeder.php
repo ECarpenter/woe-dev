@@ -27,5 +27,14 @@ class RolesTableSeeder extends Seeder
         $accountant->name = "accountant";
         $accountant->save();
 
+        $manage = new App\Permission;
+        $manage->name = 'manage-wo';
+        $manage->display_name = 'Manage Work Orders';
+        $manage->save();
+
+        $admin->attachPermission($manage);
+        $manager->attachPermission($manage);
+        $accountant->attachPermission($manage);
+
     }
 }
