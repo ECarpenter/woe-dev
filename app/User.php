@@ -27,11 +27,6 @@ class User extends Authenticatable
 
     use EntrustUserTrait;
 
-    // public function Role()
-    // {
-    //     return $this->belongsToMany('App\Role');    
-    // }
-
     public function Properties()
     {
         return $this->belongsToMany('App\Property');

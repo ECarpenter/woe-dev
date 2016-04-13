@@ -5,10 +5,72 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+                <div class="panel-heading">Tenant Registration</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {!! csrf_field() !!}
+
+                        <div class="form-group{{ $errors->has('property') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Property</label>
+
+                            <div class="col-md-6">
+                            <select name = 'property' class="form-control">
+                                <option value=''>Select One</option>
+                                @foreach ($properties as $property)
+                                    <option value={{$property->id}}> {{ $property->name }} </option>
+                                @endforeach
+                            </select>
+
+                            
+                                @if ($errors->has('property'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('property') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>                       
+
+                        <div class="form-group{{ $errors->has('suite') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Suite</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="suite" value="{{ old('suite') }}">
+
+                                @if ($errors->has('suite'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('suite') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>                     
+                         
+                        <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Company Name</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="company_name" value="{{ old('company_name') }}">
+
+                                @if ($errors->has('company_name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('company_name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('job_title') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Title</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="job_title" value="{{ old('job_title') }}">
+
+                                @if ($errors->has('job_title'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('job_title') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>    
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Name</label>

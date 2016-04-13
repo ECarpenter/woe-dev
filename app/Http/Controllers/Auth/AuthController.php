@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Tenant;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -52,6 +53,10 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'suite' => 'required|min:6',
+            'company_name' =>'required',
+            'job_title' => 'required',
+            'property' =>'required',
         ]);
     }
 
@@ -63,10 +68,25 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $tenant = new Tenant;
+        $tenant->user_id = $user->id;
+        $tenant->unit = $data['suite'];
+        $tenant->property_id = $data['property'];
+        $tenant->company_name = $data['company_name'];
+        $tenant->job_title = $data['job_title'];
+        $tenant->save();
+
+        return $user;
+
+
+
     }
 }
