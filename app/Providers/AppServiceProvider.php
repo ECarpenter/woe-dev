@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Property;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Schema\Blueprint;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,8 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $properties = Property::all();
-        view()->share('properties', $properties);
+        if (\Schema::hasTable('properties')) 
+        {
+            $properties = Property::all();
+            view()->share('properties', $properties);
+        }
     }
 
     /**

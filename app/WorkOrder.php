@@ -13,6 +13,6 @@ class WorkOrder extends Model
 
     public function ProblemType()
     {
-    	return $this->hasOne('App\ProblemType');
+    	return $this->belongsTo('App\ProblemType','problem_id');
     }
 }

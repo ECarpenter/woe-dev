@@ -77,10 +77,29 @@ class WorkOrderController extends Controller
 
     public function show(WorkOrder $workorder)
     {
-        $workorder->load('tenant.property');
+        $workorder->load('tenant.property','problemtype');
 
         return view('wo.show', compact('workorder'));
     }
+
+    public function edit(WorkOrder $workorder)
+    {
+        $workorder->load('tenant.property','problemtype');
+        $typeList = ProblemType::all();
+
+        return view('wo.edit', compact('workorder','typeList'));
+    }
+
+    public function update(Request $request, WorkOrder $workorder)
+    {
+        $workorder->problem_id = $request->type;
+        $workorder->status = $request->status;
+        $workorder->description = $request->description;
+        $workorder->save();
+
+        return redirect()->action('WorkOrderController@show', [$workorder->id]);
+    }
+
 }
 
 

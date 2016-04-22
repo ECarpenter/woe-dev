@@ -33,4 +33,6 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
 
 	Route::get('/workorders','WorkOrderController@viewlist');
 	Route::get('workorders/{workorder}', 'WorkOrderController@show');
+    Route::get('workorders/{workorder}/edit', 'WorkOrderController@edit');
+    Route::patch('workorders/{workorder}/save', 'WorkOrderController@update');
 });

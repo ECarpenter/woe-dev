@@ -9,7 +9,7 @@
 			<div class="col-md-6 col-md-offset-3">	
 				@permission('manage-wo')
 					<h4>Tenant</h4>
-					<select name = 'tenant' class="form-control" placeholder='Select One'>
+					<select name = 'tenant' class="form-control">
 						<option value=''>Select One</option>
 						@foreach ($tenants as $tenant)
 							<option value={{$tenant->id}}> {{ $tenant->company_name }} </option>

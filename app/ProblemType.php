@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProblemType extends Model
 {
-
+	protected $table = 'problem_types';
 
     public function WorkOrders()
     {
-    	return $this->belongsTo('App\WorkOrder');
+    	return $this->hasOne('App\WorkOrder');
     }
 }
