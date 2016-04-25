@@ -34,6 +34,18 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
+			<h4> Sent - <small>
+			{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone('America/Los_Angeles')))}}
+			</small></h4>
+		</div>
+		<div class="col-xs-4">
+			<h4> Updated - <small>		
+			{{date('F d, Y, g:i a', strtotime($workorder->updated_at->timezone('America/Los_Angeles')))}}
+			</small></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-2">
 			<h4> Problem Type - <small>
 			{{$workorder->ProblemType->type}}
 			</small></h4>

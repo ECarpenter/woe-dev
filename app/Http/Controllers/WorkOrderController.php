@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
+use Mail;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -60,7 +61,9 @@ class WorkOrderController extends Controller
         }
 
         $newWorkOrder->save();
+        $emails = array();
 
+        WorkOrderController::sendNoticeEmail($newWorkOrder);
 
         return view('thankyou');
     }
@@ -98,6 +101,20 @@ class WorkOrderController extends Controller
         $workorder->save();
 
         return redirect()->action('WorkOrderController@show', [$workorder->id]);
+    }
+
+    public function sendNoticeEmail(WorkOrder $workorder)
+    {
+        foreach ($workorder->Manager() as $manager) {
+
+            $emails[] = $manager->email;
+        }
+
+        Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
+             $message->from('us@example.com', 'New Work Order');
+
+             $message->to($emails)->cc('bar@example.com');
+        });
     }
 
 }

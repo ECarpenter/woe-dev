@@ -38,6 +38,18 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-2">
+				<h4> Sent - <small>
+				{{date('F d, Y, g:i a', strtotime($workorder->created_at))}}
+				</small></h4>
+			</div>
+			<div class="col-xs-4">
+				<h4> Updated - <small>		
+				{{date('F d, Y, g:i a', strtotime($workorder->updated_at))}}
+				</small></h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-2 col-xs-offset-2">
 				<h4> Problem Type - <small>
 				<select name = 'type' class="form-control">
 						@foreach ($typeList as $problemType)
@@ -46,7 +58,7 @@
 					</select>
 				</small></h4>
 			</div>
-			<div class="col-xs-4">
+			<div class="col-xs-2 col-xs-offset-2">
 				<h4> Status - <small>		
 				<select name = 'status' class="form-control">
 						
