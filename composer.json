@@ -8,7 +8,9 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "zizaco/entrust": "dev-laravel-5",
-        "guzzlehttp/guzzle": "~5.3|~6.0"
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "barryvdh/laravel-dompdf": "0.6.*",
+        "lynx39/lara-pdf-merger": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

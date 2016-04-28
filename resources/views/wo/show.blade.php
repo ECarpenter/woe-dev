@@ -6,6 +6,7 @@
 			<h4> Property - <small>
 				{{$workorder->Tenant->Property->name}}
 			</small></h4>
+			<a href="{{ asset('invoice.pdf') }}" target="_blank">Open the pdf!</a>
 		</div>
 	</div>
 	<div class="row">

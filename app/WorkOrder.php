@@ -26,7 +26,6 @@ class WorkOrder extends Model
     		
     		if($user->hasRole('manager'))
     		{
-
     			$managers[] = $user;
     		}
     	}

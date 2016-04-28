@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Mail;
+use App;
+use PDF;
+use PdfMerger;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -100,6 +103,14 @@ class WorkOrderController extends Controller
         $workorder->description = $request->description;
         $workorder->save();
 
+        $pdf = PDF::loadView('pdf.invoice');
+        $pdf->save('invoice2.pdf');
+
+        $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
+        $pdfmerge->addPDF('invoice.pdf', 'all');
+        $pdfmerge->addPDF('invoice2.pdf', 'all');
+        $pdfmerge->merge('file', 'TEST2.pdf', 'P');    
+
         return redirect()->action('WorkOrderController@show', [$workorder->id]);
     }
 
@@ -115,6 +126,8 @@ class WorkOrderController extends Controller
 
              $message->to($emails)->cc('bar@example.com');
         });
+
+
     }
 
 }
