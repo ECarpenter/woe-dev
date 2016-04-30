@@ -11,7 +11,7 @@ class PropertiesTableSeeder extends Seeder
      */
     public function run()
     {
-    	factory(App\Property::class, 10)->create();
+    	factory(App\Property::class, 5)->create();
 
     }
 }

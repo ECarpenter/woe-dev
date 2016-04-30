@@ -3,7 +3,7 @@
 @section ('content')
 	<form method="POST" action="/workorders/{{$workorder->id}}/save">
 	{{ method_field('PATCH') }}
-	{{ csrf_field()}}
+	{{ csrf_field() }}
 
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-4">

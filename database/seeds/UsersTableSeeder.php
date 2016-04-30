@@ -15,6 +15,7 @@ class UsersTableSeeder extends Seeder
         $user->name = "admin";
         $user->email = "ec@ade.com";
         $user->password = bcrypt('password');
+        $user->timezone = "America/Los_Angeles";
         $user->save();
 
         $role = DB::table('roles')->where('name', '=', 'admin')->pluck('id');

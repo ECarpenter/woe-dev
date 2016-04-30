@@ -18,6 +18,14 @@ class CreateWorkOrderTable extends Migration
             $table->integer('problem_id')->unsigned()->index();
             $table->text('description');
             $table->string('status');
+            $table->string('cos_filename')->nullable();
+            $table->string('vendor_invoice_filename')->nullable();
+            $table->string('tenant_invoice_filename')->nullable();
+            $table->text('manager_notes')->nullable();
+            $table->string('billing_description')->nullable();
+            $table->decimal('job_cost',18,2)->nullable();
+            $table->decimal('amount_billed',18,2)->nullable();
+            $table->boolean('billed')->default(false);
             $table->timestamps();
         });
     }

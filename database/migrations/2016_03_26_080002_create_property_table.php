@@ -15,9 +15,10 @@ class CreatePropertyTable extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('client_system_id');
+            $table->string('property_system_id');
             $table->string('address');
             $table->string('owner');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

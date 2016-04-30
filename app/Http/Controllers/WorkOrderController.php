@@ -98,18 +98,20 @@ class WorkOrderController extends Controller
 
     public function update(Request $request, WorkOrder $workorder)
     {
+
         $workorder->problem_id = $request->type;
         $workorder->status = $request->status;
         $workorder->description = $request->description;
+        $workorder->cos_filename = 'files/cos/cos-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
         $workorder->save();
 
         $pdf = PDF::loadView('pdf.invoice');
-        $pdf->save('invoice2.pdf');
+        $pdf->save($workorder->cos_filename);
 
-        $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
-        $pdfmerge->addPDF('invoice.pdf', 'all');
-        $pdfmerge->addPDF('invoice2.pdf', 'all');
-        $pdfmerge->merge('file', 'TEST2.pdf', 'P');    
+        // $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
+        // $pdfmerge->addPDF('invoice.pdf', 'all');
+        // $pdfmerge->addPDF('invoice2.pdf', 'all');
+        // $pdfmerge->merge('file', 'TEST2.pdf', 'P');    
 
         return redirect()->action('WorkOrderController@show', [$workorder->id]);
     }

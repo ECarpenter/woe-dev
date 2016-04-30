@@ -17,6 +17,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'password' => bcrypt('password'),
         'remember_token' => str_random(10),
+        'timezone' => "America/Los_Angeles"
     ];
 });
 
@@ -31,8 +32,11 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
         'unit' => $faker->buildingNumber,
         'company_name' => $faker->company,
         'job_title' => $faker->title,
-        'property_id' => rand(1,10),
+        'property_id' => rand(1,5),
         'user_id' => $user->id,
+        'tenant_system_id' =>"t".$faker->buildingNumber,
+        'active' => true,
+        'verified' => true,
         
     ];
 });
@@ -40,7 +44,7 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
 $factory->define(App\Property::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->streetName,
-        'client_system_id' => $faker->buildingNumber,
+        'property_system_id' => "f".$faker->buildingNumber,
         'address' => $faker->streetAddress,
         'owner' =>$faker->company,
     ];

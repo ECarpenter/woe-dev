@@ -14,11 +14,14 @@ class CreateTenantTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();           
+            $table->integer('user_id')->unsigned()->index();   
             $table->integer('property_id')->unsigned()->index();
             $table->string('unit');
             $table->string('company_name');
             $table->string('job_title');
+            $table->string('tenant_system_id')->nullable();
+            $table->boolean('active')->nullable();
+            $table->boolean('verified')->nullable();
             $table->timestamps();
         });
     }
