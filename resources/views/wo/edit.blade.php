@@ -83,9 +83,16 @@
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-xs-6 col-xs-offset-4" class="form-group">
+			<div class="col-xs-2 col-xs-offset-4" class="form-group">
 				<button type='submit' class="btn btn-primary">Save</button>
 			</div>
 		</div>
 	</form>
+
+
+
+
+</div>
+
+
 @endsection

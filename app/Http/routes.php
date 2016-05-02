@@ -35,4 +35,6 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
 	Route::get('workorders/{workorder}', 'WorkOrderController@show');
     Route::get('workorders/{workorder}/edit', 'WorkOrderController@edit');
     Route::patch('workorders/{workorder}/save', 'WorkOrderController@update');
+    Route::get('workorders/{workorder}/bill', 'WorkOrderController@bill');
+    Route::patch('workorders/{workorder}/bill', 'WorkOrderController@processbill');
 });

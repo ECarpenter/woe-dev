@@ -10,6 +10,7 @@ use Mail;
 use App;
 use PDF;
 use PdfMerger;
+use Response;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -39,6 +40,7 @@ class WorkOrderController extends Controller
     	 
         return view('wo.submit', compact('problemTypes','tenants'));
     }
+    
 
     public function save(Request $request)
     {
@@ -64,7 +66,6 @@ class WorkOrderController extends Controller
         }
 
         $newWorkOrder->save();
-        $emails = array();
 
         WorkOrderController::sendNoticeEmail($newWorkOrder);
 
@@ -102,34 +103,55 @@ class WorkOrderController extends Controller
         $workorder->problem_id = $request->type;
         $workorder->status = $request->status;
         $workorder->description = $request->description;
-        $workorder->cos_filename = 'files/cos/cos-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
         $workorder->save();
 
-        $pdf = PDF::loadView('pdf.invoice');
-        $pdf->save($workorder->cos_filename);
-
-        // $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
-        // $pdfmerge->addPDF('invoice.pdf', 'all');
-        // $pdfmerge->addPDF('invoice2.pdf', 'all');
-        // $pdfmerge->merge('file', 'TEST2.pdf', 'P');    
-
+        
         return redirect()->action('WorkOrderController@show', [$workorder->id]);
     }
 
     public function sendNoticeEmail(WorkOrder $workorder)
     {
+        $emails = array();
+
         foreach ($workorder->Manager() as $manager) {
 
             $emails[] = $manager->email;
         }
 
-        Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
-             $message->from('us@example.com', 'New Work Order');
+        if (!empty($emails))
+                {
+            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
+                $message->from('us@example.com', 'New Work Order');
 
-             $message->to($emails)->cc('bar@example.com');
-        });
+                $message->to($emails)->cc('bar@example.com');
+            });
+        }
 
+    }
 
+    public function bill(WorkOrder $workorder)
+    {
+        return Response::json($workorder);
+    }
+
+    public function processbill(WorkOrder $workorder, Request $request)
+    {
+        $workorder->amount_billed =15;
+        $workorder->billing_description = $request->billing_description;
+        $workorder->job_cost = $request->job_cost;
+        $workorder->cos_filename = 'files/cos/cos-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
+        $workorder->save();
+        
+
+        $pdf = PDF::loadView('pdf.invoice', compact('workorder'));
+        $pdf->save($workorder->cos_filename);
+
+        // $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
+        // $pdfmerge->addPDF('invoice.pdf', 'all');
+        // $pdfmerge->addPDF('invoice2.pdf', 'all');
+        // $pdfmerge->merge('file', 'TEST2.pdf', 'P');          
+
+        return Response::json($workorder);
     }
 
 }

@@ -46,7 +46,7 @@ $factory->define(App\Property::class, function (Faker\Generator $faker) {
         'name' => $faker->streetName,
         'property_system_id' => "f".$faker->buildingNumber,
         'address' => $faker->streetAddress,
-        'owner' =>$faker->company,
+        'owner_id' => 1,
     ];
 });
 
