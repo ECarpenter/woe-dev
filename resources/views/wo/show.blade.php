@@ -17,7 +17,7 @@
 		</div>
 		@else
 		<div class="col-xs-2 col-xs-offset-2">
-			<button  class="btn btn-default btn-xs" id="vendor-invoice-btn" herf="{{ asset($workorder->vendor_invoice_filename) }}" target="_blank" > Vendor Invoice </button>
+			<button  class="btn btn-info btn-xs file-btn" id="vendor-invoice-btn" href="{{ asset($workorder->vendor_invoice_filename) }}" > Vendor Invoice </button>
 		</div>
 		@endif
 
@@ -38,7 +38,7 @@
 		</div>
 		@else
 		<div class="col-xs-2 col-xs-offset-1">
-			<button  class="btn btn-primary btn-xs" id="tenant-invoice-btn" herf="{{ asset($workorder->tenant_invoice_filename) }}" target="_blank" > Tenant Invoice </button>
+			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ asset($workorder->tenant_invoice_filename) }}" > Tenant Invoice </button>
 		</div>
 		@endif
 	</div>
@@ -108,19 +108,23 @@
 	<br>
 
 	<div class="row">
-		<div class="col-xs-2 col-xs-offset-5">
+		<div class="col-xs-2 col-xs-offset-1 col-md-2 col-md-offset-2">
+			<button class="btn btn-primary open-upload-modal" value="{{$workorder->id}}">Upload Invoice</button>
+		</div>
+
+		<div class="col-xs-2 col-xs-offset-2 col-md-2 col-md-offset-1">
 			<a class="btn btn-primary" href="/workorders/{{$workorder->id}}/edit" role="button" >Edit</a>
 		</div>
 
-		<div class="col-xs-2 col-xs-offset-1">
-			<button class="btn btn-primary open-modal" value="{{$workorder->id}}">Billing</button>
+		<div class="col-xs-2 ">
+			<button class="btn btn-primary open-billing-modal" value="{{$workorder->id}}">Billing</button>
 		</div>
 
 	</div>
 
 
-<!-- Modal (Pop up when detail button clicked) -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- BillingModal (Pop up when billing button clicked) -->
+	<div class="modal fade" id="BillingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -156,6 +160,29 @@
             </div>
         </div>
     </div>
+
+    <!-- UploadModal (Pop up when upload button clicked) -->
+	<div class="modal fade" id="UploadModal" tabindex="-1" role="dialog" aria-labelledby="UploadModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="UploadModalLabel">Upload File</h4>
+                </div>
+                <div class="modal-body">
+                <form action="/workorders/{{$workorder->id}}/upload" method="POST" enctype="multipart/form-data">
+					{{ csrf_field() }}
+
+        			<input type="file" accept=".pdf" name="vendorinvoice">
+        			<br>
+        			<input class="btn btn-primary" type="submit">
+        				
+    			</form>
+               	</div>
+            </div>
+        </div>
+    </div>
+
 
 
 @endsection

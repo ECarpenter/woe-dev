@@ -3,7 +3,7 @@ $(document).ready(function(){
 
 
     //display modal form for task editing
-    $('.open-modal').click(function(){
+    $('.open-billing-modal').click(function(){
         var wo_id = $(this).val();
 
         $.get('/workorders/' + wo_id + '/bill', function (data) {
@@ -14,15 +14,26 @@ $(document).ready(function(){
             $('#billing_description').val(data.billing_description);
             $('#job_cost').val(data.job_cost);
 
-            $('#myModal').modal('show');
+            $('#BillingModal').modal('show');
+        }) 
+    });
+
+    $('.open-upload-modal').click(function(){
+        var wo_id = $(this).val();
+
+        $.get('/workorders/' + wo_id + '/bill', function (data) {
+            //success data
+            console.log(data);
+            
+
+            $('#UploadModal').modal('show');
         }) 
     });
 
     $( '.file-btn' ).on( "click", function( event ) {
-    	event.preventDefault();
-    	console.log( $( this ).text() );
-    	window.open ($(this).attr("href"));
-    	
+     	event.preventDefault();
+     	console.log( $( this ).text() );
+     	window.open ($(this).attr("href"));
 	});
 
 	$("#btn-save").click(function (e) {
@@ -57,7 +68,7 @@ $(document).ready(function(){
             }
 
 		});	
-		$('#myModal').modal('hide');
+		$('#BillingModal').modal('hide');
 	});
 });
 

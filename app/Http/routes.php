@@ -37,4 +37,5 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
     Route::patch('workorders/{workorder}/save', 'WorkOrderController@update');
     Route::get('workorders/{workorder}/bill', 'WorkOrderController@bill');
     Route::patch('workorders/{workorder}/bill', 'WorkOrderController@processbill');
+    Route::post('workorders/{workorder}/upload','WorkOrderController@upload');
 });

@@ -136,15 +136,20 @@ class WorkOrderController extends Controller
 
     public function processbill(WorkOrder $workorder, Request $request)
     {
+        $date=date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->amount_billed =15;
         $workorder->billing_description = $request->billing_description;
         $workorder->job_cost = $request->job_cost;
-        $workorder->cos_filename = 'files/cos/cos-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
+        $workorder->cos_filename = 'files/cos/cos-'.$date.'.pdf';
+        $workorder->tenant_invoice_filename = 'files/tenant_invoices/tenant-'.$date.'.pdf';
         $workorder->save();
         
 
-        $pdf = PDF::loadView('pdf.invoice', compact('workorder'));
-        $pdf->save($workorder->cos_filename);
+        $cpdf = PDF::loadView('pdf.cos', compact('workorder'));
+        $cpdf->save($workorder->cos_filename);
+
+        $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
+        $tpdf->save($workorder->tenant_invoice_filename);
 
         // $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
         // $pdfmerge->addPDF('invoice.pdf', 'all');
@@ -152,6 +157,23 @@ class WorkOrderController extends Controller
         // $pdfmerge->merge('file', 'TEST2.pdf', 'P');          
 
         return Response::json($workorder);
+    }
+
+    public function upload(WorkOrder $workorder, Request $request)
+    {
+            $this->validate($request, [ 'vendorinvoice' => 'required|mimes:pdf'
+                ]);
+
+
+        $fname = 'vendor-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
+        $workorder->vendor_invoice_filename = 'files/vendor_invoices/'.$fname;
+        $workorder->save();
+        $file = $request->vendorinvoice;
+        $file->move('files/vendor_invoices/', $fname);
+
+
+        return back();
+
     }
 
 }
