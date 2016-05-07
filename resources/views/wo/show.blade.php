@@ -63,8 +63,8 @@
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
-			<h4> User Job Title - <small>		
-			{{$workorder->Tenant->job_title}}
+			<h4> User email - <small><a href="mailto:{{$workorder->Tenant->User->email}}">{{$workorder->Tenant->User->email}}</a>		
+			
 			</small></h4>
 		</div>
 	</div>
@@ -72,12 +72,12 @@
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
 			<h4> Sent - <small>
-			{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone('America/Los_Angeles')))}}
+			{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
 			<h4> Updated - <small>		
-			{{date('F d, Y, g:i a', strtotime($workorder->updated_at->timezone('America/Los_Angeles')))}}
+			{{date('F d, Y, g:i a', strtotime($workorder->updated_at->timezone(Auth::user()->timezone)))}}
 			</small></h4>
 		</div>
 	</div>
@@ -152,7 +152,11 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btn-save">Bill Tenant</button>
+                	@if (!$workorder->billed)
+                    	<button type="button" class="btn btn-primary" id="btn-save">Bill Tenant</button>
+                    @else
+                    	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-save">Tenant Billed</button>
+                    @endif
                     <input type="hidden" id="wo_id" name="wo_id" value="0">
                     <meta name="_token" content="{{ csrf_token() }}">
                     <meta name="app-url" content="http://localhost:8000">
@@ -170,7 +174,7 @@
                     <h4 class="modal-title" id="UploadModalLabel">Upload File</h4>
                 </div>
                 <div class="modal-body">
-                <form action="/workorders/{{$workorder->id}}/upload" method="POST" enctype="multipart/form-data">
+                <form method="POST" action="/workorders/{{$workorder->id}}/upload"  enctype="multipart/form-data">
 					{{ csrf_field() }}
 
         			<input type="file" accept=".pdf" name="vendorinvoice">

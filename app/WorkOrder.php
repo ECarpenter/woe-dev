@@ -20,16 +20,14 @@ class WorkOrder extends Model
     	return $this->belongsTo('App\ProblemType','problem_id');
     }
 
-    public function Manager()
+    public function Managers()
     {
     	$managers = array();
 
     	
 
-    	foreach ($this->Tenant->Property->Users as $user) {
-    		
-    		if($user->hasRole('manager'))
-    		{
+    	foreach ($this->Tenant->Property->Users as $user) {	
+    		if($user->hasRole('manager')) {
     			$managers[] = $user;
     		}
     	}

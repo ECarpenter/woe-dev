@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     {
     	Model::unguard();
         
+        $this->call('OwnerSeeder');
+        $this->call('ChargeCodeSeeder');
         $this->call('RolesTableSeeder');
         $this->call('UsersTableSeeder');
         $this->call('TenantsTableSeeder');
@@ -26,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call('ManagerUserSeeder');
         $this->call('ManagerUserSeeder');
         $this->call('ProblemTypeTableSeeder');
+
 
         Model::reguard();
     }

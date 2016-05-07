@@ -1,0 +1,96 @@
+@extends ('layouts.app')
+
+@section ('content')
+
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-4">
+			<h4> Property - <small>
+				 {{$property->name}}
+			</small></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-2 col-xs-offset-2">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="dropdown">
+			    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+			      Managers<span class="caret"></span>
+			    </a>
+
+			    <ul class="dropdown-menu" role="menu">
+			        @foreach ($property->Managers() as $manager)
+			        	<li><a href="#">{{$manager->name}}</a></li>
+			        @endforeach
+			    </ul>
+			</li>
+		</ul>
+		</div>
+		<div class="col-xs-2 col-xs-offset-2">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="dropdown">
+			    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+			      Tenants<span class="caret"></span>
+			    </a>
+
+			    <ul class="dropdown-menu" role="menu">
+			        @foreach ($property->tenants as $tenant)
+			        	<li><a href="#">{{$tenant->company_name}}</a></li>
+			        @endforeach
+			    </ul>
+			</li>
+		</ul>
+		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-2">
+			<h4> Owner - <small>
+			{{$property->Owner->name}}
+			</small></h4>
+		</div>
+		<div class="col-xs-4">
+			<h4> ID - <small>		
+			{{$property->property_system_id}}
+			</small></h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-2">
+			<h4> Created - <small>
+			{{date('F d, Y, g:i a', strtotime($property->created_at->timezone(Auth::user()->timezone)))}}
+			</small></h4>
+		</div>
+		<div class="col-xs-4">
+			<h4> Updated - <small>		
+			{{date('F d, Y, g:i a', strtotime($property->updated_at->timezone(Auth::user()->timezone)))}}
+			</small></h4>
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-md-5 col-md-offset-3">	
+			<table class="table table-hover">
+					<tr class="info">
+						<th>Tenant</th>
+						<th>Status</th>
+						<th>Date</th>
+					</tr>
+				@foreach ($property->tenants as $tenant)
+					@foreach ($tenant->Workorder()->orderBy('created_at','desc')->get() as $workorder)
+					<tr onclick = "location.href='/workorders/{{$workorder->id}}'">
+						<td>{{$tenant->company_name}}</td>
+						<td>{{$workorder->status}}</td>
+						<td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
+					</tr>
+					@endforeach
+				@endforeach
+			</table>
+		</div>
+	</div>
+
+
+
+@endsection

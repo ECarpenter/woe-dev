@@ -17,7 +17,7 @@ class ManagerUserSeeder extends Seeder
 	    $role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
 	    
 
-	    $prop = App\Property::find(rand(1,5));
+	    $prop = App\Property::find(rand(1,2));
 		
 		$user->Roles()->attach($role);
 	    $user->Properties()->attach($prop);

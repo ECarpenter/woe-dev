@@ -36,6 +36,8 @@ $(document).ready(function(){
      	window.open ($(this).attr("href"));
 	});
 
+
+
 	$("#btn-save").click(function (e) {
 
 		$.ajaxSetup({
@@ -44,31 +46,34 @@ $(document).ready(function(){
             }
         })
 
-        e.preventDefault(); 
+        if(confirm("Are you sure you want to process the tenant's bill?"))
+        {      
+		    e.preventDefault(); 
 
-        var formData = {
-            amount_billed: $('#amount_billed').val(),
-            billing_description: $('#billing_description').val(),
-            job_cost: $('#job_cost').val(),
-        };
+		    var formData = {
+		        amount_billed: $('#amount_billed').val(),
+		        billing_description: $('#billing_description').val(),
+		        job_cost: $('#job_cost').val(),
+		    };
 
-		$.ajax({
+			$.ajax({
 
-			type: "PATCH",
-			url: '/workorders/' + $('#wo_id').val() + '/bill',
-			data: formData,
-            dataType: 'json',
-			success: function (data){
-				console.log(data);
+				type: "PATCH",
+				url: '/workorders/' + $('#wo_id').val() + '/bill',
+				data: formData,
+		        dataType: 'json',
+				success: function (data){
+					console.log(data);
 
-				location.reload();
-			},
-			error: function (data) {
-                console.log('Error:', data);
-            }
+					location.reload();
+				},
+				error: function (data) {
+		            console.log('Error:', data);
+		        }
 
-		});	
-		$('#BillingModal').modal('hide');
+			});	
+			$('#BillingModal').modal('hide');
+		}
 	});
 });
 

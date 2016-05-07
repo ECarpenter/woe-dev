@@ -55,15 +55,9 @@ class WorkOrderController extends Controller
         $newWorkOrder->status = "Open";
         $newWorkOrder->problem_id = $request->type;
         
-        if (Auth::user()->hasRole('tenant'))
-        {
-            $newWorkOrder->tenant_id = Auth::user()->Tenants()->first()->id;
-
-        }
-        else
-        {
-            $newWorkOrder->tenant_id = $request->tenant;
-        }
+        
+        $newWorkOrder->tenant_id = $request->tenant;
+        
 
         $newWorkOrder->save();
 
@@ -84,6 +78,7 @@ class WorkOrderController extends Controller
 
     public function show(WorkOrder $workorder)
     {
+
         $workorder->load('tenant.property','problemtype');
 
         return view('wo.show', compact('workorder'));
@@ -113,7 +108,7 @@ class WorkOrderController extends Controller
     {
         $emails = array();
 
-        foreach ($workorder->Manager() as $manager) {
+        foreach ($workorder->Tenant->Property->Managers() as $manager) {
 
             $emails[] = $manager->email;
         }
@@ -142,6 +137,7 @@ class WorkOrderController extends Controller
         $workorder->job_cost = $request->job_cost;
         $workorder->cos_filename = 'files/cos/cos-'.$date.'.pdf';
         $workorder->tenant_invoice_filename = 'files/tenant_invoices/tenant-'.$date.'.pdf';
+        $workorder->billed = true;
         $workorder->save();
         
 
@@ -151,20 +147,15 @@ class WorkOrderController extends Controller
         $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
         $tpdf->save($workorder->tenant_invoice_filename);
 
-        // $pdfmerge = new \LynX39\LaraPdfMerger\PdfManage;
-        // $pdfmerge->addPDF('invoice.pdf', 'all');
-        // $pdfmerge->addPDF('invoice2.pdf', 'all');
-        // $pdfmerge->merge('file', 'TEST2.pdf', 'P');          
+        WorkOrderController::sendbillingEmail($workorder);
 
         return Response::json($workorder);
     }
 
     public function upload(WorkOrder $workorder, Request $request)
     {
-            $this->validate($request, [ 'vendorinvoice' => 'required|mimes:pdf'
-                ]);
-
-
+        $this->validate($request, [ 'vendorinvoice' => 'required|mimes:pdf'
+            ]);
         $fname = 'vendor-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
         $workorder->vendor_invoice_filename = 'files/vendor_invoices/'.$fname;
         $workorder->save();
@@ -174,6 +165,49 @@ class WorkOrderController extends Controller
 
         return back();
 
+    }
+
+    public function sendbillingEmail(WorkOrder $workorder)
+    {
+        $managers = $workorder->Manager();
+        $manageremail = $managers[0]->email;
+        $ar_file = $workorder->cos_filename;
+
+        if ($workorder->vendor_invoice_filename != null)
+        {
+            $ap = new \LynX39\LaraPdfMerger\PdfManage;
+            $ap->addPDF($workorder->vendor_invoice_filename, 'all');
+            $ap->addPDF($workorder->cos_filename, 'all');
+            $ap->merge('file', 'tmp\AP.pdf', 'P');          
+
+            Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail) {
+                $message->from($manageremail, 'PM');
+                $message->subject('AP Invoice');
+                //$message->attach('tmp\AP.pdf');
+                $message->to('AP@davispartners.com');
+            });
+
+            $ar_file = 'tmp\AR.pdf';
+            $ar = new \LynX39\LaraPdfMerger\PdfManage;
+            $ar->addPDF($workorder->cos_filename, 'all');
+            $ar->addPDF($workorder->vendor_invoice_filename, 'all');
+            $ar->merge('file', $ar_file,'P'); 
+
+        }
+        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
+            $message->from($manageremail, 'PM');
+            $message->subject('COS');
+            //$message->attach($ar_file);
+            $message->to('AR@davispartners.com');
+        });      
+
+        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder) {
+            $message->from($manageremail, 'PM');
+            $message->subject('Tenant Invoice');
+            //$message->attach($workorder->tenant_invoice_filename, ['as' => 'Invoice.pdf']);
+            $message->to($workorder->Tenant->User->email);
+        });
+        
     }
 
 }

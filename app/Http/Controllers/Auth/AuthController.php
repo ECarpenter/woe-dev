@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use DB;
+
 use App\User;
 use App\Tenant;
 use Validator;
@@ -53,7 +55,7 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'suite' => 'required|min:6',
+            'suite' => 'required',
             'company_name' =>'required',
             'job_title' => 'required',
             'property' =>'required',
@@ -74,7 +76,11 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'timezone' => "America/Los_Angeles"
         ]);
+
+        $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
+        $user->Roles()->attach($role);
 
         $tenant = new Tenant;
         $tenant->user_id = $user->id;
@@ -82,6 +88,7 @@ class AuthController extends Controller
         $tenant->property_id = $data['property'];
         $tenant->company_name = $data['company_name'];
         $tenant->job_title = $data['job_title'];
+        $tenant->tenant_system_id = $data['tenant_system_id'];
         $tenant->save();
 
         return $user;

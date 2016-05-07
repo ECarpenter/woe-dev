@@ -31,6 +31,8 @@ Route::group(['middleware' => 'web'], function () {
 Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
 	Route::auth();
 
+    //Workorder Routes
+
 	Route::get('/workorders','WorkOrderController@viewlist');
 	Route::get('workorders/{workorder}', 'WorkOrderController@show');
     Route::get('workorders/{workorder}/edit', 'WorkOrderController@edit');
@@ -38,4 +40,16 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
     Route::get('workorders/{workorder}/bill', 'WorkOrderController@bill');
     Route::patch('workorders/{workorder}/bill', 'WorkOrderController@processbill');
     Route::post('workorders/{workorder}/upload','WorkOrderController@upload');
+
+    //Property Routes
+    
+    Route::post('property','PropertyController@viewid');
+    Route::post('property/save','PropertyController@save');
+    Route::get('property/add','PropertyController@add');
+    Route::get('property/{property}','PropertyController@view');
+    //Tenant Routes
+    
+    Route::get('tenant/add','TenantController@add');
+    Route::post('tenant/save','TenantController@save');
+
 });

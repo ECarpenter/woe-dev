@@ -19,7 +19,7 @@ class CreateTenantTable extends Migration
             $table->string('unit');
             $table->string('company_name');
             $table->string('job_title');
-            $table->string('tenant_system_id')->nullable();
+            $table->string('tenant_system_id')->unique()->nullable();
             $table->boolean('active')->nullable();
             $table->boolean('verified')->nullable();
             $table->timestamps();

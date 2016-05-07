@@ -32,7 +32,7 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
         'unit' => $faker->buildingNumber,
         'company_name' => $faker->company,
         'job_title' => $faker->title,
-        'property_id' => rand(1,5),
+        'property_id' => rand(1,2),
         'user_id' => $user->id,
         'tenant_system_id' =>"t".$faker->buildingNumber,
         'active' => true,

@@ -51,7 +51,7 @@
 		<div class="row">
 			<div class="col-xs-2 col-xs-offset-2">
 				<h4> Problem Type - <small>
-				<select name = 'type' class="form-control">
+					<select name = 'type' class="form-control">
 						@foreach ($typeList as $problemType)
 							<option <?php if($workorder->ProblemType->id == $problemType->id){echo("selected");}?> value={{$problemType->id}}> {{ $problemType->type }} </option>
 						@endforeach

@@ -26,6 +26,7 @@ class CreateWorkOrderTable extends Migration
             $table->decimal('job_cost',18,2)->nullable();
             $table->decimal('amount_billed',18,2)->nullable();
             $table->boolean('billed')->default(false);
+            $table->string('billed_by')->nullable();
             $table->timestamps();
         });
     }

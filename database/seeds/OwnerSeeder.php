@@ -13,6 +13,8 @@ class OwnerSeeder extends Seeder
     {
         $owner = new App\Owner;
         $owner->name = "TA";
+        $owner->ar_email = "ar@example.com";
+        $owner->ap_email = "ap@example.com";
         $owner->save();
     }
 }
