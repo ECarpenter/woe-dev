@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain' => 'mg.ejcustom.com',
+        'secret' => 'key-794751ea895055542b79d0e85c89a45e',
     ],
 
     'ses' => [

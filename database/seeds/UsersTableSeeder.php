@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     {
         $user = new App\User;
         $user->name = "admin";
-        $user->email = "ec@ade.com";
+        $user->email = "admin@ejcustom.com";
         $user->password = bcrypt('password');
         $user->timezone = "America/Los_Angeles";
         $user->save();

@@ -115,10 +115,12 @@ class WorkOrderController extends Controller
 
         if (!empty($emails))
                 {
-            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
-                $message->from('us@example.com', 'New Work Order');
 
-                $message->to($emails)->cc('bar@example.com');
+
+            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
+                $message->from('notice@example.com', 'Notice');
+                $message->subject('New Work Order');
+                $message->to('ecarpen905@gmail.com');
             });
         }
 
@@ -138,6 +140,7 @@ class WorkOrderController extends Controller
         $workorder->cos_filename = 'files/cos/cos-'.$date.'.pdf';
         $workorder->tenant_invoice_filename = 'files/tenant_invoices/tenant-'.$date.'.pdf';
         $workorder->billed = true;
+        $workorder->status = 'Done';
         $workorder->save();
         
 
@@ -169,25 +172,28 @@ class WorkOrderController extends Controller
 
     public function sendbillingEmail(WorkOrder $workorder)
     {
-        $managers = $workorder->Manager();
+        $managers = $workorder->Managers();
         $manageremail = $managers[0]->email;
         $ar_file = $workorder->cos_filename;
 
         if ($workorder->vendor_invoice_filename != null)
         {
+            $ar_file = 'tmp\AR.pdf';
+            $ap_file = 'tmp\AP.pdf';
+
             $ap = new \LynX39\LaraPdfMerger\PdfManage;
             $ap->addPDF($workorder->vendor_invoice_filename, 'all');
             $ap->addPDF($workorder->cos_filename, 'all');
-            $ap->merge('file', 'tmp\AP.pdf', 'P');          
+            $ap->merge('file', $ap_file, 'P');          
 
-            Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail) {
+            Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ap_file) {
                 $message->from($manageremail, 'PM');
                 $message->subject('AP Invoice');
-                //$message->attach('tmp\AP.pdf');
-                $message->to('AP@davispartners.com');
+                $message->attach($ap_file);
+                $message->to('ecarpen905@example.com');
             });
 
-            $ar_file = 'tmp\AR.pdf';
+            
             $ar = new \LynX39\LaraPdfMerger\PdfManage;
             $ar->addPDF($workorder->cos_filename, 'all');
             $ar->addPDF($workorder->vendor_invoice_filename, 'all');
@@ -197,15 +203,15 @@ class WorkOrderController extends Controller
         Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
             $message->from($manageremail, 'PM');
             $message->subject('COS');
-            //$message->attach($ar_file);
-            $message->to('AR@davispartners.com');
+            $message->attach($ar_file);
+            $message->to('ecarpen905@gmail.com');
         });      
 
         Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder) {
             $message->from($manageremail, 'PM');
             $message->subject('Tenant Invoice');
-            //$message->attach($workorder->tenant_invoice_filename, ['as' => 'Invoice.pdf']);
-            $message->to($workorder->Tenant->User->email);
+            $message->attach($workorder->tenant_invoice_filename, ['as' => 'Invoice.pdf']);
+            $message->to('ecarpen905@gmail.com');
         });
         
     }

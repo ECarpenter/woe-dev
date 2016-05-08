@@ -23,10 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call('TenantsTableSeeder');
         $this->call('PropertiesTableSeeder');
         $this->call('ManagerUserSeeder');
-        $this->call('ManagerUserSeeder');
-        $this->call('ManagerUserSeeder');
-        $this->call('ManagerUserSeeder');
-        $this->call('ManagerUserSeeder');
         $this->call('ProblemTypeTableSeeder');
 
 

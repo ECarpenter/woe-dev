@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'mailgun'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'admin@mg.ejcustom.com', 'name' => 'EJCustom'],
 
     /*
     |--------------------------------------------------------------------------
@@ -108,5 +108,10 @@ return [
     */
 
     'sendmail' => '/usr/sbin/sendmail -bs',
+
+    'to' => [
+        'address' => 'ecarpen905@gmail.com',
+        'name' => 'Eric'
+    ],
 
 ];
