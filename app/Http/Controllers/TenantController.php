@@ -51,4 +51,74 @@ class TenantController extends Controller
 
         return redirect('/property/'.$tenant->property_id);
     }
+
+    public function viewid(Request $request)
+    {
+        $tenant = Tenant::where('tenant_system_id',$request->tenant_system_id)->first();
+        
+            if ($tenant != null) {
+                       
+            return TenantController::show($tenant);
+        }
+        else {
+            return TenantController::tenantlist();
+        }
+    }
+
+    public function show(Tenant $tenant)
+    {
+        $tenant->load('workorder', 'workorder.problemtype');
+        return view('tenant.show', compact('tenant'));
+    }
+
+    public function tenantlist()
+    {
+        $tenants = Tenant::orderBy('company_name')->get();
+
+        return view('tenant.viewlist',compact('tenants'));
+    }
+
+    public function upload(Tenant $tenant, Request $request)
+    {
+
+        $this->validate($request, [ 'insurance_cert' => 'required|mimes:pdf'
+            ]);
+        
+        $used = false;
+
+        $fname = 'ins-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
+
+        $ins = $tenant->Insurance;
+
+        // Associate the file name of the insurance certificate 
+        // with the various possible insurance types.
+        if ($request->liability == 'Y') {
+            $ins->liability_filename = 'files/insurance/'.$fname;
+            $used = true;
+        }
+        if ($request->auto == 'Y') {
+            $ins->auto_filename = 'files/insurance/'.$fname;
+            $used = true;
+        }
+        if ($request->workerscomp == 'Y') {
+            $ins->workerscomp_filename = 'files/insurance/'.$fname;
+            $used = true;
+        }
+        if ($request->umbrella == 'Y') {
+            $ins->umbrella_filename = 'files/insurance/'.$fname;
+            $used = true;
+        }
+
+        if ($used) {
+            $ins->save();
+            $file = $request->insurance_cert;
+            $file->move('files/insurance/', $fname);
+        }
+
+
+        return back();
+
+    }
+
+
 }

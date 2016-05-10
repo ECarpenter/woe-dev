@@ -25,6 +25,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
 
 	$user = factory(App\User::class)->create();
+    $ins = new App\Insurance;
 	$role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
     $user->Roles()->attach($role);
 

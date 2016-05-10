@@ -28,7 +28,7 @@
 
 <body>
 	<div align="right">
-		<img src="images\DP_Logo.jpg" alt="Company Logo" class="GeneratedImage">
+		<img src="images/DP_Logo.jpg" alt="Company Logo" class="GeneratedImage">
 	</div>
 	<div align="right">
 			<h3>Change of Status </h3>

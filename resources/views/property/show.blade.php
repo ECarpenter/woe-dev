@@ -33,8 +33,8 @@
 			    </a>
 
 			    <ul class="dropdown-menu" role="menu">
-			        @foreach ($property->tenants as $tenant)
-			        	<li><a href="#">{{$tenant->company_name}}</a></li>
+			        @foreach ($property->Tenants()->orderBy('company_name')->get() as $tenant)
+			        	<li><a href="/tenant/{{$tenant->id}}">{{$tenant->company_name}}</a></li>
 			        @endforeach
 			    </ul>
 			</li>
@@ -68,7 +68,12 @@
 		</div>
 	</div>
 
-
+	<div class="row">
+		<div class="col-md-5 col-md-offset-3 text-center">
+			<h4> Work Orders </h4>
+		</div>
+		
+	</div>
 
 	<div class="row">
 		<div class="col-md-5 col-md-offset-3">	

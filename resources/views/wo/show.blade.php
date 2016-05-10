@@ -109,7 +109,7 @@
 
 	<div class="row">
 		<div class="col-xs-2 col-xs-offset-1 col-md-2 col-md-offset-2">
-			<button class="btn btn-primary open-upload-modal" value="{{$workorder->id}}">Upload Invoice</button>
+			<button class="btn btn-primary open-upload-invoice-modal" value="{{$workorder->id}}">Upload Invoice</button>
 		</div>
 
 		<div class="col-xs-2 col-xs-offset-2 col-md-2 col-md-offset-1">
@@ -166,7 +166,7 @@
     </div>
 
     <!-- UploadModal (Pop up when upload button clicked) -->
-	<div class="modal fade" id="UploadModal" tabindex="-1" role="dialog" aria-labelledby="UploadModalLabel" aria-hidden="true">
+	<div class="modal fade" id="UploadInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="UploadModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

@@ -44,12 +44,17 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
     //Property Routes
     
     Route::post('property','PropertyController@viewid');
+    Route::get('property/list','PropertyController@proplist');
     Route::post('property/save','PropertyController@save');
     Route::get('property/add','PropertyController@add');
-    Route::get('property/{property}','PropertyController@view');
+    Route::get('property/{property}','PropertyController@show');
     //Tenant Routes
     
+    Route::post('tenant','TenantController@viewid');
+    Route::get('tenant/list','tenantController@tenantlist');
     Route::get('tenant/add','TenantController@add');
     Route::post('tenant/save','TenantController@save');
+    Route::get('tenant/{tenant}','TenantController@show');
+    Route::post('tenant/{tenant}/upload','TenantController@upload');
 
 });

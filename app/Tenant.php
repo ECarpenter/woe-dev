@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends Model
 {
 
-    protected $fillable = [
-        'tenant_system_id'
-    ];
-
     public function User()
     {
     	return $this->belongsTo('App\User');
@@ -24,5 +20,10 @@ class Tenant extends Model
     public function WorkOrder()
     {
     	return $this->hasMany('App\WorkOrder');
+    }
+
+    public function Insurance()
+    {
+        return $this->hasOne('App\Insurance');
     }
 }

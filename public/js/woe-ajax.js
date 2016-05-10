@@ -18,7 +18,7 @@ $(document).ready(function(){
         }) 
     });
 
-    $('.open-upload-modal').click(function(){
+    $('.open-upload-invoice-modal').click(function(){
         var wo_id = $(this).val();
 
         $.get('/workorders/' + wo_id + '/bill', function (data) {
@@ -26,8 +26,29 @@ $(document).ready(function(){
             console.log(data);
             
 
-            $('#UploadModal').modal('show');
+            $('#UploadInvoiceModal').modal('show');
         }) 
+    });
+
+    $('.open-upload-invoice-modal').click(function(){
+        var wo_id = $(this).val();
+
+        $.get('/workorders/' + wo_id + '/bill', function (data) {
+            //success data
+            console.log(data);
+            
+
+            $('#UploadInvoiceModal').modal('show');
+        }) 
+    });
+
+    $('.open-upload-insurance-modal').click(function(){
+        
+        
+            
+
+            $('#UploadInsuranceModal').modal('show');
+         
     });
 
     $( '.file-btn' ).on( "click", function( event ) {

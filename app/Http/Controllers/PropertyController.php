@@ -26,24 +26,29 @@ class PropertyController extends Controller
         $this->middleware('auth');
     }
 
-    public function viewid(Request $request)
+    public function showid(Request $request)
     {
     	$property = Property::where('property_system_id',$request->property_system_id)->first();
 		
 			if ($property != null) {
 			$property->load(['tenants' => function($query) {
-				$query->orderBy('name');
+				$query->orderBy('company_name');
 			}]);
-    	    $property->load('owner');
-    		return view('property.show', compact('property'));
+    	    
+    		return PropertyController::show($property);
     	}
     	else {
-    		$properties = Property::orderBy('name')->get();
-    		return view('property.viewlist',compact('properties'));
+    		return PropertyController::proplist();
     	}
     }
 
-    public function view(Property $property)
+    public function proplist()
+    {
+        $properties = Property::orderBy('name')->get();
+        return view('property.viewlist',compact('properties'));
+    }
+
+    public function show(Property $property)
     {
     	
     	$property->load('owner');
