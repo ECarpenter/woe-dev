@@ -51,7 +51,7 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
     //Tenant Routes
     
     Route::post('tenant','TenantController@viewid');
-    Route::get('tenant/list','tenantController@tenantlist');
+    Route::get('tenant/list','TenantController@tenantlist');
     Route::get('tenant/add','TenantController@add');
     Route::post('tenant/save','TenantController@save');
     Route::get('tenant/{tenant}','TenantController@show');

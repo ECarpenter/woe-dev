@@ -4,8 +4,8 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
-			<h4> Property - <small>
-				{{$workorder->Tenant->Property->name}}
+			<h4> Property - <small> <a href="/property/{{$workorder->Tenant->Property->id}}">
+				{{$workorder->Tenant->Property->name}}</a>
 			</small></h4>
 		</div>
 	</div>
@@ -45,8 +45,8 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Tenant - <small>
-			{{$workorder->Tenant->company_name}}
+			<h4> Tenant - <small><a href="/tenant/{{$workorder->Tenant->id}}">
+			{{$workorder->Tenant->company_name}}</a>
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
@@ -152,7 +152,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                	@if (true)
+                	@if (!$workorder->billed)
                     	<button type="button" class="btn btn-primary" id="btn-save">Bill Tenant</button>
                     @else
                     	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-save">Tenant Billed</button>

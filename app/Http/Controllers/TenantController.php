@@ -9,6 +9,7 @@ use DB;
 use App\Http\Requests;
 use App\Tenant;
 use App\User;
+use App\Insurance;
 
 
 class TenantController extends Controller
@@ -40,6 +41,7 @@ class TenantController extends Controller
         $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
         $user->Roles()->attach($role);
 
+
         $tenant = new Tenant;
         $tenant->user_id = $user->id;
         $tenant->unit = $request['suite'];
@@ -49,6 +51,9 @@ class TenantController extends Controller
         $tenant->tenant_system_id = $request['tenant_system_id'];
         $tenant->save();
 
+        $ins = new Insurance;
+        $ins->tenant_id = $tenant->id;
+        $ins->save();
         return redirect('/property/'.$tenant->property_id);
     }
 
