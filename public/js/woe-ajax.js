@@ -42,12 +42,15 @@ $(document).ready(function(){
         }) 
     });
 
-    $('.open-upload-insurance-modal').click(function(){
-        
-        
-            
+    $('.open-upload-insurance-modal').click(function(){ 
 
             $('#UploadInsuranceModal').modal('show');
+         
+    });
+
+    $('.open-update-insurance-modal').click(function(){           
+
+            $('#UpdateInsuranceModal').modal('show');
          
     });
 

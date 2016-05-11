@@ -152,7 +152,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                	@if (!$workorder->billed)
+                	@if (true)
                     	<button type="button" class="btn btn-primary" id="btn-save">Bill Tenant</button>
                     @else
                     	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-save">Tenant Billed</button>

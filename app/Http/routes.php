@@ -43,7 +43,7 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
 
     //Property Routes
     
-    Route::post('property','PropertyController@viewid');
+    Route::post('property','PropertyController@showid');
     Route::get('property/list','PropertyController@proplist');
     Route::post('property/save','PropertyController@save');
     Route::get('property/add','PropertyController@add');
@@ -56,5 +56,7 @@ Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
     Route::post('tenant/save','TenantController@save');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload','TenantController@upload');
+    Route::patch('insurance/{insurance}/update','InsuranceController@update');
+
 
 });

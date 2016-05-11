@@ -22,6 +22,11 @@ class CreatePropertyTable extends Migration
             $table->string('zip')->nullable();
             $table->integer('owner_id')->unsigned();
             $table->boolean('active')->default(true);
+            $table->integer('req_liability_single_limit');
+            $table->integer('req_liability_combined_limit');
+            $table->integer('req_auto_limit');
+            $table->integer('req_umbrella_limit');
+            $table->integer('req_workerscomp_limit');
             $table->timestamps();
         });
     }

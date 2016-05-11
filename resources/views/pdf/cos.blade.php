@@ -10,19 +10,19 @@
 		}
 
 		.GenInfoLeft {
-			position: absolute; top: 140px; height: 90px; width: 175px; 
+			position: absolute; top: 140px; height: 90px; width: 100px; 
 		}
 		.GenInfoLeftValue {
-			position: absolute; top: 140px; left: 100px; height: 90px; width: 175px; 
+			position: absolute; top: 140px; left: 100px; height: 90px; width: 350px; 
 		}
 		.GenInfoRight {
-			position: absolute; top: 140px; left: 350px; height: 90px; width: 175px; 
+			position: absolute; top: 140px; left: 450px; height: 90px; width: 175px; 
 		}
 		.GenInfoRightValue {
-			position: absolute; top: 140px; left: 400px; height: 90px; width: 1750px; 
+			position: absolute; top: 140px; left: 550px; height: 90px; width: 175px; 
 		}
 
-		body { font-family: DejaVu Sans; }
+		body { font-family: Helvetica; }
 	</style>
 </head>
 
@@ -42,12 +42,19 @@
 
 	</div>
 
-	<div class="GenInfoLeftValue"> 		{{$workorder->Tenant->Property->name}}
+	<div class="GenInfoLeftValue"> {{$workorder->Tenant->Property->name}} <br>
+		{{$workorder->Tenant->company_name}} <br>
+		{{$workorder->Tenant->unit}}
 
 	</div>
 
 	<div class="GenInfoRight">	
-	Property#: <br>
+	Property ID: <br>
 	Tenant ID: <br>
 
+	</div>
+
+	<div class="GenInfoRightValue">
+		{{$workorder->Tenant->Property->property_system_id}} <br>
+		{{$workorder->Tenant->tenant_system_id}}
 	</div>
