@@ -43,4 +43,9 @@ class Property extends Model
 
         return $managers;
     }
+
+    public function Group()
+    {
+        return $this->hasMany('App\Group');
+    }
 }

@@ -5,3 +5,5 @@ Homestead.yaml
 Homestead.json
 .env
 *.pdf
+
+!/vendor/zizaco/entrust/src/Entrust/Middleware/*

@@ -22,6 +22,7 @@ class CreateTenantTable extends Migration
             $table->string('tenant_system_id')->unique()->nullable();
             $table->boolean('active')->default(true);
             $table->boolean('verified')->default(false);
+            $table->integer('req_liability_single_limit')->nullable();
             $table->integer('req_liability_combined_limit')->nullable();
             $table->integer('req_auto_limit')->nullable();
             $table->integer('req_umbrella_limit')->nullable();

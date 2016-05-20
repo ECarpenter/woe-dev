@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use DB;
+use Response;
 
 use App\Http\Requests;
 use App\Tenant;
@@ -81,7 +82,7 @@ class TenantController extends Controller
 
     public function tenantlist()
     {
-        $tenants = Tenant::orderBy('company_name')->get();
+        $tenants = Tenant::orderByRaw('company_name COLLATE NOCASE')->get();
 
         return view('tenant.viewlist',compact('tenants'));
     }
@@ -135,6 +136,24 @@ class TenantController extends Controller
 
         return back();
 
+    }
+
+    public function edit(Tenant $tenant)
+    {
+        $tenant->load('user');
+        return Response::json($tenant);
+    }
+
+    public function update(Tenant $tenant, Request $request)
+    {
+        $tenant->tenant_system_id = $request->tenant_system_id;
+        $tenant->unit = $request->unit;
+        $tenant->company_name = $request->company_name;
+        $tenant->active = $request->active_switch;
+        $tenant->verified = $request->verified_switch;
+        $tenant->save();
+
+        return redirect('/tenant/'.$tenant_id);
     }
 
 

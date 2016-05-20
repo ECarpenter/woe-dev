@@ -95,8 +95,8 @@
 
                         <ul class="dropdown-menu" role="menu">
 
-                            <li><a href="#">View Users</a></li>
-                            <li><a href="#">Add Users</a></li>
+                            <li><a href="/user/list">View Users</a></li>
+                            <li><a href="/user/add">Add Users</a></li>
                         </ul>
                     </li>
                     @endpermission

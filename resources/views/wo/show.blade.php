@@ -153,9 +153,9 @@
                 </div>
                 <div class="modal-footer">
                 	@if (!$workorder->billed)
-                    	<button type="button" class="btn btn-primary" id="btn-save">Bill Tenant</button>
+                    	<button type="button" class="btn btn-primary" id="btn-bill">Bill Tenant</button>
                     @else
-                    	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-save">Tenant Billed</button>
+                    	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-bill">Tenant Billed</button>
                     @endif
                     <input type="hidden" id="wo_id" name="wo_id" value="0">
                     <meta name="_token" content="{{ csrf_token() }}">

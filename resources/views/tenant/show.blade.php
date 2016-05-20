@@ -61,6 +61,14 @@
 	</div>
 
 	<div class="row">
+		<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
+			<button class="btn btn-primary open-edit-tenant-modal btn-xs" value="{{$tenant->id}}">Edit Tenant Information</button>
+		</div>
+	</div>
+
+	<br>
+
+	<div class="row">
 		<div class="col-xs-4 col-xs-offset-1 col-md-3 col-md-offset-3">
 			<button class="btn btn-primary open-upload-insurance-modal btn-xs" value="{{$tenant->id}}">Upload Insurance Document</button>
 		</div>
@@ -86,7 +94,7 @@
 						<th>Limit</th>
 					</tr>
 					
-					<tr onclick="{{$state['llink']}}')">
+					<tr onclick="{{$state['llink']}}">
 						<td class="{{$state['lfile']}}">Liability</td>
 						<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_start))}}</td>
 						<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
@@ -198,6 +206,95 @@
         </div>
     </div>
 
+    <!-- EditTenantModel - will let the user edit basic tenant information -->
+	<div class="modal fade" id="EditTenantModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="EditModalLabel">Edit Tenant Information</h4>
+                </div>
+                <div class="modal-body">
+	                <form method="POST" action="/tenant/{{$tenant->id}}/update"  enctype="multipart/form-data">
+						{{ csrf_field() }}
+						
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Tenant ID#</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" id="tenant_system_id" value="{{ old('tenant_system_id') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group{{ $errors->has('unit') ? ' has-error' : '' }}">
+		                        <label class="col-xs-4 control-label">Unit</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" id="unit" value="{{ old('unit') }}">
+		                            @if ($errors->has('unit'))
+		                                <span class="help-block">
+		                                    <strong>{{ $errors->first('unit') }}</strong>
+		                                </span>
+		                            @endif
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">	                     
+		                    <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
+		                        <label class="col-xs-4 control-label">Company Name</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" id="company_name" value="{{ old('company_name') }}">
+
+		                            @if ($errors->has('company_name'))
+		                                <span class="help-block">
+		                                    <strong>{{ $errors->first('company_name') }}</strong>
+		                                </span>
+		                            @endif
+		                        </div>
+		                    </div>
+	                    </div>
+
+	                    <div class="row">
+	                    	<div class="form-group">
+	                    		<div class="col-xs-4 col-xs-offset-4">
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="active_switch" id="active" value="true">Active
+		                    		</label>
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="active_switch" id="inactive" value="false">Inactive
+		                    		</label>
+	                    		</div>
+	                    	</div>
+	                    </div>
+
+	                    <div class="row">
+	                    	<div class="form-group">
+	                    		<div class="col-xs-4 col-xs-offset-4">
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="verified_switch" id="verified" value="true">Verified
+		                    		</label>
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="verified_switch" id="unverified" value="false">Unverified
+		                    		</label>
+	                    		</div>
+	                    	</div>
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="col-xs-2 col-xs-offset-4">
+		        				<input class="btn btn-primary" type="submit">
+		        			</div>
+	        			</div>
+	        				
+	    			</form>
+               	</div>
+            </div>
+        </div>
+    </div>
+
+    <!--Model to update insurance information   -->
     <div class="modal fade" id="UpdateInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="UpdateModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
             <div class="modal-content">

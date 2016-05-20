@@ -18,40 +18,37 @@ $(document).ready(function(){
         }) 
     });
 
-    $('.open-upload-invoice-modal').click(function(){
-        var wo_id = $(this).val();
+    $('.open-edit-tenant-modal').click(function(){
+        var tenant_id = $(this).val();
 
-        $.get('/workorders/' + wo_id + '/bill', function (data) {
+        $.get('/tenant/' + tenant_id + '/edit', function (data) {
             //success data
             console.log(data);
-            
 
-            $('#UploadInvoiceModal').modal('show');
-        }) 
+            $('#tenant_system_id').val(data.tenant_system_id);
+            $('#unit').val(data.unit);
+            $('#company_name').val(data.company_name);
+            $('#active').prop('checked', data.active);
+            $('#verified').prop('checked', data.verified);
+            $('#inactive').prop('checked', !data.active);
+            $('#unverified').prop('checked', !data.verified);
+            $('#EditTenantModal').modal('show');
+        })
     });
+    
+    $('.open-upload-invoice-modal').click(function(){        
 
-    $('.open-upload-invoice-modal').click(function(){
-        var wo_id = $(this).val();
-
-        $.get('/workorders/' + wo_id + '/bill', function (data) {
-            //success data
-            console.log(data);
-            
-
-            $('#UploadInvoiceModal').modal('show');
-        }) 
+        $('#UploadInvoiceModal').modal('show');
     });
 
     $('.open-upload-insurance-modal').click(function(){ 
 
-            $('#UploadInsuranceModal').modal('show');
-         
+        $('#UploadInsuranceModal').modal('show');         
     });
 
     $('.open-update-insurance-modal').click(function(){           
 
-            $('#UpdateInsuranceModal').modal('show');
-         
+        $('#UpdateInsuranceModal').modal('show');         
     });
 
     $( '.file-btn' ).on( "click", function( event ) {
@@ -62,7 +59,7 @@ $(document).ready(function(){
 
 
 
-	$("#btn-save").click(function (e) {
+	$("#btn-bill").click(function (e) {
 
 		$.ajaxSetup({
             headers: {

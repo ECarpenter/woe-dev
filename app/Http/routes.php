@@ -11,6 +11,8 @@
 |
 */
 
+
+
 Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', function () {
@@ -28,35 +30,44 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 
-Route::group(['middleware' => 'web', ['permission:manage-wo']], function () {
-	Route::auth();
+Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
+	
 
     //Workorder Routes
 
-	Route::get('/workorders','WorkOrderController@viewlist');
-	Route::get('workorders/{workorder}', 'WorkOrderController@show');
-    Route::get('workorders/{workorder}/edit', 'WorkOrderController@edit');
-    Route::patch('workorders/{workorder}/save', 'WorkOrderController@update');
-    Route::get('workorders/{workorder}/bill', 'WorkOrderController@bill');
-    Route::patch('workorders/{workorder}/bill', 'WorkOrderController@processbill');
-    Route::post('workorders/{workorder}/upload','WorkOrderController@upload');
+	Route::get('/workorders', 'WorkOrderController@viewlist');
+	Route::get('workorders/{workorder}',  'WorkOrderController@show');
+    Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
+    Route::patch('workorders/{workorder}/save',  'WorkOrderController@update');
+    Route::get('workorders/{workorder}/bill',  'WorkOrderController@bill');
+    Route::patch('workorders/{workorder}/bill',  'WorkOrderController@processbill');
+    Route::post('workorders/{workorder}/upload', 'WorkOrderController@upload');
 
     //Property Routes
     
-    Route::post('property','PropertyController@showid');
-    Route::get('property/list','PropertyController@proplist');
-    Route::post('property/save','PropertyController@save');
-    Route::get('property/add','PropertyController@add');
-    Route::get('property/{property}','PropertyController@show');
-    //Tenant Routes
+    Route::post('property', 'PropertyController@showid');
+    Route::get('property/list', 'PropertyController@proplist');
+    Route::post('property/save', 'PropertyController@save');
+    Route::get('property/add', 'PropertyController@add');
+    Route::get('property/{property}', 'PropertyController@show');
     
-    Route::post('tenant','TenantController@viewid');
-    Route::get('tenant/list','TenantController@tenantlist');
-    Route::get('tenant/add','TenantController@add');
-    Route::post('tenant/save','TenantController@save');
+    //Tenant Routes
+    Route::post('tenant', 'TenantController@viewid');
+    Route::get('tenant/list', 'TenantController@tenantlist');
+    Route::get('tenant/add', 'TenantController@add');
+    Route::post('tenant/save', 'TenantController@save');
     Route::get('tenant/{tenant}','TenantController@show');
-    Route::post('tenant/{tenant}/upload','TenantController@upload');
-    Route::patch('insurance/{insurance}/update','InsuranceController@update');
+    Route::post('tenant/{tenant}/upload', 'TenantController@upload');
+    Route::get('tenant/{tenant}/edit', 'TenantController@edit');
+    Route::post('tenant/{tenant}/update', 'TenantController@update');
+
+    //User Routes
+    Route::get('user/add',['middleware' => ['role:admin'], 'uses' => 'UserController@add']);
+    Route::post('user/save',['middleware' => ['role:admin'], 'uses' => 'UserController@save']);
+    Route::get('user/list',['middleware' => ['role:admin'], 'uses' => 'UserController@userlist']);
+
+    //Insurance Tracking
+    Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
 
 
 });
