@@ -222,7 +222,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Tenant ID#</label>
 		                        <div class="col-xs-6">
-		                            <input type="text" class="form-control" id="tenant_system_id" value="{{ old('tenant_system_id') }}">
+		                            <input type="text" class="form-control" name="tenant_system_id" id="tenant_system_id" value="{{ old('tenant_system_id') }}">
 		                        </div>
 		                    </div>   
 	                    </div>
@@ -231,7 +231,7 @@
 		                    <div class="form-group{{ $errors->has('unit') ? ' has-error' : '' }}">
 		                        <label class="col-xs-4 control-label">Unit</label>
 		                        <div class="col-xs-6">
-		                            <input type="text" class="form-control" id="unit" value="{{ old('unit') }}">
+		                            <input type="text" class="form-control" name="unit" id="unit" value="{{ old('unit') }}">
 		                            @if ($errors->has('unit'))
 		                                <span class="help-block">
 		                                    <strong>{{ $errors->first('unit') }}</strong>
@@ -245,7 +245,7 @@
 		                    <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
 		                        <label class="col-xs-4 control-label">Company Name</label>
 		                        <div class="col-xs-6">
-		                            <input type="text" class="form-control" id="company_name" value="{{ old('company_name') }}">
+		                            <input type="text" class="form-control" name="company_name" id="company_name" value="{{ old('company_name') }}">
 
 		                            @if ($errors->has('company_name'))
 		                                <span class="help-block">

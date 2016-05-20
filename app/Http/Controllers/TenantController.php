@@ -146,6 +146,7 @@ class TenantController extends Controller
 
     public function update(Tenant $tenant, Request $request)
     {
+
         $tenant->tenant_system_id = $request->tenant_system_id;
         $tenant->unit = $request->unit;
         $tenant->company_name = $request->company_name;
@@ -153,7 +154,7 @@ class TenantController extends Controller
         $tenant->verified = $request->verified_switch;
         $tenant->save();
 
-        return redirect('/tenant/'.$tenant_id);
+        return redirect('/tenant/'.$tenant->id);
     }
 
 

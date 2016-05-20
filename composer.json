@@ -4,13 +4,23 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories":[
+        {
+            "type":"vcs",
+            "url":"https://github.com/ECarpenter/entrust"
+        },
+        {
+            "type":"vcs",
+            "url":"https://github.com/ECarpenter/lara-pdf-merger"
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "zizaco/entrust": "dev-laravel-5",
+        "zizaco/entrust": "dev-woe",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "barryvdh/laravel-dompdf": "0.6.*",
-        "lynx39/lara-pdf-merger": "dev-master"
+        "lynx39/lara-pdf-merger": "dev-woe"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
