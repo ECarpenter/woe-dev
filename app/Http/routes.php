@@ -54,8 +54,10 @@ Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
 
     //Group Routes
     Route::post('group', 'GroupController@showid');
+    Route::get('group/list', 'GroupController@grouplist');   
     Route::get('group/add', 'GroupController@add');
     Route::post('group/save', 'GroupController@save');
+    Route::get('group/{group}', 'GroupController@show');
     Route::get('group/{group}/manage', 'GroupController@manage');
     Route::patch('group/{group}/update', 'GroupController@update');
     Route::patch('group/{group}/remove', 'GroupController@remove');

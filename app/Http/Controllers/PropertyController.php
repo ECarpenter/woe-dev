@@ -13,6 +13,7 @@ use App\Tenant;
 use App\User;
 use App\Property;
 use App\Owner;
+use App\Group;
 
 
 class PropertyController extends Controller
@@ -33,11 +34,14 @@ class PropertyController extends Controller
     public function showid(Request $request)
     {
     	$property = Property::where('property_system_id',$request->property_system_id)->first();
-		if ($property != null) 
+        $group = Group::where('group_system_id', $request->property_system_id)->first();
+		if ($group != null) 
         {
-    		$property->load(['tenants' => function($query) {
-    			$query->orderBy('company_name');
-    		}]);
+            return redirect('/group/'.$group->id);
+        }
+        elseif ($property != null) 
+        {
+    		
     	    
     		return PropertyController::show($property);
     	}
@@ -58,7 +62,23 @@ class PropertyController extends Controller
     public function show(Property $property)
     {
     	$property->load('owner');
-    	return view('property.show', compact('property'));
+        $tenants = collect();
+        foreach ($property->Tenants as $tenant) 
+        {               
+            $tenants->prepend($tenant);
+        }
+        $tenants = $tenants->sortBy('company_name');
+
+        $workorders = collect();
+        foreach ($tenants as $tenant)
+        {
+            foreach ($tenant->WorkOrder as $workorder)
+            {
+                $workorders->prepend($workorder);
+            }
+        }
+        $workorders = $workorders->sortByDesc('created_at');
+    	return view('property.show', compact('property', 'tenants','workorders'));
     }
 
     //Creates the form to add a new property

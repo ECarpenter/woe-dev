@@ -29,6 +29,7 @@ class GroupController extends Controller
 
     	return redirect('group/'.$group->id.'/manage');
     }
+
     public function showid(Request $request)
     {
     	$group = Group::where('group_system_id',$request->group_system_id)->first();
@@ -38,7 +39,7 @@ class GroupController extends Controller
     	}
     	else
     	{
-    		return GroupController::add();
+    		return GroupController::grouplist();
     	}
     }
 
@@ -54,7 +55,7 @@ class GroupController extends Controller
 
 		if ($property != null) 
         {
-        	$group->Property()->attach($property);
+        	$group->Properties()->attach($property);
         }
     	return redirect('group/'.$group->id.'/manage');
     }
@@ -62,8 +63,42 @@ class GroupController extends Controller
     public function remove(Group $group, Request $request)
     {
     	$property = Property::find($request->prop_id);
-    	$group->Property()->detach($property);
+    	$group->Properties()->detach($property);
     	return redirect('group/'.$group->id.'/manage');
     }
+
+    public function grouplist()
+    {
+        $groups = Group::orderBy('name')->get();
+        return view('group.viewlist',compact('groups'));
+    }
+
+    public function show(Group $group)
+    {
+        $group->load('properties', 'properties.owner');
+
+        $tenants = collect();
+        foreach ($group->Properties as $property) 
+        {
+            foreach ($property->Tenants as $tenant) 
+            {               
+                $tenants->prepend($tenant);
+            }
+        }
+        $tenants = $tenants->sortBy('company_name');
+
+        $workorders = collect();
+        foreach ($tenants as $tenant)
+        {
+            foreach ($tenant->WorkOrder as $workorder)
+            {
+                $workorders->prepend($workorder);
+            }
+        }
+        $workorders = $workorders->sortByDesc('created_at');
+
+        return view('group.show', compact('group','tenants', 'workorders'));
+    }
+
 
 }

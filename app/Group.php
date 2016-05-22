@@ -8,7 +8,7 @@ class Group extends Model
 {
 	protected $table = 'group';
 
-    public function Property()
+    public function Properties()
     {
     	return $this->belongsToMany('App\Property');
     }

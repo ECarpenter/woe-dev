@@ -36,7 +36,7 @@
 							<th>ID</th>
 							<th></th>
 						</tr>
-					@foreach ($group->Property()->orderBy('property_system_id')->get() as $property)
+					@foreach ($group->Properties()->orderBy('property_system_id')->get() as $property)
 						<tr>
 							<td onclick = "location.href='/property/{{$property->id}}'">{{$property->name}}</td>
 							<td onclick = "location.href='/property/{{$property->id}}'">{{$property->property_system_id}}</td>
