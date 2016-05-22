@@ -73,7 +73,10 @@
 
                             <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
                             <li><a href="/property/add">Add Property</a></li>
-                            <li><a href="/property/list">Property List</a></li>
+                            <li><a href="/property/list">All Properties</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#propertyImportModal">Property Import</a></li>
+                            <li><a href="/group/add">Add Property Group</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -132,12 +135,12 @@
     <script src="{{ asset('js/woe-ajax.js') }}"></script> 
 
     <!-- PropertyIDModal (Pop up when view property link clicked) -->
-    <div class="modal fade" id="PropIDModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="PropIDModal" tabindex="-1" role="dialog" aria-labelledby="PropIDLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">View Property</h4>
+                    <h4 class="modal-title" id="PropIDLabel">View Property</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/property" class="form-horizontal">
@@ -157,12 +160,12 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TenantIDModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="TenantIDModal" tabindex="-1" role="dialog" aria-labelledby="tenantIDLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">View Tenant</h4>
+                    <h4 class="modal-title" id="tenantIDLabel">View Tenant</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/tenant" class="form-horizontal">
@@ -171,6 +174,57 @@
                             <label for="inputTenantID" class="col-xs-3 control-label">Enter Tenant ID</label>
                             <div class="col-xs-6">
                                 <input type="text" class="form-control" name="tenant_system_id"  placeholder="Yardi ID" value="">
+                            </div>
+                            
+                            <div class="col-xs-3" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Enter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="propertyImportModal" tabindex="-1" role="dialog" aria-labelledby="propertyImportLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="propertyImportLabel">Import Properties</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/property/import" class="form-horizontal" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                        <div class="form-group">
+                            
+                            <input type="file" accept=".xls" name="propertyimport">
+                            <br>
+                            
+                            <div class="col-xs-3" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Enter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GroupIDModal (Pop up when view group link clicked) -->
+    <div class="modal fade" id="GroupIDModal" tabindex="-1" role="dialog" aria-labelledby="GroupIDLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="GroupIDLabel">View Group</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/group" class="form-horizontal">
+                    {{ csrf_field() }}
+                        <div class="form-group">
+                            <label for="inputPropID" class="col-xs-3 control-label">Enter Group ID</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" name="group_system_id"  placeholder="Yardi ID" value="">
                             </div>
                             
                             <div class="col-xs-3" class="form-group">

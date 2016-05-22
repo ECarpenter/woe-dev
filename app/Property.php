@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Property extends Model
 {
 
-    protected $fillable = ['name', 'property_system_id', 'address', 'city','state','zip','owner_id','active'
+    protected $fillable = ['name', 'property_system_id', 'address', 'city','state','zip','owner_id','active', 'req_liability_single_limit', 'req_liability_combined_limit', 'req_auto_limit', 'req_umbrella_limit', 'req_workerscomp_limit'
     ];
 
     public function Tenants()
@@ -46,6 +46,6 @@ class Property extends Model
 
     public function Group()
     {
-        return $this->hasMany('App\Group');
+        return $this->belongsToMany('App\Group');
     }
 }

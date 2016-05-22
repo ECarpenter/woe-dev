@@ -163,7 +163,7 @@ return [
 
         Barryvdh\DomPDF\ServiceProvider::class,
         LynX39\LaraPdfMerger\PdfMergerServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -213,6 +213,7 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'PdfMerger' => LynX39\LaraPdfMerger\Facades\PdfMerger::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

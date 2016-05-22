@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Excel;
+
 use App\Http\Requests;
 use App\ProblemType;
 use App\WorkOrder;
@@ -26,36 +28,40 @@ class PropertyController extends Controller
         $this->middleware('auth');
     }
 
+    //Checks if the property id entered is valid 
+    //if not then the list of all properties is displayed.
     public function showid(Request $request)
     {
     	$property = Property::where('property_system_id',$request->property_system_id)->first();
-		
-			if ($property != null) {
-			$property->load(['tenants' => function($query) {
-				$query->orderBy('company_name');
-			}]);
+		if ($property != null) 
+        {
+    		$property->load(['tenants' => function($query) {
+    			$query->orderBy('company_name');
+    		}]);
     	    
     		return PropertyController::show($property);
     	}
-    	else {
+    	else 
+        {
     		return PropertyController::proplist();
     	}
     }
 
+    //Displays a list of all the properties
     public function proplist()
     {
         $properties = Property::orderBy('name')->get();
         return view('property.viewlist',compact('properties'));
     }
 
+    //Shows an individual property to the user
     public function show(Property $property)
     {
-    	
     	$property->load('owner');
     	return view('property.show', compact('property'));
-    	
     }
 
+    //Creates the form to add a new property
     public function add()
     {
     	
@@ -74,6 +80,7 @@ class PropertyController extends Controller
     	return view('property.add', compact('managers','owners'));
     }
 
+    //validates and saves a new property
     public function save(Request $request)
     {
         $this->validate($request, [
@@ -100,6 +107,41 @@ class PropertyController extends Controller
         $property->Users()->attach(User::find($request->manager));
 
 		return redirect('/property/'.$property->id);
+    }
+
+
+    //takes an .xls file to import in a mass amount of properties at once. 
+    public function import(Request $request)
+    {
+        $file = $request->propertyimport;
+        $file->move('tmp/','import.xls');
+
+        Excel::load('tmp/import.xls', function($reader) {
+           
+            $reader->each(function($sheet){
+                $sheet->each(function($row){
+                    
+                    $property = Property::firstOrCreate([
+                        'name' => $row->name,
+                        'property_system_id' => $row->property_system_id,
+                        'address' => $row->address,
+                        'city' => $row->city,
+                        'state' => $row->state,
+                        'zip' => $row->zip,
+                        'owner_id' => $row->owner_id,
+                        'req_liability_single_limit' => $row->req_liability_single_limit,
+                        'req_liability_combined_limit' => $row->req_liability_combined_limit,
+                        'req_auto_limit' => $row->req_auto_limit,
+                        'req_umbrella_limit' => $row->req_umbrella_limit,
+                        'req_workerscomp_limit' => $row->req_workerscomp_limit
+                    ]);
+                    
+                });
+            });
+
+        });
+
+        return redirect('/property/list');
     }
 
 }
