@@ -89,6 +89,7 @@
                             <li><a href="#" data-toggle="modal" data-target="#TenantIDModal">View Tenants</a></li>
                             <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="/tenant/list">Tenant List</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -160,6 +161,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="TenantIDModal" tabindex="-1" role="dialog" aria-labelledby="tenantIDLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -185,6 +187,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="propertyImportModal" tabindex="-1" role="dialog" aria-labelledby="propertyImportLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -198,6 +201,31 @@
                         <div class="form-group">
                             
                             <input type="file" accept=".xls" name="propertyimport">
+                            <br>
+                            
+                            <div class="col-xs-3" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Enter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal fade" id="tenantImportModal" tabindex="-1" role="dialog" aria-labelledby="tenantImportLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="tenantImportLabel">Import Properties</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/tenant/import" class="form-horizontal" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                        <div class="form-group">
+                            
+                            <input type="file" accept=".xls" name="tenantimport">
                             <br>
                             
                             <div class="col-xs-3" class="form-group">

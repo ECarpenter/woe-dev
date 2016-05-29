@@ -27,6 +27,10 @@ class RolesTableSeeder extends Seeder
         $accountant->name = "accountant";
         $accountant->save();
 
+        $insurance = new App\Role;
+        $insurance->name = "insurance";
+        $insurance->save();
+
         $manage = new App\Permission;
         $manage->name = 'manage-wo';
         $manage->display_name = 'Manage Work Orders';
@@ -35,6 +39,7 @@ class RolesTableSeeder extends Seeder
         $admin->attachPermission($manage);
         $manager->attachPermission($manage);
         $accountant->attachPermission($manage);
+        $insurance->attachPermission($manage);
 
     }
 }

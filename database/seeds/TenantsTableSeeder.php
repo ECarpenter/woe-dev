@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Helper;
 use Illuminate\Database\Seeder;
 
 class TenantsTableSeeder extends Seeder
@@ -11,10 +12,6 @@ class TenantsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Tenant::class, 20)->create()->each(function($t) {
-        	App\Insurance::create([
-        			'tenant_id' => $t->id,
-        		]);
-        });
+        Helper::importTenant('Tenant.xls');
     }
 }

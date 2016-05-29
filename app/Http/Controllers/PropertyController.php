@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Excel;
+use Helper;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -112,6 +113,11 @@ class PropertyController extends Controller
             'city'=> 'required',
             'state'=> 'required',
             'zip'=> 'required',
+            'req_liability_single_limit' => 'required',
+            'req_liability_combined_limit' => 'required',
+            'req_auto_limit' => 'required',
+            'req_umbrella_limit' => 'required',
+            'req_workerscomp_limit' => 'required',
             ]);
 
     	$property = Property::create([
@@ -121,7 +127,12 @@ class PropertyController extends Controller
     		'city' => $request->city,
     		'state' => $request->state,
     		'zip' => $request->zip,
-    		'owner_id' => $request->owner_id
+    		'owner_id' => $request->owner_id,
+            'req_liability_single_limit' => $request->req_liability_single_limit,
+            'req_liability_combined_limit' => $request->req_liability_combined_limit,
+            'req_auto_limit' => $request->req_auto_limit,
+            'req_umbrella_limit' => $request->req_umbrella_limit,
+            'req_workerscomp_limit' => $request->req_workerscomp_limit
 		]);
 
         $property->Users()->attach(User::find($request->manager));
@@ -136,32 +147,11 @@ class PropertyController extends Controller
         $file = $request->propertyimport;
         $file->move('tmp/','import.xls');
 
-        Excel::load('tmp/import.xls', function($reader) {
-           
-            $reader->each(function($sheet){
-                $sheet->each(function($row){
-                    
-                    $property = Property::firstOrCreate([
-                        'name' => $row->name,
-                        'property_system_id' => $row->property_system_id,
-                        'address' => $row->address,
-                        'city' => $row->city,
-                        'state' => $row->state,
-                        'zip' => $row->zip,
-                        'owner_id' => $row->owner_id,
-                        'req_liability_single_limit' => $row->req_liability_single_limit,
-                        'req_liability_combined_limit' => $row->req_liability_combined_limit,
-                        'req_auto_limit' => $row->req_auto_limit,
-                        'req_umbrella_limit' => $row->req_umbrella_limit,
-                        'req_workerscomp_limit' => $row->req_workerscomp_limit
-                    ]);
-                    
-                });
-            });
-
-        });
+        Helper::importProperty('tmp/import.xls');
 
         return redirect('/property/list');
     }
+
+    
 
 }

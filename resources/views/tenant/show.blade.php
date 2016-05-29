@@ -35,13 +35,7 @@
 				Active
 			@else
 				Inactive
-			@endif
-			 / 
-			@if ($tenant->verified)
-				Verified
-			@else
-				Unverified
-			@endif
+			@endif			
 
 			</h4>
 		</div>

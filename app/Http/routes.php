@@ -34,7 +34,6 @@ Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
 	
 
     //Workorder Routes
-
 	Route::get('/workorders', 'WorkOrderController@viewlist');
 	Route::get('workorders/{workorder}',  'WorkOrderController@show');
     Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
@@ -44,7 +43,6 @@ Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
     Route::post('workorders/{workorder}/upload', 'WorkOrderController@upload');
 
     //Property Routes
-    
     Route::post('property', 'PropertyController@showid');
     Route::get('property/list', 'PropertyController@proplist');
     Route::post('property/save', 'PropertyController@save');
@@ -67,6 +65,7 @@ Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
     Route::get('tenant/list', 'TenantController@tenantlist');
     Route::get('tenant/add', 'TenantController@add');
     Route::post('tenant/save', 'TenantController@save');
+    Route::post('tenant/import', 'TenantController@import');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/edit', 'TenantController@edit');

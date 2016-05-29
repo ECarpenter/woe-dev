@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call('ChargeCodeSeeder');
         $this->call('RolesTableSeeder');
         $this->call('UsersTableSeeder');
-        $this->call('TenantsTableSeeder');
         $this->call('PropertiesTableSeeder');
+        $this->call('TenantsTableSeeder');
         $this->call('ManagerUserSeeder');
         $this->call('ProblemTypeTableSeeder');
 

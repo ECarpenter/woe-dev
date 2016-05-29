@@ -76,7 +76,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-5 col-md-offset-3">	
+		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
 			<table class="table table-hover">
 				<tr class="info">
 					<th>Tenant</th>

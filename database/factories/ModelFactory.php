@@ -27,12 +27,13 @@ $factory->define(App\Tenant::class, function (Faker\Generator $faker) {
 	$user = factory(App\User::class)->create();
     $ins = new App\Insurance;
 	$role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
+    $user->job_title = $faker->title;
+    $user->save();
     $user->Roles()->attach($role);
 
     return [
         'unit' => $faker->buildingNumber,
         'company_name' => $faker->company,
-        'job_title' => $faker->title,
         'property_id' => rand(1,2),
         'user_id' => $user->id,
         'tenant_system_id' =>"t".$faker->buildingNumber,

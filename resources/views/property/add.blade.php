@@ -11,7 +11,7 @@
                         {!! csrf_field() !!} 
 
                         <div class="form-group{{ $errors->has('owner') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Owner*</label>
+                            <label class="col-md-2 control-label">Owner*</label>
 
                             <div class="col-md-6">
                             <select name = 'owner_id' class="form-control">
@@ -42,9 +42,9 @@
                             </select>
 
                             
-                                @if ($errors->has('owner'))
+                                @if ($errors->has('manager'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('owner') }}</strong>
+                                        <strong>{{ $errors->first('manager') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -131,6 +131,77 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group{{ $errors->has('req_liability_single_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Liability Single Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="req_liability_single_limit" step="100000" value="{{ old('req_liability_single_limit') }}">
+
+                                @if ($errors->has('req_liability_single_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('req_liability_single_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('req_liability_combined_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Liability Combined Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="req_liability_combined_limit" step="100000" value="{{ old('req_liability_combined_limit') }}">
+
+                                @if ($errors->has('req_liability_combined_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('req_liability_combined_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('req_auto_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Auto Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="req_auto_limit" step="100000" value="{{ old('req_auto_limit') }}">
+
+                                @if ($errors->has('req_auto_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('req_auto_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('req_umbrella_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Umbrella Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="req_umbrella_limit" step="100000" value="{{ old('req_umbrella_limit') }}">
+
+                                @if ($errors->has('req_umbrella_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('req_umbrella_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('req_workerscomp_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Workers Comp Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" name="req_workerscomp_limit" step="100000" value="{{ old('req_workerscomp_limit') }}">
+
+                                @if ($errors->has('req_workerscomp_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('req_workerscomp_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

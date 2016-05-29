@@ -8,6 +8,7 @@ use DB;
 use Response;
 
 use App\Http\Requests;
+use App\Helpers\Helper;
 use App\Tenant;
 use App\User;
 use App\Insurance;
@@ -33,10 +34,12 @@ class TenantController extends Controller
     public function save(Request $request)
     {
     	$user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-            'timezone' => "America/Los_Angeles"
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'timezone' => "America/Los_Angeles",
+            'job_title' => $request->job_title,
+            'verified' =>true
         ]);
 
         $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
@@ -45,11 +48,10 @@ class TenantController extends Controller
 
         $tenant = new Tenant;
         $tenant->user_id = $user->id;
-        $tenant->unit = $request['suite'];
-        $tenant->property_id = $request['property'];
-        $tenant->company_name = $request['company_name'];
-        $tenant->job_title = $request['job_title'];
-        $tenant->tenant_system_id = $request['tenant_system_id'];
+        $tenant->unit = $request->suite;
+        $tenant->property_id = $request->property;
+        $tenant->company_name = $request->company_name;
+        $tenant->tenant_system_id = $request->tenant_system_id;
         $tenant->save();
 
         $ins = new Insurance;
@@ -73,9 +75,10 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant)
     {
-        $tenant->load('workorder', 'workorder.problemtype');
+        $tenant->load('workorder', 'workorder.problemtype','user');
 
         $state = TenantController::insuranceCheck($tenant);
+
 
         return view('tenant.show', compact('tenant','state'));
     }
@@ -151,7 +154,7 @@ class TenantController extends Controller
         $tenant->unit = $request->unit;
         $tenant->company_name = $request->company_name;
         $tenant->active = $request->active_switch;
-        $tenant->verified = $request->verified_switch;
+        $tenant->User()->verified = $request->verified_switch;
         $tenant->save();
 
         return redirect('/tenant/'.$tenant->id);
@@ -256,5 +259,15 @@ class TenantController extends Controller
         return $state;
     }
 
+    //takes an .xls file to import in a mass amount of tenants at once. 
+    public function import(Request $request)
+    {
 
+        $file = $request->tenantimport;
+        $file->move('tmp/','import.xls');
+
+        Helper::importTenant('tmp/import.xls');
+
+        return redirect('/tenant/list');
+    }
 }

@@ -214,6 +214,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'PdfMerger' => LynX39\LaraPdfMerger\Facades\PdfMerger::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Helper' => App\Helpers\Helper::class,
     ],
 
 ];

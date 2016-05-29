@@ -14,14 +14,14 @@ class CreateTenantTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();   
+            $table->integer('user_id')->unsigned()->index()->nullable();   
             $table->integer('property_id')->unsigned()->index();
             $table->string('unit');
             $table->string('company_name');
-            $table->string('job_title');
-            $table->string('tenant_system_id')->unique()->nullable();
+            $table->string('tenant_system_id')->unique();
             $table->boolean('active')->default(true);
-            $table->boolean('verified')->default(false);
+            $table->string('insurance_contact_email')->nullable();
+            $table->boolean('insurance_compliant')->default(true);
             $table->integer('req_liability_single_limit')->nullable();
             $table->integer('req_liability_combined_limit')->nullable();
             $table->integer('req_auto_limit')->nullable();
