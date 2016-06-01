@@ -33,9 +33,13 @@ class CreateInsuranceTable extends Migration
             $table->date('workerscomp_start')->nullable();
             $table->date('workerscomp_end')->nullable();
             $table->integer('workerscomp_limit')->nullable();
-            $table->boolean('expired')->nullable();
+            $table->boolean('compliant')->default(true);
             $table->integer('notice_count')->default(0);
+            $table->date('last_notice_sent')->nullable();
             $table->string('endorsement_filename')->nullable();
+            $table->string('tempfile')->nullable();
+            $table->string('upload_token')->nullable();
+            $table->string('filepath')->default("files/insurance/");
             $table->timestamps();
         });
     }

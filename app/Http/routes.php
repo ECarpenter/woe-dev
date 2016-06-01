@@ -10,19 +10,23 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::group(['middleware' => ['web' ]], function () {
 
-
-
-Route::group(['middleware' => ['web']], function () {
-
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
+    Route::get('/upload/insurance/{token?}', 'InsuranceController@upload');
+    Route::post('/upload/insurance/save', 'InsuranceController@save');
 });
 
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+
+});
+
+Route::group(['middleware' => ['web','auth']], function () {
+    
 
     Route::get('/home', 'HomeController@index');
     Route::get('/submit', 'WorkOrderController@submit');
@@ -30,7 +34,7 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 
-Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
+Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function () {
 	
 
     //Workorder Routes
@@ -78,6 +82,7 @@ Route::group(['middleware' => ['web', 'permission:manage-wo']], function () {
 
     //Insurance Tracking
     Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
+
 
 
 });

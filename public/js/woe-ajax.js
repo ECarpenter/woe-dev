@@ -41,9 +41,9 @@ $(document).ready(function(){
         $('#UploadInvoiceModal').modal('show');
     });
 
-    $('.open-upload-insurance-modal').click(function(){ 
+    $('.open-manage-insurance-modal').click(function(){ 
 
-        $('#UploadInsuranceModal').modal('show');         
+        $('#ManageInsuranceModal').modal('show');         
     });
 
     $('.open-update-insurance-modal').click(function(){           

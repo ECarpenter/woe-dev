@@ -5,19 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Tenant;
 use App\Insurance;
 
 class InsuranceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        
     }
 
     public function update(Insurance $insurance, Request $request)
     {
-    	$this->validate($request, [
-    		]);
+        $this->validate($request, [ 
+            'insurance_cert' => 'mimes:pdf'
+            ]);        
+
+        if ($insurance->tempfile != null) {
+            if ($request->tenantUpload == 'accept') {
+                
+                if (InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request)) {
+                    $insurance->tempfile = null;
+                }   
+            }
+            //Reject tenant original upload need add a message back to the tenant.
+            else {
+                Storage::delete($insurance->filepath.$insurance->tempfile);
+            }
+        }
+        else if ($request->insurance_cert != null) {
+            $fname = 'ins-'.$insurance->Tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
+            if (InsuranceController::processInsuranceFile($fname, $insurance, $request)) {
+                $file = $request->insurance_cert;
+                $file->move('files/insurance/', $fname);
+            }
+        }
+        
+
+        
     	$insurance->liability_start = $request->liability_start;
     	$insurance->liability_end = $request->liability_end;
     	$insurance->liability_single_limit = $request->liability_single_limit;
@@ -34,5 +59,64 @@ class InsuranceController extends Controller
     	$insurance->save();
 
     	return back();
+    }
+
+    public function upload($token)
+    {
+        return view('insurance.upload', compact('token'));
+    }
+
+    public function save(Request $request)
+    {
+        $this->validate($request, [ 
+            'insurance_cert' => 'required|mimes:pdf', 
+            'tenant_system_id' => 'required'
+            ]);
+
+        $tenant = Tenant::where('tenant_system_id', $request->tenant_system_id)->first();
+        if($tenant != null && $tenant->Insurance->upload_token == $request->token)
+        {
+            $fname = 'ins-'.$tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
+            $file = $request->insurance_cert;
+            $file->move($tenant->Insurance->filepath, $fname);
+            $tenant->Insurance->tempfile = $fname;
+            $tenant->Insurance->save();
+
+            return view('insurance.thankyou');
+        }
+    }
+
+    public function processInsuranceFile($fname, $insurance, $request)
+    {
+        
+        $used = false;
+        // Associate the file name of the insurance certificate 
+        // with the various possible insurance types.
+        // first determines file type
+        
+        if ($request->typeSelect == 'certificate') {
+            if ($request->liability == 'Y') {
+                $insurance->liability_filename = $fname;
+                $used = true;
+            }
+            if ($request->auto == 'Y') {
+                $insurance->auto_filename = $fname;
+                $used = true;
+            }
+            if ($request->workerscomp == 'Y') {
+                $insurance->workerscomp_filename = $fname;
+                $used = true;
+            }
+            if ($request->umbrella == 'Y') {
+                $insurance->umbrella_filename = $fname;
+                $used = true;
+            }
+        }
+        elseif ($request->typeSelect == 'endorsement'){
+            $insurance->endorsement_filename = $fname;
+            $used = true;
+        }
+
+        return $used;
     }
 }

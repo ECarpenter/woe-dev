@@ -63,11 +63,8 @@
 	<br>
 
 	<div class="row">
-		<div class="col-xs-4 col-xs-offset-1 col-md-3 col-md-offset-3">
-			<button class="btn btn-primary open-upload-insurance-modal btn-xs" value="{{$tenant->id}}">Upload Insurance Document</button>
-		</div>
-		<div class="col-xs-4 col-xs-offset-1 col-md-3 col-md-offset-0">
-			<button class="btn btn-primary open-update-insurance-modal btn-xs" value="{{$tenant->id}}">Update Insurance Data</button>
+		<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
+			<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant}}">	Manage Insurance Information</button>
 		</div>
 	</div>
 
@@ -147,51 +144,109 @@
 	</div>
 
 
-	<!-- UploadModal (Pop up when upload button clicked) -->
-	<div class="modal fade" id="UploadInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="UploadModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+	<!-- ManageInsuranceModal (Pop up when manage button clicked) -->
+	<div class="modal fade" id="ManageInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="ManageModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="UploadModalLabel">Upload Insurance Certificate</h4>
+                    <h4 class="modal-title" id="ManageModalLabel">Manage Insurance Certificate</h4>
                 </div>
                 <div class="modal-body">
-                <form method="POST" action="/tenant/{{$tenant->id}}/upload"  enctype="multipart/form-data">
+                <form method="POST" action="/insurance/{{$tenant->Insurance->id}}/update"  enctype="multipart/form-data">
 					{{ csrf_field() }}
+					{{ method_field('PATCH') }}
 
-        			<input type="file" accept=".pdf" name="insurance_cert">
-        			<br>
-        			<h4>Type of Upload</h4>
-        			<div class="radio">
-        				<label>
-        					<input type="radio" name="typeSelect" value="certificate">
-        					Certificate
-        				</label>
-        				<label>
-        					<input type="radio" name="typeSelect" value="endorsement">
-        					Endorsement
-        				</label>
-        			</div>
-        			<br>
-        			<h4>Type of Certificate <small>- Check all that apply</small></h4>
-        			<div class="checkbox">
-        				<label>
-        					<input type="checkbox" name="liability" value="Y">
-        					Liability
-        				</label>
-        				<label>
-        					<input type="checkbox" name="umbrella" value="Y">
-        					Umbrella
-        				</label>
-        				<label>
-        					<input type="checkbox" name="auto" value="Y">
-        					Auto
-        				</label>
-        				<label>
-        					<input type="checkbox" name="workerscomp" value="Y">
-        					Workers Comp
-        				</label>
-        			</div>
+					<div class="container">
+						<div class="col-lg-8 col-centered">
+
+							@if ($tenant->Insurance->tempfile == null) 
+								<input type="file" accept=".pdf" name="insurance_cert">
+							@else
+								<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ asset($tenant->Insurance->filepath.$tenant->Insurance->tempfile) }}" > View Insurance Certificate </button>
+								<br>
+								<h4>Accept tenant's upload</h4>
+								<div class="radio">
+									<label>
+										<input type="radio" name="tenantUpload" value="accept">
+										Accept
+									</label>
+									<label>
+										<input type="radio" name="tenantUpload" value="reject">
+										Reject
+									</label>
+								</div>
+			    			@endif
+			    			<br>
+			    			<h4>Type of Upload</h4>
+			    			<div class="radio">
+			    				<label>
+			    					<input type="radio" name="typeSelect" value="certificate">
+			    					Certificate
+			    				</label>
+			    				<label>
+			    					<input type="radio" name="typeSelect" value="endorsement">
+			    					Endorsement
+			    				</label>
+			    			</div>
+			    			<br>
+			    			<h4>Type of Certificate <small>- Check all that apply</small></h4>
+			    			<div class="checkbox">
+			    				<label>
+			    					<input type="checkbox" name="liability" value="Y">
+			    					Liability
+			    				</label>
+			    				<label>
+			    					<input type="checkbox" name="umbrella" value="Y">
+			    					Umbrella
+			    				</label>
+			    				<label>
+			    					<input type="checkbox" name="auto" value="Y">
+			    					Auto
+			    				</label>
+			    				<label>
+			    					<input type="checkbox" name="workerscomp" value="Y">
+			    					Workers Comp
+			    				</label>
+			    			</div>
+						</div>
+					</div>
+        			<div class="table-responsive">
+						<table class="table table-hover">
+							<tr class="info">
+								<th>Insurance Type</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Limit</th>
+							</tr>
+							
+							<tr>
+								<td class="{{$state['lfile']}}">Liability</td>
+								<td class="{{$state['lexpire']}}"><input type="date" name="liability_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_start))}}"></td>
+								<td class="{{$state['lexpire']}}"><input type="date" name="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}"></td>
+								<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="100000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="100000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
+							</tr>
+							<tr>
+								<td class="{{$state['ufile']}}">Umbrella</td>
+								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_start))}}"></td>
+								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_end))}}"></td>
+								<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="100000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
+							</tr>
+							<tr>
+								<td class="{{$state['afile']}}">Auto</td>
+								<td class="{{$state['aexpire']}}"><input type="date" name="auto_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_start))}}"></td>
+								<td class="{{$state['aexpire']}}"><input type="date" name="auto_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_end))}}"></td>
+								<td class="{{$state['alimit']}}"><input type="number" name="auto_limit" step="100000" value="{{$tenant->Insurance->auto_limit}}"></td>
+							</tr>
+							<tr>
+								<td class="{{$state['wfile']}}">Workers Comp</td>
+								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_start))}}"></td>
+								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_end))}}"></td>
+								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="100000" value="{{$tenant->Insurance->workerscomp_limit}}"></td>
+							</tr>
+
+						</table>
+					</div>
         			<input class="btn btn-primary" type="submit">
         				
     			</form>
@@ -288,61 +343,6 @@
         </div>
     </div>
 
-    <!--Model to update insurance information   -->
-    <div class="modal fade" id="UpdateInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="UpdateModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="UpdateModalLabel">Update Insurance Certificate</h4>
-                </div>
-                <div class="modal-body">
-	                <form method="POST" action="/insurance/{{$tenant->Insurance->id}}/update"  enctype="multipart/form-data">
-						{{ method_field('PATCH') }}
-						{{ csrf_field() }}
-						<div class="table-responsive">
-							<table class="table table-hover">
-								<tr class="info">
-									<th>Insurance Type</th>
-									<th>Start Date</th>
-									<th>End Date</th>
-									<th>Limit</th>
-								</tr>
-								
-								<tr>
-									<td class="{{$state['lfile']}}">Liability</td>
-									<td class="{{$state['lexpire']}}"><input type="date" name="liability_start" value="{{$tenant->Insurance->liability_start}}"></td>
-									<td class="{{$state['lexpire']}}"><input type="date" name="liability_end" value="{{$tenant->Insurance->liability_end}}"></td>
-									<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="100000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="100000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
-								</tr>
-								<tr>
-									<td class="{{$state['ufile']}}">Umbrella</td>
-									<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_start" value="{{$tenant->Insurance->umbrella_start}}"></td>
-									<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_end" value="{{$tenant->Insurance->umbrella_end}}"></td>
-									<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="100000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
-								</tr>
-								<tr>
-									<td class="{{$state['afile']}}">Auto</td>
-									<td class="{{$state['aexpire']}}"><input type="date" name="auto_start" value="{{$tenant->Insurance->auto_start}}"></td>
-									<td class="{{$state['aexpire']}}"><input type="date" name="auto_end" value="{{$tenant->Insurance->auto_end}}"></td>
-									<td class="{{$state['alimit']}}"><input type="number" name="auto_limit" step="100000" value="{{$tenant->Insurance->auto_limit}}"></td>
-								</tr>
-								<tr>
-									<td class="{{$state['wfile']}}">Workers Comp</td>
-									<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_start" value="{{$tenant->Insurance->workerscomp_start}}"></td>
-									<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_end" value="{{$tenant->Insurance->workerscomp_end}}"></td>
-									<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="100000" value="{{$tenant->Insurance->workerscomp_limit}}"></td>
-								</tr>
-
-							</table>
-
-		    				<input class="btn btn-primary" type="submit">
-	        			</div>	
-	    			</form>
-               	</div>
-            </div>
-        </div>
-    </div>
 
 
 

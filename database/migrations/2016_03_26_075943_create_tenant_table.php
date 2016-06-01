@@ -21,7 +21,6 @@ class CreateTenantTable extends Migration
             $table->string('tenant_system_id')->unique();
             $table->boolean('active')->default(true);
             $table->string('insurance_contact_email')->nullable();
-            $table->boolean('insurance_compliant')->default(true);
             $table->integer('req_liability_single_limit')->nullable();
             $table->integer('req_liability_combined_limit')->nullable();
             $table->integer('req_auto_limit')->nullable();

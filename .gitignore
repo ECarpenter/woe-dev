@@ -7,3 +7,4 @@ Homestead.json
 *.pdf
 
 !/vendor/zizaco/entrust/src/Entrust/Middleware/*
+*.xls

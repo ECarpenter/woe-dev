@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Add Property
+                <div class="panel-heading">Add Property</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="/property/save">
                         {!! csrf_field() !!} 
 
                         <div class="form-group{{ $errors->has('owner') ? ' has-error' : '' }}">
-                            <label class="col-md-2 control-label">Owner*</label>
+                            <label class="col-md-4 control-label">Owner*</label>
 
                             <div class="col-md-6">
                             <select name = 'owner_id' class="form-control">

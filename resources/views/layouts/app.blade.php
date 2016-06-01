@@ -23,6 +23,11 @@
         .fa-btn {
             margin-right: 6px;
         }
+
+        .col-centered {
+            float: none;
+            margin:0 auto;
+        }
         
     </style>
 </head>
@@ -41,7 +46,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Work Order Express
+                    <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="189" height="30">
                 </a>
             </div>
 
