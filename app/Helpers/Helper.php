@@ -267,13 +267,13 @@ class Helper
     		if (!$tenant->Insurance->compliant) {
     			
     			echo "$tenant->company_name ";
-    			Helper::sendInsuranceNotice($tenant);
+    			Helper::sendInsuranceNotice($tenant, 'firstnotice');
     		}
     	}
     	return true;
     }
 
-    public static function sendInsuranceNotice(Tenant $tenant)
+    public static function sendInsuranceNotice(Tenant $tenant, $type)
     {
     	if ($tenant->insurance_contact_email != null)
     	{
@@ -281,7 +281,7 @@ class Helper
     		$token = Str::random(60);
     		$tenant->Insurance->upload_token = $token;
     		$tenant->Insurance->save();
-    		Mail::send('email.insurance-notice',compact('tenant', 'token'), function ($message) use ($tenant, $token) {
+    		Mail::send('email.insurance-notice',compact('tenant', 'token','type'), function ($message) use ($tenant) {
                 $message->from('insurance-admin@davispartners.com', 'Insurance Administrator');
                 $message->subject('Insurance Certificate Needs Update');
                 $message->to($tenant->insurance_contact_email);

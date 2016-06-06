@@ -39,6 +39,7 @@ class CreateInsuranceTable extends Migration
             $table->string('endorsement_filename')->nullable();
             $table->string('tempfile')->nullable();
             $table->string('upload_token')->nullable();
+            $table->string('rejection_msg')->nullable();
             $table->string('filepath')->default("files/insurance/");
             $table->timestamps();
         });

@@ -52,7 +52,7 @@
 				<h4>Describe your problem . . .</h4>
 				
 				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-					<textarea name = 'description' class="form-control"></textarea>
+					<textarea name ='description' class="form-control"></textarea>
 				
 
 					@if ($errors->has('description'))

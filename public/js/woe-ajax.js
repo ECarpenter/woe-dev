@@ -96,6 +96,19 @@ $(document).ready(function(){
 			$('#BillingModal').modal('hide');
 		}
 	});
+
+    $("input:radio[name='tenantUpload']").click(function(){
+        if ($(this).val() == "reject") {
+            $('#rejectnote').show();
+            $('#insurancedata').hide();
+            $('#insurancetable').hide();
+        }
+        else {
+            $('#rejectnote').hide();
+            $('#insurancedata').show();
+            $('#insurancetable').show();
+        }
+    });
 });
 
 

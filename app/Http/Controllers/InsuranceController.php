@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Storage;
+
+use App\Helpers\Helper;
 use App\Http\Requests;
 use App\Tenant;
 use App\Insurance;
@@ -24,14 +27,17 @@ class InsuranceController extends Controller
         if ($insurance->tempfile != null) {
             if ($request->tenantUpload == 'accept') {
                 
-                if (InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request)) {
-                    $insurance->tempfile = null;
-                }   
+                (InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request)); 
             }
             //Reject tenant original upload need add a message back to the tenant.
             else {
+                $insurance->rejection_msg = $request->rejection_msg;
+                $insurance->save();
+                Helper::sendInsuranceNotice($insurance->Tenant, 'reject');
                 Storage::delete($insurance->filepath.$insurance->tempfile);
             }
+            $insurance->tempfile = null;
+            $insurance->rejection_msg = null;
         }
         else if ($request->insurance_cert != null) {
             $fname = 'ins-'.$insurance->Tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
@@ -84,6 +90,7 @@ class InsuranceController extends Controller
 
             return view('insurance.thankyou');
         }
+        return view('errors.upload');
     }
 
     public function processInsuranceFile($fname, $insurance, $request)

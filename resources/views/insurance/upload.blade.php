@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="form-group">
-                        <div class="col-md-offset-4">	
+                        <div class="col-md-offset-4 col-xs-offset-2">	
                         	<label class="btn btn-primary btn-file">Upload Insurance Certificate
                                 <input type="file" accept=".pdf" name="insurance_cert" style="display:none;" onchange="javascript:this.form.submit();">
                             </label>

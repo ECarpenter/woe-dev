@@ -168,7 +168,7 @@
 								<h4>Accept tenant's upload</h4>
 								<div class="radio">
 									<label>
-										<input type="radio" name="tenantUpload" value="accept">
+										<input type="radio" name="tenantUpload" value="accept" checked>
 										Accept
 									</label>
 									<label>
@@ -176,42 +176,50 @@
 										Reject
 									</label>
 								</div>
+								<div class="form-group" id="rejectnote" hidden>
+									<label>
+									<h4>Reason for Rejection</h4>
+										<textarea name ="rejection_msg" class="form-control"> </textarea>
+									</label>
+								</div>
 			    			@endif
 			    			<br>
-			    			<h4>Type of Upload</h4>
-			    			<div class="radio">
-			    				<label>
-			    					<input type="radio" name="typeSelect" value="certificate">
-			    					Certificate
-			    				</label>
-			    				<label>
-			    					<input type="radio" name="typeSelect" value="endorsement">
-			    					Endorsement
-			    				</label>
-			    			</div>
-			    			<br>
-			    			<h4>Type of Certificate <small>- Check all that apply</small></h4>
-			    			<div class="checkbox">
-			    				<label>
-			    					<input type="checkbox" name="liability" value="Y">
-			    					Liability
-			    				</label>
-			    				<label>
-			    					<input type="checkbox" name="umbrella" value="Y">
-			    					Umbrella
-			    				</label>
-			    				<label>
-			    					<input type="checkbox" name="auto" value="Y">
-			    					Auto
-			    				</label>
-			    				<label>
-			    					<input type="checkbox" name="workerscomp" value="Y">
-			    					Workers Comp
-			    				</label>
-			    			</div>
+			    			<div id="insurancedata">
+				    			<h4>Type of Upload</h4>
+				    			<div class="radio">
+				    				<label>
+				    					<input type="radio" name="typeSelect" value="certificate" checked>
+				    					Certificate
+				    				</label>
+				    				<label>
+				    					<input type="radio" name="typeSelect" value="endorsement">
+				    					Endorsement
+				    				</label>
+				    			</div>
+				    			<br>
+				    			<h4>Type of Certificate <small>- Check all that apply</small></h4>
+				    			<div class="checkbox" id="rejectnote" >
+				    				<label>
+				    					<input type="checkbox" name="liability" value="Y">
+				    					Liability
+				    				</label>
+				    				<label>
+				    					<input type="checkbox" name="umbrella" value="Y">
+				    					Umbrella
+				    				</label>
+				    				<label>
+				    					<input type="checkbox" name="auto" value="Y">
+				    					Auto
+				    				</label>
+				    				<label>
+				    					<input type="checkbox" name="workerscomp" value="Y">
+				    					Workers Comp
+				    				</label>
+				    			</div>
+							</div>
 						</div>
 					</div>
-        			<div class="table-responsive">
+        			<div class="table-responsive" id="insurancetable">
 						<table class="table table-hover">
 							<tr class="info">
 								<th>Insurance Type</th>
