@@ -113,14 +113,11 @@ class WorkOrderController extends Controller
             $emails[] = $manager->email;
         }
 
-        if (!empty($emails))
-                {
-
-
+        if (!empty($emails)) {
             Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
-                $message->from('notice@example.com', 'Notice');
+                $message->from('davispartners@ejcustom.com', 'Notice');
                 $message->subject('New Work Order');
-                $message->to('ecarpen905@gmail.com');
+                $message->to($emails);
             });
         }
 

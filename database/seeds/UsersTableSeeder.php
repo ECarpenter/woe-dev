@@ -20,5 +20,15 @@ class UsersTableSeeder extends Seeder
 
         $role = DB::table('roles')->where('name', '=', 'admin')->pluck('id');
         $user->Roles()->attach($role);
+
+        $insuranceadmin = new App\User;
+        $insuranceadmin->name = "Tracie";
+        $insuranceadmin->email = "insuarance@davisparnters.com";
+        $insuranceadmin->password = bcrypt('password');
+        $insuranceadmin->timezone = "America/Los_Angeles";
+        $insuranceadmin->save();
+
+        $role = DB::table('roles')->where('name', '=', 'insurance')->pluck('id');
+        $insuranceadmin->Roles()->attach($role);
     }
 }

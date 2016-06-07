@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Storage;
+use Mail;
+
 
 use App\Helpers\Helper;
 use App\Http\Requests;
 use App\Tenant;
+use App\Role;
 use App\Insurance;
 
 class InsuranceController extends Controller
@@ -87,6 +90,19 @@ class InsuranceController extends Controller
             $file->move($tenant->Insurance->filepath, $fname);
             $tenant->Insurance->tempfile = $fname;
             $tenant->Insurance->save();
+
+            $users = Role::where('name','insurance')->first()->users()->get();
+            foreach ($users as $user) {
+                $emails[] = $user->email;
+            }
+
+            if (!empty($emails)) {
+                Mail::queue('email.uploadedcert',compact('tenant'), function ($message) use ($emails) {
+                    $message->from('davispartners@ejcustom.com', 'EJCustom');
+                    $message->subject('New Insurance Upload');
+                    $message->to($emails);
+                });
+            }
 
             return view('insurance.thankyou');
         }
