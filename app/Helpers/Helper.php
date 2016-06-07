@@ -218,7 +218,7 @@ class Helper
                 $insurance->compliant = false;
             }
         }
-        elseif ($tenant->Property->req_liability_single_limit > $tenant->Insurance->liability_single_limit  && $tenant->Property->req_liability_combined_limit > $tenant->Insurance->liability_combined_limit) {
+        elseif ($tenant->Property->req_liability_single_limit > $tenant->Insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->Insurance->liability_combined_limit) {
             $state["llimit"] = "danger";
             $insurance->compliant = false;
         }

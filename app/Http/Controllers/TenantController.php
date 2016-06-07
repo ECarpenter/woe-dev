@@ -90,6 +90,29 @@ class TenantController extends Controller
         return view('tenant.viewlist',compact('tenants'));
     }
 
+    public function tenantuploadlist()
+    {
+        $insurances = Insurance::whereNotNull('tempfile')->get();
+        $tenants = array();
+        foreach ($insurances as $insurance) {
+            $tenants[] = $insurance->tenant;
+        }
+
+        return view('tenant.viewlist',compact('tenants'));
+    }
+
+    public function tenantnoncompliancelist()
+    {
+        $insurances = Insurance::where('compliant', false)->get();
+        $tenants = array();
+        foreach ($insurances as $insurance) {
+            $tenants[] = $insurance->tenant;
+        }
+
+        return view('tenant.viewlist',compact('tenants'));
+    }
+
+
     public function upload(Tenant $tenant, Request $request)
     {
 
