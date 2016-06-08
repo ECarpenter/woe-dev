@@ -20,12 +20,12 @@ class CreateTenantTable extends Migration
             $table->string('company_name');
             $table->string('tenant_system_id')->unique();
             $table->boolean('active')->default(true);
-            $table->string('insurance_contact_email')->nullable();
-            $table->integer('req_liability_single_limit')->nullable();
-            $table->integer('req_liability_combined_limit')->nullable();
-            $table->integer('req_auto_limit')->nullable();
-            $table->integer('req_umbrella_limit')->nullable();
-            $table->integer('req_workerscomp_limit')->nullable();
+            $table->string('insurance_contact_email')->default(0);
+            $table->integer('req_liability_single_limit')->default(0);
+            $table->integer('req_liability_combined_limit')->default(0);
+            $table->integer('req_auto_limit')->default(0);
+            $table->integer('req_umbrella_limit')->default(0);
+            $table->integer('req_workerscomp_limit')->default(0);
             $table->timestamps();
         });
     }

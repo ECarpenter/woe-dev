@@ -68,19 +68,30 @@ class Helper
 	                        $tenant->tenant_system_id = $row->tenant_system_id;
 	                        $tenant->insurance_contact_email = $row->insurance_contact_email;
 	                        $tenant->unit = $row->unit;
-	                        $tenant->req_liability_single_limit = $row->req_liability_single_limit;
-	                        $tenant->req_liability_combined_limit = $row->req_liability_combined_limit;
-	                        $tenant->req_auto_limit = $row->req_auto_limit;
-	                        $tenant->req_umbrella_limit = $row->req_umbrella_limit;
-	                        $tenant->req_workerscomp_limit = $row->req_workerscomp_limit;
+	                        if ($row->req_liability_single_limit != null) {	                        	
+	                        	$tenant->req_liability_single_limit = $row->req_liability_single_limit;
+	                    	}
+	                    	if ($row->req_liability_single_limit != null) {	                    		
+	                        	$tenant->req_liability_combined_limit = $row->req_liability_combined_limit;
+	                    	}
+	                    	if ($row->req_liability_single_limit != null) {	                    		
+	                        	$tenant->req_auto_limit = $row->req_auto_limit;
+	                    	}
+	                    	if ($row->req_liability_single_limit != null) {	                    		
+	                        	$tenant->req_umbrella_limit = $row->req_umbrella_limit;
+	                    	}
+	                    	if ($row->req_liability_single_limit != null) {
+	                       		$tenant->req_workerscomp_limit = $row->req_workerscomp_limit;
+	                  		}
 
 	                        $property = Property::where('name',$row->property_name)->first();
 	                        if ($property != null)
 	                        {
 	                        	$tenant->property_id = $property->id;
+	                        	$tenant->save();
 	                        }
 
-	                    	$tenant->save();
+	                    	
 
 	                    	$ins = new Insurance;
 	                        $ins->tenant_id = $tenant->id;
@@ -163,94 +174,93 @@ class Helper
         
         if ($tenant->Insurance->endorsement_filename == null) {
             $state["efile"] = "danger";
-            $insurance->compliant = false;
         }
         else {
-            $state["elink"] = "window.open('/".$tenant->insurance->filepath.$tenant->Insurance->endorsement_filename."')";
+            $state["elink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->endorsement_filename."')";
         } 
         if ($tenant->Insurance->liability_filename == null) {
             $state["lfile"] = "danger";
             $insurance->compliant = false;
         }
         else {
-            $state["llink"] = "window.open('/".$tenant->insurance->filepath.$tenant->Insurance->liability_filename."')";
+            $state["llink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->liability_filename."')";
         }    
         if ($tenant->Insurance->umbrella_filename == null) {
             $state["ufile"] = "danger";
             $insurance->compliant = false;
         }
         else {
-            $state["ulink"] = "window.open('/".$tenant->insurance->filepath.$tenant->Insurance->umbrella_filename."')";
+            $state["ulink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->umbrella_filename."')";
         } 
-        if ($tenant->Insurance->auto_filename == null) {
+        if ($tenant->insurance->auto_filename == null) {
             $state["afile"] = "danger";
             $insurance->compliant = false;
         }
         else {
-            $state["alink"] = "window.open('/".$tenant->insurance->filepath.$tenant->Insurance->auto_filename."')";
+            $state["alink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->auto_filename."')";
         } 
-        if ($tenant->Insurance->workerscomp_filename == null) {
+        if ($tenant->insurance->workerscomp_filename == null) {
             $state["wfile"] = "danger";
             $insurance->compliant = false;
         }
         else {
-            $state["wlink"] = "window.open('/".$tenant->insurance->filepath.$tenant->Insurance->workerscomp_filename."')";
+            $state["wlink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->workerscomp_filename."')";
         }    
-        if ($tenant->Insurance->liability_end < $today) {
+        if ($tenant->insurance->liability_end < $today) {
             $state["lexpire"] = "danger";
             $insurance->compliant = false;
         }  
-        if ($tenant->Insurance->umbrella_end < $today) {
+        if ($tenant->insurance->umbrella_end < $today) {
             $state["uexpire"] = "danger";
             $insurance->compliant = false;
         }
-        if ($tenant->Insurance->auto_end < $today) {
+        if ($tenant->insurance->auto_end < $today) {
             $state["aexpire"] = "danger";
             $insurance->compliant = false;
         }
-        if ($tenant->Insurance->workerscomp_end < $today) {
+        if ($tenant->insurance->workerscomp_end < $today) {
             $state["wexpire"] = "danger";
             $insurance->compliant = false;
         }
-        if ($tenant->req_liability_single_limit != null &&  $tenant->req_liability_combined_limit != null  ) {
-            if ( $tenant->req_liability_single_limit > $tenant->Insurance->liability_single_limit || $tenant->req_liability_combined_limit > $tenant->Insurance->liability_combined_limit) {
+        if ($tenant->req_liability_single_limit > 0 &&  $tenant->req_liability_combined_limit > 0  ) {
+            if ( $tenant->req_liability_single_limit > $tenant->insurance->liability_single_limit || $tenant->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
                 $state["llimit"] = "danger";
                 $insurance->compliant = false;
             }
         }
-        elseif ($tenant->Property->req_liability_single_limit > $tenant->Insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->Insurance->liability_combined_limit) {
+        elseif ($tenant->Property->req_liability_single_limit > $tenant->insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
             $state["llimit"] = "danger";
             $insurance->compliant = false;
         }
-        if ($tenant->req_umbrella_limit != null){
-            if ($tenant->req_umbrella_limit > $tenant->Insurance->umbrella_limit) {
+        if ($tenant->req_umbrella_limit > 0){
+            if ($tenant->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
                 $state["ulimit"] = "danger";
                 $insurance->compliant = false;
             }
         }
-        elseif ($tenant->Property->req_umbrella_limit > $tenant->Insurance->umbrella_limit) {
+        elseif ($tenant->Property->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
             $state["ulimit"] = "danger";
             $insurance->compliant = false;
         }
 
-        if ($tenant->req_auto_limit != null){
-            if ($tenant->req_auto_limit > $tenant->Insurance->auto_limit) {
+        if ($tenant->req_auto_limit > 0){
+            if ($tenant->req_auto_limit > $tenant->insurance->auto_limit) {
                 $state["alimit"] = "danger";
                 $insurance->compliant = false;
             }
         }
-        elseif ($tenant->Property->req_auto_limit > $tenant->Insurance->auto_limit) {
+        elseif ($tenant->Property->req_auto_limit > $tenant->insurance->auto_limit) {
             $state["alimit"] = "danger";
             $insurance->compliant = false;
         }
 
-        if ($tenant->req_workerscomp_limit != null){
-            if ($tenant->req_workerscomp_limit > $tenant->Insurance->workerscomp_limit) {
+        if ($tenant->req_workerscomp_limit > 0){
+            if ($tenant->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
                 $state["wlimit"] = "danger";
                 $insurance->compliant = false;
             }
         }
-        elseif ($tenant->Property->req_workerscomp_limit > $tenant->Insurance->workerscomp_limit) {
+        elseif ($tenant->Property->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
             $state["wlimit"] = "danger";
             $insurance->compliant = false;
         }

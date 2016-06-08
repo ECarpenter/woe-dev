@@ -51,6 +51,16 @@ $(document).ready(function(){
         $('#UpdateInsuranceModal').modal('show');         
     });
 
+    $('.open-tenant-req-insurance-modal').click(function(){           
+
+        $('#InsReqTenantModal').modal('show');         
+    });
+
+    $('.open-property-req-insurance-modal').click(function(){           
+
+        $('#InsReqPropertyModal').modal('show');         
+    });
+
     $( '.file-btn' ).on( "click", function( event ) {
      	event.preventDefault();
      	console.log( $( this ).text() );

@@ -84,6 +84,7 @@ Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function 
 
     //Insurance Tracking
     Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
+    Route::patch('insurance/requirements', 'InsuranceController@savereq');
 
 
 

@@ -13,6 +13,7 @@ use App\Http\Requests;
 use App\Tenant;
 use App\Role;
 use App\Insurance;
+use App\Property;
 
 class InsuranceController extends Controller
 {
@@ -107,6 +108,25 @@ class InsuranceController extends Controller
             return view('insurance.thankyou');
         }
         return view('errors.upload');
+    }
+
+    public function savereq(Request $request)
+    {
+        if ($request->type == 'tenant') {
+            $entity = Tenant::find($request->id);
+        }
+        elseif ($request->type == 'property') {
+            $entity = Property::find($request->id);
+        }
+
+        $entity->req_liability_single_limit = $request->req_liability_single_limit;
+        $entity->req_liability_combined_limit = $request->req_liability_combined_limit;
+        $entity->req_auto_limit = $request->req_auto_limit;
+        $entity->req_umbrella_limit = $request->req_umbrella_limit;
+        $entity->req_workerscomp_limit = $request->req_workerscomp_limit;
+        $entity->save();
+
+        return back();
     }
 
     public function processInsuranceFile($fname, $insurance, $request)
