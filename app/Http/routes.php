@@ -74,7 +74,8 @@ Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function 
     Route::post('tenant/import', 'TenantController@import');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
-    Route::get('tenant/{tenant}/edit', 'TenantController@edit');
+    Route::get('tenant/{tenant}/response', 'TenantController@response');
+    Route::get('tenant/{tenant}/notice', 'TenantController@notice');
     Route::post('tenant/{tenant}/update', 'TenantController@update');
 
     //User Routes
@@ -83,9 +84,10 @@ Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function 
     Route::get('user/list',['middleware' => ['role:admin'], 'uses' => 'UserController@userlist']);
 
     //Insurance Tracking
-    Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
     Route::patch('insurance/requirements', 'InsuranceController@savereq');
-
+    Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
+    Route::get('insurance/{insurance}/response', 'InsuranceController@response');
+    
 
 
 });

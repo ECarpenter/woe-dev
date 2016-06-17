@@ -49,7 +49,8 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => database_path('database.sqlite'),
-            'prefix' => '',
+            'prefix' => '',            
+            'collation' => 'utf8_unicode_ci',
         ],
 
         'mysql' => [

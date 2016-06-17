@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Storage;
 use Mail;
+use Response;
 
 
 use App\Helpers\Helper;
@@ -51,7 +52,12 @@ class InsuranceController extends Controller
             }
         }
         
-
+        if ($request->workerscomp_applicable == 'N') {
+            $insurance->workerscomp_applicable = false;
+        }
+        else {
+            $insurance->workerscomp_applicable = true;
+        }
         
     	$insurance->liability_start = $request->liability_start;
     	$insurance->liability_end = $request->liability_end;
@@ -161,5 +167,10 @@ class InsuranceController extends Controller
         }
 
         return $used;
+    }
+
+    public function response(Insurance $insurance)
+    {
+        return Response::json($insurance);
     }
 }

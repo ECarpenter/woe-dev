@@ -13,7 +13,6 @@ use App\Owner;
 use App\Group;
 use App\Insurance;
 
-
 class Helper
 {
     public static function importProperty($fname)
@@ -119,20 +118,20 @@ class Helper
 	                        $insurance->liability_combined_limit = $row->liability_combined_limit;
 	                        $insurance->liability_start = $row->liability_start;
 	                        $insurance->liability_end = $row->liability_end;
-	                        $insurance->liability_filename = 'files/insurance/'.$row->liability_filename;
+	                        $insurance->liability_filename = $row->liability_filename;
 	                        $insurance->auto_limit = $row->auto_limit;
 	                        $insurance->auto_start = $row->auto_start;
 	                        $insurance->auto_end = $row->auto_end;
-	                        $insurance->auto_filename = 'files/insurance/'.$row->auto_filename;
+	                        $insurance->auto_filename = $row->auto_filename;
 	                        $insurance->umbrella_limit = $row->umbrella_limit;
 	                        $insurance->umbrella_start = $row->umbrella_start;
 	                        $insurance->umbrella_end = $row->umbrella_end;
-	                        $insurance->umbrella_filename = 'files/insurance/'.$row->umbrella_filename;
+	                        $insurance->umbrella_filename = $row->umbrella_filename;
 	                        $insurance->workerscomp_limit = $row->workerscomp_limit;
 	                        $insurance->workerscomp_start = $row->workerscomp_start;
 	                        $insurance->workerscomp_end = $row->workerscomp_end;
-	                        $insurance->workerscomp_filename = 'files/insurance/'.$row->workerscomp_filename;
-	                        $insurance->endorsement_filename = 'files/insurance/'.$row->endorsement_filename;
+	                        $insurance->workerscomp_filename = $row->workerscomp_filename;
+	                        $insurance->endorsement_filename = $row->endorsement_filename;
 	                    	
 	                        $insurance->save();
 	                    	
@@ -168,6 +167,7 @@ class Helper
             "ulink" => "",
             "alink" => "",
             "wlink" => "",
+            "manual_notice" => "valid"
             );
 
         $today = date("Y-m-d");
@@ -199,7 +199,10 @@ class Helper
         else {
             $state["alink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->auto_filename."')";
         } 
-        if ($tenant->insurance->workerscomp_filename == null) {
+        if (!$tenant->insurance->workerscomp_applicable) {
+            $state["wfile"] = "";
+        }
+        elseif ($tenant->insurance->workerscomp_filename == null) {
             $state["wfile"] = "danger";
             $insurance->compliant = false;
         }
@@ -218,7 +221,10 @@ class Helper
             $state["aexpire"] = "danger";
             $insurance->compliant = false;
         }
-        if ($tenant->insurance->workerscomp_end < $today) {
+        if (!$tenant->insurance->workerscomp_applicable) {
+            $state["wexpire"] = "";
+        }
+        elseif ($tenant->insurance->workerscomp_end < $today) {
             $state["wexpire"] = "danger";
             $insurance->compliant = false;
         }
@@ -253,8 +259,10 @@ class Helper
             $state["alimit"] = "danger";
             $insurance->compliant = false;
         }
-
-        if ($tenant->req_workerscomp_limit > 0){
+        if (!$tenant->insurance->workerscomp_applicable) {
+            $state["wlimit"] = "disabled";
+        }
+        elseif ($tenant->req_workerscomp_limit > 0){
             if ($tenant->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
                 $state["wlimit"] = "danger";
                 $insurance->compliant = false;
@@ -264,6 +272,14 @@ class Helper
             $state["wlimit"] = "danger";
             $insurance->compliant = false;
         }
+
+        if ($insurance->compliant){
+            $state['manual_notice'] = "invalid";
+        }
+        if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) {
+            $state['manual_notice'] = "invalid";
+        }
+
 
         $insurance->save();
         return $state;
@@ -277,7 +293,8 @@ class Helper
     		if (!$tenant->Insurance->compliant) {
     			
     			echo "$tenant->company_name ";
-    			Helper::sendInsuranceNotice($tenant, 'firstnotice');
+                // Auto send of notice turned off for intial setup
+    			 Helper::sendInsuranceNotice($tenant, 'firstnotice');
     		}
     	}
     	return true;
@@ -289,8 +306,9 @@ class Helper
     	{
     		$tenant->load('insurance');
     		$token = Str::random(60);
-    		$tenant->Insurance->upload_token = $token;
-    		$tenant->Insurance->save();
+    		$tenant->insurance->upload_token = $token;
+            $tenant->insurance->last_notice_sent = \Carbon\Carbon::now();
+    		$tenant->insurance->save();
     		Mail::send('email.insurance-notice',compact('tenant', 'token','type'), function ($message) use ($tenant) {
                 $message->from('insurance-admin@davispartners.com', 'Insurance Administrator');
                 $message->subject('Insurance Certificate Needs Update');

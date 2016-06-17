@@ -21,17 +21,25 @@ $(document).ready(function(){
     $('.open-edit-tenant-modal').click(function(){
         var tenant_id = $(this).val();
 
-        $.get('/tenant/' + tenant_id + '/edit', function (data) {
+        $.get('/tenant/' + tenant_id + '/response', function (data) {
             //success data
             console.log(data);
 
             $('#tenant_system_id').val(data.tenant_system_id);
             $('#unit').val(data.unit);
             $('#company_name').val(data.company_name);
-            $('#active').prop('checked', data.active);
-            $('#verified').prop('checked', data.verified);
-            $('#inactive').prop('checked', !data.active);
-            $('#unverified').prop('checked', !data.verified);
+            if(data.active == 1) {
+                $('#active').prop('checked', true);
+            }
+            else {
+                $('#inactive').prop('checked', true);
+            }
+            if(data.verified == 1) {
+                $('#verified').prop('checked', true);
+            }
+            else {
+                $('#unverified').prop('checked', true);
+            }
             $('#EditTenantModal').modal('show');
         })
     });
@@ -42,8 +50,17 @@ $(document).ready(function(){
     });
 
     $('.open-manage-insurance-modal').click(function(){ 
+        var insurance_id = $(this).val();
 
-        $('#ManageInsuranceModal').modal('show');         
+        $.get('/insurance/' + insurance_id + '/response', function (data) {
+            //success data
+            console.log(data);
+            if(data.workerscomp_applicable == 0) {
+                console.log('passed if');
+                $('#workerscomp_applicable').prop('checked', true);
+            }
+            $('#ManageInsuranceModal').modal('show');       
+        })  
     });
 
     $('.open-update-insurance-modal').click(function(){           

@@ -75,17 +75,16 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant)
     {
-        $tenant->load('workorder', 'workorder.problemtype','user');
+        $tenant->load('workorder', 'workorder.problemtype','user','insurance');
 
         $state = Helper::insuranceCheck($tenant);
-
 
         return view('tenant.show', compact('tenant','state'));
     }
 
     public function tenantlist()
     {
-        $tenants = Tenant::orderByRaw('company_name COLLATE NOCASE')->get();
+        $tenants = Tenant::orderBy('company_name')->get();
 
         return view('tenant.viewlist',compact('tenants'));
     }
@@ -165,7 +164,7 @@ class TenantController extends Controller
 
     }
 
-    public function edit(Tenant $tenant)
+    public function response(Tenant $tenant)
     {
         $tenant->load('user');
         return Response::json($tenant);
@@ -173,19 +172,28 @@ class TenantController extends Controller
 
     public function update(Tenant $tenant, Request $request)
     {
-
+        
         $tenant->tenant_system_id = $request->tenant_system_id;
         $tenant->unit = $request->unit;
         $tenant->company_name = $request->company_name;
-        $tenant->active = $request->active_switch;
-        $tenant->User()->verified = $request->verified_switch;
+        if ($request->active_switch == 'true'){
+            $tenant->active = true;
+        }
+        else {
+            $tenant->active = false;
+        }
+        //$tenant->User()->verified = $request->verified_switch;
         $tenant->save();
-
+        
         return redirect('/tenant/'.$tenant->id);
     }
 
+    public function notice(Tenant $tenant)
+    {
+        Helper::sendInsuranceNotice($tenant, 'manual');
 
-    
+        return back();
+    }
 
     //takes an .xls file to import in a mass amount of tenants at once. 
     public function import(Request $request)

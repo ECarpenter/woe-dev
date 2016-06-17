@@ -33,6 +33,7 @@ class CreateInsuranceTable extends Migration
             $table->date('workerscomp_start')->nullable();
             $table->date('workerscomp_end')->nullable();
             $table->integer('workerscomp_limit')->nullable();
+            $table->boolean('workerscomp_applicable')->default(true);
             $table->boolean('compliant')->default(true);
             $table->integer('notice_count')->default(0);
             $table->date('last_notice_sent')->nullable();

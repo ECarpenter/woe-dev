@@ -43,13 +43,15 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Created - <small>
-			{{date('F d, Y, g:i a', strtotime($tenant->created_at->timezone(Auth::user()->timezone)))}}
+			<h4> Updated - <small>		
+			{{date('F d, Y, g:i a', strtotime($tenant->updated_at->timezone(Auth::user()->timezone)))}}
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
-			<h4> Updated - <small>		
-			{{date('F d, Y, g:i a', strtotime($tenant->updated_at->timezone(Auth::user()->timezone)))}}
+			<h4> Ins. Notice Sent - <small>
+			@if ($tenant->insurance->last_notice_sent != null)		
+			{{date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone(Auth::user()->timezone)))}}
+			@endif
 			</small></h4>
 		</div>
 	</div>
@@ -67,14 +69,13 @@
 				    </a>
 
 				    <ul class="dropdown-menu" role="menu">
-				        	<li><a href="#">Liability Single - {{ number_format($tenant->req_liability_single_limit) }}</a></li>
-				        	<li><a href="#">Liability Combined - {{ number_format($tenant->req_liability_combined_limit) }}</a></li>
-				        	<li><a href="#">Umbrella - {{ number_format($tenant->req_umbrella_limit) }}</a></li>
-				        	<li><a href="#">Auto - {{ number_format($tenant->req_auto_limit) }}</a></li>
-				        	<li><a href="#">Workers Comp - {{ number_format($tenant->req_workerscomp_limit) }}</a></li>
-				        	<li><a href="#">Umbrella - {{ number_format($tenant->req_umbrella_limit) }}</a></li>
-				        	<li><a href="#" class="open-tenant-req-insurance-modal" value="{{$tenant}}">Edit Requirements</a></li>
-				    </ul>
+						<li><a href="#">Liability Single - {{ number_format($tenant->req_liability_single_limit) }}</a></li>
+						<li><a href="#">Liability Combined - {{ number_format($tenant->req_liability_combined_limit) }}</a></li>
+						<li><a href="#">Excess/Umbrella - {{ number_format($tenant->req_umbrella_limit) }}</a></li>
+						<li><a href="#">Auto - {{ number_format($tenant->req_auto_limit) }}</a></li>
+						<li><a href="#">Workers Comp - {{ number_format($tenant->req_workerscomp_limit) }}</a></li>
+						<li><a href="#" class="open-tenant-req-insurance-modal">Edit Requirements</a></li>
+					</ul>
 				</li>
 			</ul>
 		</div>
@@ -84,7 +85,14 @@
 
 	<div class="row">
 		<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
-			<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant}}">	Manage Insurance Information</button>
+			<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant->insurance->id}}"}}">	Manage Insurance Information</button>
+		</div>
+		<div class="col-xs-3  col-md-3 ">
+			@if ($state['manual_notice'] == "valid")
+			<a href="/tenant/{{$tenant->id}}/notice" class="btn btn-primary btn-xs" role="button">	Send Insurance Notice </a>
+			@else
+			<a href="#" class="btn btn-primary btn-xs disabled" role="button">	Send Insurance Notice </a>
+			@endif
 		</div>
 	</div>
 
@@ -112,7 +120,7 @@
 						<td class="{{$state['llimit']}}">{{number_format($tenant->Insurance->liability_single_limit)}} / {{number_format($tenant->Insurance->liability_combined_limit)}}</td>
 					</tr>
 					<tr onclick="{{$state['ulink']}}">
-						<td class="{{$state['ufile']}}">Umbrella</td>
+						<td class="{{$state['ufile']}}">Excess/Umbrella</td>
 						<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_start))}}</td>
 						<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_end))}}</td>
 						<td class="{{$state['ulimit']}}">{{number_format($tenant->Insurance->umbrella_limit)}}</td>
@@ -123,13 +131,14 @@
 						<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_end))}}</td>
 						<td class="{{$state['alimit']}}">{{number_format($tenant->Insurance->auto_limit)}}</td>
 					</tr>
+					@if ($tenant->insurance->workerscomp_applicable)
 					<tr onclick="{{$state['wlink']}}">
 						<td class="{{$state['wfile']}}">Workers Comp</td>
 						<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_start))}}</td>
 						<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_end))}}</td>
 						<td class="{{$state['wlimit']}}">{{number_format($tenant->Insurance->workerscomp_limit)}}</td>
 					</tr>
-
+					@endif
 					<tr onclick="{{$state['elink']}}">
 						<td class="{{$state['efile']}} text-center" colspan="4" >Endorsement</td>
 					</tr>
@@ -225,7 +234,7 @@
 				    				</label>
 				    				<label>
 				    					<input type="checkbox" name="umbrella" value="Y">
-				    					Umbrella
+				    					Excess/Umbrella
 				    				</label>
 				    				<label>
 				    					<input type="checkbox" name="auto" value="Y">
@@ -255,7 +264,7 @@
 								<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="100000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="100000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
 							</tr>
 							<tr>
-								<td class="{{$state['ufile']}}">Umbrella</td>
+								<td class="{{$state['ufile']}}">Excess/Umbrella</td>
 								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_start))}}"></td>
 								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_end))}}"></td>
 								<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="100000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
@@ -270,7 +279,8 @@
 								<td class="{{$state['wfile']}}">Workers Comp</td>
 								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_start))}}"></td>
 								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_end))}}"></td>
-								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="100000" value="{{$tenant->Insurance->workerscomp_limit}}"></td>
+								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="100000" value="{{$tenant->Insurance->workerscomp_limit}}"> - <input type="checkbox" id="workerscomp_applicable" name="workerscomp_applicable" value="N">
+				    					Not Applicable </td>
 							</tr>
 
 						</table>
@@ -319,7 +329,7 @@
 
 						<div class="row">
 		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Umbrella</label>
+		                        <label class="col-xs-4 control-label">Excess/Umbrella</label>
 		                        <div class="col-xs-6">
 		                            <input type="number" class="form-control" name="req_umbrella_limit" id="req_umbrella_limit" step="100000" value="{{ $tenant->req_umbrella_limit }}">
 		                        </div>
