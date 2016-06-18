@@ -310,7 +310,7 @@ class Helper
             $tenant->insurance->last_notice_sent = \Carbon\Carbon::now();
     		$tenant->insurance->save();
     		Mail::send('email.insurance-notice',compact('tenant', 'token','type'), function ($message) use ($tenant) {
-                $message->from('insurance-admin@davispartners.com', 'Insurance Administrator');
+                $message->from('insurance@davispartners.com', 'Insurance Administrator');
                 $message->subject('Insurance Certificate Needs Update');
                 $message->to($tenant->insurance_contact_email);
             });
