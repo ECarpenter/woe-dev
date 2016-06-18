@@ -33,18 +33,11 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('/submit-tenant', 'WorkOrderController@save');
 });
 
-
-Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function () {
+//insurance and work orders
+Route::group(['middleware' => ['web', 'auth','permission:manage-wo', 'permission:manage-insurance']], function () {
 	
 
-    //Workorder Routes
-	Route::get('/workorders', 'WorkOrderController@viewlist');
-	Route::get('workorders/{workorder}',  'WorkOrderController@show');
-    Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
-    Route::patch('workorders/{workorder}/save',  'WorkOrderController@update');
-    Route::get('workorders/{workorder}/bill',  'WorkOrderController@bill');
-    Route::patch('workorders/{workorder}/bill',  'WorkOrderController@processbill');
-    Route::post('workorders/{workorder}/upload', 'WorkOrderController@upload');
+
 
     //Property Routes
     Route::post('property', 'PropertyController@showid');
@@ -83,11 +76,28 @@ Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function 
     Route::post('user/save',['middleware' => ['role:admin'], 'uses' => 'UserController@save']);
     Route::get('user/list',['middleware' => ['role:admin'], 'uses' => 'UserController@userlist']);
 
+});
+
+//only workorders
+Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function () {
+
+    //Workorder Routes
+    Route::get('/workorders', 'WorkOrderController@viewlist');
+    Route::get('workorders/{workorder}',  'WorkOrderController@show');
+    Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
+    Route::patch('workorders/{workorder}/save',  'WorkOrderController@update');
+    Route::get('workorders/{workorder}/bill',  'WorkOrderController@bill');
+    Route::patch('workorders/{workorder}/bill',  'WorkOrderController@processbill');
+    Route::post('workorders/{workorder}/upload', 'WorkOrderController@upload');
+
+});
+
+//only insurance
+Route::group(['middleware' => ['web', 'auth', 'permission:manage-insurance']], function () {
+
     //Insurance Tracking
     Route::patch('insurance/requirements', 'InsuranceController@savereq');
     Route::patch('insurance/{insurance}/update', 'InsuranceController@update');
     Route::get('insurance/{insurance}/response', 'InsuranceController@response');
-    
-
 
 });
