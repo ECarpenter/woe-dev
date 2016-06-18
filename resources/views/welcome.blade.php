@@ -8,7 +8,7 @@
                 <div class="panel-heading">Welcome</div>
 
                 <div class="panel-body">
-                    Login to Submit a Maintence Issue
+                    Thank you for visiting our tenant portal. To upload an insurance certificate please use the link provided in your notice.
                 </div>
             </div>
         </div>
