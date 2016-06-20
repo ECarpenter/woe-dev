@@ -111,7 +111,7 @@ return [
 
     'to' => [
         'address' => 'ecarpen905@gmail.com',
-        'name' => 'Eric'
+        'name' => 'Insurance Administrator'
     ],
 
 ];

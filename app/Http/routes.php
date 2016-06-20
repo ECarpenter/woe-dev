@@ -34,7 +34,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 });
 
 //insurance and work orders
-Route::group(['middleware' => ['web', 'auth','permission:manage-wo', 'permission:manage-insurance']], function () {
+Route::group(['middleware' => ['web', 'auth', 'permission:manage-insurance']], function () {
 	
 
 

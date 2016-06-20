@@ -32,6 +32,7 @@ class Helper
                         $property->city = $row->city;
                         $property->state = $row->state;
                         $property->zip = $row->zip;
+                        $property->insured_name = $row->insured_name;
                         $property->owner_id = $row->owner_id;
                         $property->req_liability_single_limit = $row->req_liability_single_limit;
                         $property->req_liability_combined_limit = $row->req_liability_combined_limit;
@@ -294,7 +295,7 @@ class Helper
     			
     			echo "$tenant->company_name ";
                 // Auto send of notice turned off for intial setup
-    			 Helper::sendInsuranceNotice($tenant, 'firstnotice');
+    			// Helper::sendInsuranceNotice($tenant, 'firstnotice');
     		}
     	}
     	return true;
@@ -304,7 +305,7 @@ class Helper
     {
     	if ($tenant->insurance_contact_email != null)
     	{
-    		$tenant->load('insurance');
+    		$tenant->load('insurance','property');
     		$token = Str::random(60);
     		$tenant->insurance->upload_token = $token;
             $tenant->insurance->last_notice_sent = \Carbon\Carbon::now();

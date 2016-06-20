@@ -45,7 +45,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('http://www.davispartners.com/') }}">
                     <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="189" height="30">
                 </a>
             </div>
@@ -69,6 +69,8 @@
                             <li><a href="{{ url('/workorders') }}">View Work Order</a></li>
                         </ul>
                     </li>
+                    @endpermission          
+                    @permission('manage-insurance')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             Properties<span class="caret"></span>
@@ -95,10 +97,15 @@
                             <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="/tenant/list">Tenant List</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
+                            
+                            @permission('manage-insurance')
                             <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
                             <li><a href="/tenant/noncompliancelist">Insurance Noncompliance List</a></li>
+                            @endpermission
                         </ul>
                     </li>
+                    @endpermission
+                    @permission('admin')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             Users<span class="caret"></span>

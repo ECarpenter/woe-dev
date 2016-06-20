@@ -114,22 +114,25 @@ div.WordSection1
 
 <body lang=EN-US style='tab-interval:.5in'>
 
-
+{{$tenant->property->name}}<br>
+{{$tenant->property->address}}<br>
+{{$tenant->property->city}} {{$tenant->property->state}}, {{$tenant->property->zip}}<br> <br>
 Hi,<br><br>
 
-{{$tenant->company_name}}
 @if ($type == 'reject')
  your insurance upload was rejected for the following reason:<br>
 {{$tenant->insurance->rejection_msg}}
 @else
- your insurance is out of date.
+
+ {{$tenant->company_name}} our records indicate that we do not have Certificate of Insurance for the above referenced premises on file.  Please note that we must receive a current Certificate of Insurance within the next five (5) business days evidencing proof of the required coverage and amount outlined in your Lease.  In order to expedite the process, we suggest submitting the insurance section of your Lease to your insurance agent which I have attached here.  Said Certificate must include {{$tenant->property->insured_name}} and Davis Partners, LLC as additional insured.  Please reference the premise address and suite number on the certificate.    
+
 @endif
 <br>
 <br>
 Click here to upload a new insurance certificate: <a href="{{ $link = url('upload/insurance', $token).'?tenant_system_id='.urlencode($tenant->tenant_system_id) }}"> {{ $link }} </a>
 
 <br><br>
-Thanks,<br><br>
+Thank you,<br><br>
 
 
 <div class=WordSection1>
@@ -148,7 +151,7 @@ insurance@davispartners.com<br>
 style='font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:115%;font-family:
 "Palatino Linotype","serif";color:navy;mso-no-proof:yes'>
 
-<img width=816 height=124 src="{{ $message->embed('InsuranceSignature_files/image001.jpg')}}" v:shapes="Picture_x0020_1"></span></b><b
+<img width=816 height=124 src="{{ $message->embed('InsuranceSignature_files\image001.jpg')}}" v:shapes="Picture_x0020_1"></span></b><b
 style=mso-bidi-font-weight:normal'><span style='font-size:10.0pt;mso-bidi-font-size:
 11.0pt;line-height:115%;font-family:"Palatino Linotype","serif";color:navy'><o:p></o:p></span></b></p>
 

@@ -25,8 +25,8 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Unit - <small>
-			{{$tenant->unit}}
+			<h4> E-Mail - <small><a href="mailto:
+			{{$tenant->insurance_contact_email}}"> {{$tenant->insurance_contact_email}}</a>
 			</small></h4>
 		</div>
 		<div class="col-xs-4">

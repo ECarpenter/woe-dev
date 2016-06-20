@@ -22,13 +22,13 @@ class UsersTableSeeder extends Seeder
         $user->Roles()->attach($role);
 
         $insuranceadmin = new App\User;
-        $insuranceadmin->name = "Tracie";
-        $insuranceadmin->email = "insuarance@davisparnters.com";
-        $insuranceadmin->password = bcrypt('password');
+        $insuranceadmin->name = "Insurance Administrator";
+        $insuranceadmin->email = "insurance@davispartners.com";
+        $insuranceadmin->password = bcrypt('insur@nce2016');
         $insuranceadmin->timezone = "America/Los_Angeles";
         $insuranceadmin->save();
 
-        $role = DB::table('roles')->where('name', '=', 'insurance')->pluck('id');
+        $role = DB::table('roles')->where('name', '=', 'insurance-admin')->pluck('id');
         $insuranceadmin->Roles()->attach($role);
     }
 }

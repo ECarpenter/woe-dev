@@ -20,6 +20,7 @@ class CreatePropertyTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
+            $table->string('insured_name')->nullable();
             $table->integer('owner_id')->unsigned();
             $table->boolean('active')->default(true);
             $table->integer('req_liability_single_limit');
