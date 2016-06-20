@@ -98,7 +98,7 @@ class InsuranceController extends Controller
             $tenant->Insurance->tempfile = $fname;
             $tenant->Insurance->save();
 
-            $users = Role::where('name','insurance')->first()->users()->get();
+            $users = Role::where('name','insurance-admin')->first()->users()->get();
             foreach ($users as $user) {
                 $emails[] = $user->email;
             }
