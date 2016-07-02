@@ -30,11 +30,17 @@
                             </div>
                         </div>  
 
-                        <div class="form-group">
+                        <div class="form-group{{ $errors->has('tenant_system_id') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Tenant ID#</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="tenant_system_id" value="{{ old('tenant_system_id') }}">
+
+                                @if ($errors->has('tenant_system_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('tenant_system_id') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>                        
 
@@ -66,36 +72,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('job_title') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Title*</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="job_title" value="{{ old('job_title') }}">
-
-                                @if ($errors->has('job_title'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('job_title') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>    
-
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name*</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">E-Mail Address*</label>
+                            <label class="col-md-4 control-label">Contact E-Mail Address*</label>
 
                             <div class="col-md-6">
                                 <input type="email" class="form-control" name="email" value="{{ old('email') }}">
@@ -106,15 +84,6 @@
                                     </span>
                                 @endif
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            
-                                <input type="hidden" class="form-control" name="password" value="password">
-
-                                                  
-                                <input type="hidden" class="form-control" name="password_confirmation" value="password">
-
                         </div>
 
                         <div class="form-group">

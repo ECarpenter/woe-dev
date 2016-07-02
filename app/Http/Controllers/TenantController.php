@@ -33,31 +33,27 @@ class TenantController extends Controller
 
     public function save(Request $request)
     {
-    	$user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'timezone' => "America/Los_Angeles",
-            'job_title' => $request->job_title,
-            'verified' =>true
-        ]);
-
-        $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
-        $user->Roles()->attach($role);
-
-
+        $this->validate($request, [
+            'suite' => 'required',
+            'email' => 'required|email',
+            'tenant_system_id' => 'required|unique:tenants',
+            'company_name' => 'required',
+            'property' => 'required'
+            ]);
+    	
         $tenant = new Tenant;
-        $tenant->user_id = $user->id;
         $tenant->unit = $request->suite;
         $tenant->property_id = $request->property;
         $tenant->company_name = $request->company_name;
         $tenant->tenant_system_id = $request->tenant_system_id;
+        $tenant->insurance_contact_email = $request->email;
+
         $tenant->save();
 
         $ins = new Insurance;
         $ins->tenant_id = $tenant->id;
         $ins->save();
-        return redirect('/property/'.$tenant->property_id);
+        return redirect('/tenant/'.$tenant->id);
     }
 
     public function viewid(Request $request)
