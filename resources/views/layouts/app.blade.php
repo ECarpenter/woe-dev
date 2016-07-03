@@ -28,6 +28,16 @@
             float: none;
             margin:0 auto;
         }
+        .ejc-inactive {
+            background-color: #835A5A
+        }
+        .table-hover > tbody > tr > td.ejc-inactive:hover,
+        .table-hover > tbody > tr > th.ejc-inactive:hover,
+        .table-hover > tbody > tr.ejc-inactive:hover > td,
+        .table-hover > tbody > tr:hover > .ejc-inactive,
+        .table-hover > tbody > tr.ejc-inactive:hover > th {
+            background-color: #E29A9A;
+        } 
         
     </style>
 </head>
@@ -175,12 +185,13 @@
         </div>
     </div>
 
+    <!-- TenantIDModal (Pop up when view tenant link clicked) -->
     <div class="modal fade" id="TenantIDModal" tabindex="-1" role="dialog" aria-labelledby="tenantIDLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="tenantIDLabel">View Tenant</h4>
+                    <h4 class="modal-title" id="tenantIDLabel">Find Tenant</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/tenant" class="form-horizontal">
@@ -190,6 +201,7 @@
                             <div class="col-xs-6">
                                 <input type="text" class="form-control" name="tenant_system_id"  placeholder="Yardi ID" value="">
                             </div>
+                            
                             
                             <div class="col-xs-3" class="form-group">
                                 <button type='submit' class="btn btn-primary btn-md">Enter</button>
@@ -226,12 +238,12 @@
         </div>
     </div>
 
-        <div class="modal fade" id="tenantImportModal" tabindex="-1" role="dialog" aria-labelledby="tenantImportLabel" aria-hidden="true">
+    <div class="modal fade" id="tenantImportModal" tabindex="-1" role="dialog" aria-labelledby="tenantImportLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="tenantImportLabel">Import Properties</h4>
+                    <h4 class="modal-title" id="tenantImportLabel">Import Tenants</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/tenant/import" class="form-horizontal" enctype="multipart/form-data">
