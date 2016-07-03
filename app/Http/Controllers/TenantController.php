@@ -30,7 +30,8 @@ class TenantController extends Controller
 
 	public function add()
 	{
-		return view('tenant.add');
+		$properties = Property::orderBy('name')->get();
+		return view('tenant.add', compact('properties'));
 	}
 
 	public function save(Request $request)
