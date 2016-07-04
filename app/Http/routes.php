@@ -65,6 +65,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:manage-insurance']], f
     Route::get('tenant/add', 'TenantController@add');
     Route::post('tenant/save', 'TenantController@save');
     Route::post('tenant/import', 'TenantController@import');
+    Route::post('tenant/refinelist', 'TenantController@refinelist');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/response', 'TenantController@response');

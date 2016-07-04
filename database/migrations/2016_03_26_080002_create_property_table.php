@@ -23,6 +23,7 @@ class CreatePropertyTable extends Migration
             $table->string('insured_name')->nullable();
             $table->integer('owner_id')->unsigned();
             $table->boolean('active')->default(true);
+            $table->boolean('allow_workorder')->default(false);
             $table->integer('req_liability_single_limit');
             $table->integer('req_liability_combined_limit');
             $table->integer('req_auto_limit');

@@ -12,198 +12,253 @@ use App\Helpers\Helper;
 use App\Tenant;
 use App\User;
 use App\Insurance;
+use App\Property;
+use App\Group;
 
 
 class TenantController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
 
-    public function add()
-    {
-    	return view('tenant.add');
-    }
+	public function add()
+	{
+		$properties = Property::orderBy('name')->get();
+		return view('tenant.add', compact('properties'));
+	}
 
-    public function save(Request $request)
-    {
-    	$user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'timezone' => "America/Los_Angeles",
-            'job_title' => $request->job_title,
-            'verified' =>true
-        ]);
+	public function save(Request $request)
+	{
+		$this->validate($request, [
+			'suite' => 'required',
+			'email' => 'required|email',
+			'tenant_system_id' => 'required|unique:tenants',
+			'company_name' => 'required',
+			'property' => 'required'
+			]);
+		
+		$tenant = new Tenant;
+		$tenant->unit = $request->suite;
+		$tenant->property_id = $request->property;
+		$tenant->company_name = $request->company_name;
+		$tenant->tenant_system_id = $request->tenant_system_id;
+		$tenant->insurance_contact_email = $request->email;
 
-        $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
-        $user->Roles()->attach($role);
+		$tenant->save();
 
+		$ins = new Insurance;
+		$ins->tenant_id = $tenant->id;
+		$ins->save();
+		return redirect('/tenant/'.$tenant->id);
+	}
 
-        $tenant = new Tenant;
-        $tenant->user_id = $user->id;
-        $tenant->unit = $request->suite;
-        $tenant->property_id = $request->property;
-        $tenant->company_name = $request->company_name;
-        $tenant->tenant_system_id = $request->tenant_system_id;
-        $tenant->save();
+	public function viewid(Request $request)
+	{
+		$tenant = Tenant::where('tenant_system_id',$request->tenant_system_id)->first();
+		
+			if ($tenant != null) {
+					   
+			return TenantController::show($tenant);
+		}
+		else {
+			return TenantController::tenantlist();
+		}
+	}
 
-        $ins = new Insurance;
-        $ins->tenant_id = $tenant->id;
-        $ins->save();
-        return redirect('/property/'.$tenant->property_id);
-    }
+	public function show(Tenant $tenant)
+	{
+		$tenant->load('workorder', 'workorder.problemtype','user','insurance');
 
-    public function viewid(Request $request)
-    {
-        $tenant = Tenant::where('tenant_system_id',$request->tenant_system_id)->first();
-        
-            if ($tenant != null) {
-                       
-            return TenantController::show($tenant);
-        }
-        else {
-            return TenantController::tenantlist();
-        }
-    }
+		$state = Helper::insuranceCheck($tenant);
 
-    public function show(Tenant $tenant)
-    {
-        $tenant->load('workorder', 'workorder.problemtype','user','insurance');
+		return view('tenant.show', compact('tenant','state'));
+	}
 
-        $state = Helper::insuranceCheck($tenant);
+	public function tenantlist()
+	{
+		$tenants = Tenant::where('active', true)->orderBy('company_name')->get();
+		$active_selector = 'active';
 
-        return view('tenant.show', compact('tenant','state'));
-    }
+		return view('tenant.viewlist',compact('tenants','active_selector'));
+	}
 
-    public function tenantlist()
-    {
-        $tenants = Tenant::orderBy('company_name')->get();
+	public function tenantuploadlist()
+	{
+		$insurances = Insurance::whereNotNull('tempfile')->get();
+		$tenants = array();
+		foreach ($insurances as $insurance) {
+			$tenants[] = $insurance->tenant;
+		}
+		
 
-        return view('tenant.viewlist',compact('tenants'));
-    }
+		return view('insurance.viewlist',compact('tenants'));
+	}
 
-    public function tenantuploadlist()
-    {
-        $insurances = Insurance::whereNotNull('tempfile')->get();
-        $tenants = array();
-        foreach ($insurances as $insurance) {
-            $tenants[] = $insurance->tenant;
-        }
+	public function tenantnoncompliancelist()
+	{
+		$insurances = Insurance::where('compliant', false)->get();
+		$tenants = array();
+		foreach ($insurances as $insurance) {
+			if ($insurance->tenant->active) {
+				$tenants[] = $insurance->tenant;
+			}
+		}
+		
 
-        return view('tenant.viewlist',compact('tenants'));
-    }
-
-    public function tenantnoncompliancelist()
-    {
-        $insurances = Insurance::where('compliant', false)->get();
-        $tenants = array();
-        foreach ($insurances as $insurance) {
-            $tenants[] = $insurance->tenant;
-        }
-
-        return view('tenant.viewlist',compact('tenants'));
-    }
-
-
-    public function upload(Tenant $tenant, Request $request)
-    {
-
-        $this->validate($request, [ 
-            'insurance_cert' => 'required|mimes:pdf'
-            ]);
-        
-        $used = false;
-
-        $fname = 'ins-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
-
-        $ins = $tenant->Insurance;
+		return view('insurance.viewlist',compact('tenants','active_selector'));
+	}
 
 
-        // Associate the file name of the insurance certificate 
-        // with the various possible insurance types.
-        // first determines file type
-        
-        if ($request->typeSelect == 'certificate') {
-            if ($request->liability == 'Y') {
-                $ins->liability_filename = 'files/insurance/'.$fname;
-                $used = true;
-            }
-            if ($request->auto == 'Y') {
-                $ins->auto_filename = 'files/insurance/'.$fname;
-                $used = true;
-            }
-            if ($request->workerscomp == 'Y') {
-                $ins->workerscomp_filename = 'files/insurance/'.$fname;
-                $used = true;
-            }
-            if ($request->umbrella == 'Y') {
-                $ins->umbrella_filename = 'files/insurance/'.$fname;
-                $used = true;
-            }
-        }
-        elseif ($request->typeSelect == 'endorsement'){
-            $ins->endorsement_filename = 'files/insurance/'.$fname;
-            $used = true;
-        }
+	public function upload(Tenant $tenant, Request $request)
+	{
 
-        if ($used) {
-            $ins->save();
-            $file = $request->insurance_cert;
-            $file->move('files/insurance/', $fname);
-        }
+		$this->validate($request, [ 
+			'insurance_cert' => 'required|mimes:pdf'
+			]);
+		
+		$used = false;
+
+		$fname = 'ins-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
+
+		$ins = $tenant->Insurance;
 
 
-        return back();
+		// Associate the file name of the insurance certificate 
+		// with the various possible insurance types.
+		// first determines file type
+		
+		if ($request->typeSelect == 'certificate') {
+			if ($request->liability == 'Y') {
+				$ins->liability_filename = 'files/insurance/'.$fname;
+				$used = true;
+			}
+			if ($request->auto == 'Y') {
+				$ins->auto_filename = 'files/insurance/'.$fname;
+				$used = true;
+			}
+			if ($request->workerscomp == 'Y') {
+				$ins->workerscomp_filename = 'files/insurance/'.$fname;
+				$used = true;
+			}
+			if ($request->umbrella == 'Y') {
+				$ins->umbrella_filename = 'files/insurance/'.$fname;
+				$used = true;
+			}
+		}
+		elseif ($request->typeSelect == 'endorsement'){
+			$ins->endorsement_filename = 'files/insurance/'.$fname;
+			$used = true;
+		}
 
-    }
+		if ($used) {
+			$ins->save();
+			$file = $request->insurance_cert;
+			$file->move('files/insurance/', $fname);
+		}
 
-    public function response(Tenant $tenant)
-    {
-        $tenant->load('user');
-        return Response::json($tenant);
-    }
 
-    public function update(Tenant $tenant, Request $request)
-    {
-        
-        $tenant->tenant_system_id = $request->tenant_system_id;
-        $tenant->unit = $request->unit;
-        $tenant->company_name = $request->company_name;
-        if ($request->active_switch == 'true'){
-            $tenant->active = true;
-        }
-        else {
-            $tenant->active = false;
-        }
-        //$tenant->User()->verified = $request->verified_switch;
-        $tenant->save();
-        
-        return redirect('/tenant/'.$tenant->id);
-    }
+		return back();
 
-    public function notice(Tenant $tenant)
-    {
-        Helper::sendInsuranceNotice($tenant, 'manual');
+	}
 
-        return back();
-    }
+	public function refinelist(Request $request)
+	{
+		$tenants = collect();
+		$property = Property::where('property_system_id',$request->property_system_id)->first();
+		$group = Group::where('group_system_id', $request->property_system_id)->first();
+		if ($group != null) 
+		{
+			$group->load('properties', 'properties.owner');
+			
+			foreach ($group->Properties as $property) 
+			{
+				foreach ($property->tenants as $tenant) {
+					$tenants->prepend($tenant);
+				}
+			}
+			$tenants = $tenants->sortBy('company_name');
+		}
+		elseif ($property != null) 
+		{
+			foreach ($property->Tenants as $tenant) 
+			{               
+				$tenants->prepend($tenant);
+			}
+			$tenants = $tenants->sortBy('company_name');
+		}
+		else 
+		{
+			$tenants = Tenant::orderBy('company_name')->get();
+		}
+		
+		if ($request->active_selector == 'active') {
+			$tenants = $tenants->filter(function ($tenant) {
+				return $tenant->active;
+			});
+		}
+		elseif ($request->active_selector == 'inactive') {
+			$tenants = $tenants->filter(function ($tenant) {
+				return !$tenant->active;
+			});
+		}
+		$active_selector = $request->active_selector;
 
-    //takes an .xls file to import in a mass amount of tenants at once. 
-    public function import(Request $request)
-    {
+		return view('tenant.viewlist',compact('tenants', 'active_selector'));
+	}
 
-        $file = $request->tenantimport;
-        $file->move('tmp/','import.xls');
+	public function response(Tenant $tenant)
+	{
+		$tenant->load('user');
+		return Response::json($tenant);
+	}
 
-        Helper::importTenant('tmp/import.xls');
+	public function jsontenantlist () 
+	{
+		$tenants = Tenant::orderBy('company_name')->get();
+		$tenants->load('property','insurance');
+	}
 
-        return redirect('/tenant/list');
-    }
+	public function update(Tenant $tenant, Request $request)
+	{
+		
+		$tenant->tenant_system_id = $request->tenant_system_id;
+		$tenant->unit = $request->unit;
+		$tenant->company_name = $request->company_name;
+		if ($request->active_switch == 'true'){
+			$tenant->active = true;
+		}
+		else {
+			$tenant->active = false;
+		}
+		//$tenant->User()->verified = $request->verified_switch;
+		$tenant->save();
+		
+		return redirect('/tenant/'.$tenant->id);
+	}
+
+	public function notice(Tenant $tenant)
+	{
+		Helper::sendInsuranceNotice($tenant, 'manual');
+
+		return back();
+	}
+
+	//takes an .xls file to import in a mass amount of tenants at once. 
+	public function import(Request $request)
+	{
+
+		$file = $request->tenantimport;
+		$file->move('tmp/','import.xls');
+
+		Helper::importTenant('tmp/import.xls');
+
+		return redirect('/tenant/list');
+	}
 }

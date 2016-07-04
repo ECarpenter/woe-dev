@@ -84,8 +84,6 @@ $(document).ready(function(){
      	window.open ($(this).attr("href"));
 	});
 
-
-
 	$("#btn-bill").click(function (e) {
 
 		$.ajaxSetup({
