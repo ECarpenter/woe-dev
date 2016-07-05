@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\User;
+
 class Property extends Model
 {
 
@@ -42,6 +44,21 @@ class Property extends Model
         }
 
         return $managers;
+    }
+
+    public function canAccess()
+    {
+
+        foreach ($this->Users as $user) 
+        {
+            
+            if ($user->id == \Auth::user()->id)
+            {
+
+                return true;
+            }
+        }
+        return false;
     }
 
     public function Group()

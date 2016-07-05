@@ -12,7 +12,7 @@
                         {{ method_field('PATCH') }}
                         {!! csrf_field() !!}
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('old_password') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Old Password</label>
 
                             <div class="col-md-6">
@@ -20,7 +20,7 @@
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>{{ $errors->first('old_password') }}</strong>
                                     </span>
                                 @endif
                             </div>

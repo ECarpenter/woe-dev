@@ -74,9 +74,14 @@ class TenantController extends Controller
 
 	public function show(Tenant $tenant)
 	{
+		if (!\Auth::user()->can('view-all'))
+		{
+			return TenantController::tenantlist();
+		}
 		$tenant->load('workorder', 'workorder.problemtype','user','insurance');
 
 		$state = Helper::insuranceCheck($tenant);
+		
 
 		return view('tenant.show', compact('tenant','state'));
 	}
@@ -85,6 +90,9 @@ class TenantController extends Controller
 	{
 		$tenants = Tenant::where('active', true)->orderBy('company_name')->get();
 		$active_selector = 'active';
+		
+		$tenants = TenantController::checkPermissions($tenants);
+
 
 		return view('tenant.viewlist',compact('tenants','active_selector'));
 	}
@@ -96,7 +104,7 @@ class TenantController extends Controller
 		foreach ($insurances as $insurance) {
 			$tenants[] = $insurance->tenant;
 		}
-		
+		$tenants = TenantController::checkPermissions($tenants);
 
 		return view('insurance.viewlist',compact('tenants'));
 	}
@@ -111,6 +119,7 @@ class TenantController extends Controller
 			}
 		}
 		
+		$tenants = TenantController::checkPermissions($tenants);
 
 		return view('insurance.viewlist',compact('tenants','active_selector'));
 	}
@@ -210,6 +219,8 @@ class TenantController extends Controller
 		}
 		$active_selector = $request->active_selector;
 
+		$tenants = TenantController::checkPermissions($tenants);
+
 		return view('tenant.viewlist',compact('tenants', 'active_selector'));
 	}
 
@@ -219,15 +230,9 @@ class TenantController extends Controller
 		return Response::json($tenant);
 	}
 
-	public function jsontenantlist () 
-	{
-		$tenants = Tenant::orderBy('company_name')->get();
-		$tenants->load('property','insurance');
-	}
 
 	public function update(Tenant $tenant, Request $request)
 	{
-		
 		$tenant->tenant_system_id = $request->tenant_system_id;
 		$tenant->unit = $request->unit;
 		$tenant->company_name = $request->company_name;
@@ -260,5 +265,23 @@ class TenantController extends Controller
 		Helper::importTenant('tmp/import.xls');
 
 		return redirect('/tenant/list');
+	}
+
+	public static function checkPermissions($tenants)
+	{
+		if (!\Auth::user()->can('view-all'))
+		{
+			$tenants = $tenants->keyBy('id');
+			foreach ($tenants as $tenant)
+			{
+				if (!$tenant->property->canAccess())
+				{	
+					$tenants->forget($tenant->id);
+				}
+				
+			}
+		}
+
+		return $tenants;
 	}
 }

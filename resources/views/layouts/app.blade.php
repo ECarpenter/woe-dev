@@ -80,7 +80,7 @@
                         </ul>
                     </li>
                     @endpermission          
-                    @permission('manage-insurance')
+                    @permission('general')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             Properties<span class="caret"></span>
