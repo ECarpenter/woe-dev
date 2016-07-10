@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Log;
 use Storage;
 use Mail;
 use Response;
@@ -110,6 +111,7 @@ class InsuranceController extends Controller
 
 			if (!empty($emails)) 
 			{
+				Log::info('Insurance upload notification e-mail sent to',[$emails]);
 				Mail::queue('email.uploadedcert',compact('tenant'), function ($message) use ($emails) {
 					$message->from('davispartners@ejcustom.com', 'EJCustom');
 					$message->subject('New Insurance Upload');
