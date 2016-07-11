@@ -47,10 +47,24 @@
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
-			<h4> 
-					
+			<ul class="nav nav-pills nav-stacked">
+				<li class="dropdown">
+				    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+				    Insurance Requirements<span class="caret"></span>
+				    </a>
 
-			</h4>
+				    <ul class="dropdown-menu" role="menu">
+						<li><a href="#">Liability Single - {{ $tenant->req_liability_single_limit == 0 ? number_format($tenant->property->req_liability_single_limit).' (property)' : number_format($tenant->req_liability_single_limit) }}</a></li>
+						<li><a href="#">Liability Combined - {{ $tenant->req_liability_combined_limit == 0 ? number_format($tenant->property->req_liability_combined_limit).' (property)' : number_format($tenant->req_liability_combined_limit) }}</a></li>
+						<li><a href="#">Excess/Umbrella - {{ $tenant->req_umbrella_limit == 0 ? number_format($tenant->property->req_umbrella_limit).' (property)' : number_format($tenant->req_umbrella_limit) }}</a></li>
+						<li><a href="#">Auto - {{ $tenant->req_auto_limit == 0 ? number_format($tenant->property->req_auto_limit).' (property)' : number_format($tenant->req_auto_limit) }}</a></li>
+						<li><a href="#">Workers Comp - {{ $tenant->req_workerscomp_limit == 0 ? number_format($tenant->property->req_workerscomp_limit).' (property)' : number_format($tenant->req_workerscomp_limit) }}</a></li>
+						<li><a href="#" class="open-tenant-req-insurance-modal">Edit Requirements</a></li>
+					</ul>
+				</li>
+			</ul>		
+
+			
 		</div>
 	</div>
 
@@ -75,22 +89,7 @@
 		</div>
 
 		<div class="col-xs-3">
-			<ul class="nav nav-pills nav-stacked">
-				<li class="dropdown">
-				    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-				      Insurance Requirements<span class="caret"></span>
-				    </a>
-
-				    <ul class="dropdown-menu" role="menu">
-						<li><a href="#">Liability Single - {{ number_format($tenant->req_liability_single_limit) }}</a></li>
-						<li><a href="#">Liability Combined - {{ number_format($tenant->req_liability_combined_limit) }}</a></li>
-						<li><a href="#">Excess/Umbrella - {{ number_format($tenant->req_umbrella_limit) }}</a></li>
-						<li><a href="#">Auto - {{ number_format($tenant->req_auto_limit) }}</a></li>
-						<li><a href="#">Workers Comp - {{ number_format($tenant->req_workerscomp_limit) }}</a></li>
-						<li><a href="#" class="open-tenant-req-insurance-modal">Edit Requirements</a></li>
-					</ul>
-				</li>
-			</ul>
+			
 		</div>
 	</div>
 
@@ -159,6 +158,7 @@
 		</div>
 	</div>
 
+	@permission('manage-wo')
 	<div class="row">
 		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3 text-center">
 			<h4> Work Order </h4>
@@ -184,7 +184,7 @@
 			</table>
 		</div>
 	</div>
-
+	@endpermission
 
 	<!-- ManageInsuranceModal (Pop up when manage button clicked) -->
 	<div class="modal fade" id="ManageInsuranceModal" tabindex="-1" role="dialog" aria-labelledby="ManageModalLabel" aria-hidden="true">
