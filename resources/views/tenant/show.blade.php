@@ -40,6 +40,19 @@
 			</h4>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-2">
+			<h4> Unit - <small>
+			{{$tenant->unit}} 
+			</small></h4>
+		</div>
+		<div class="col-xs-4">
+			<h4> 
+					
+
+			</h4>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
@@ -380,6 +393,15 @@
 		                        <label class="col-xs-4 control-label">Tenant ID#</label>
 		                        <div class="col-xs-6">
 		                            <input type="text" class="form-control" name="tenant_system_id" id="tenant_system_id" value="{{ old('tenant_system_id') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Insurance Contact</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="insurance_contact_email" id="insurance_contact_email" value="{{ old('tenant_system_id') }}">
 		                        </div>
 		                    </div>   
 	                    </div>

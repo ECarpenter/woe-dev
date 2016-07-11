@@ -28,6 +28,7 @@ $(document).ready(function(){
             $('#tenant_system_id').val(data.tenant_system_id);
             $('#unit').val(data.unit);
             $('#company_name').val(data.company_name);
+            $('#insurance_contact_email').val(data.insurance_contact_email);
             if(data.active == 1) {
                 $('#active').prop('checked', true);
             }
