@@ -21,7 +21,8 @@
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "barryvdh/laravel-dompdf": "0.6.*",
         "lynx39/lara-pdf-merger": "dev-woe",
-        "maatwebsite/excel":"~2.1.0"
+        "maatwebsite/excel":"~2.1.0",
+        "league/flysystem-aws-s3-v3":"~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

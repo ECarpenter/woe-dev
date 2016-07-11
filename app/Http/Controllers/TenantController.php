@@ -82,8 +82,13 @@ class TenantController extends Controller
 
 		$state = Helper::insuranceCheck($tenant);
 		
+		$tempfileurl = '';
+		if ($tenant->insurance->tempfile != null)
+		{
+			$tempfileurl = Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->tempfile);
+		}
 
-		return view('tenant.show', compact('tenant','state'));
+		return view('tenant.show', compact('tenant','state','tempfileurl'));
 	}
 
 	public function tenantlist()

@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Log;
 use Excel;
 use Mail;
+use Storage;
 
 use Illuminate\Support\Str;
 use App\Tenant;
@@ -178,28 +179,30 @@ class Helper
 			$state["efile"] = "danger";
 		}
 		else {
-			$state["elink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->endorsement_filename."')";
+			
+			$state["elink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->endorsement_filename)."')";
 		} 
 		if ($tenant->Insurance->liability_filename == null) {
 			$state["lfile"] = "danger";
 			$insurance->compliant = false;
 		}
 		else {
-			$state["llink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->liability_filename."')";
+			
+			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
 		}    
 		if ($tenant->Insurance->umbrella_filename == null) {
 			$state["ufile"] = "danger";
 			$insurance->compliant = false;
 		}
 		else {
-			$state["ulink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->umbrella_filename."')";
+			$state["ulink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->umbrella_filename)."')";
 		} 
 		if ($tenant->insurance->auto_filename == null) {
 			$state["afile"] = "danger";
 			$insurance->compliant = false;
 		}
 		else {
-			$state["alink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->auto_filename."')";
+			$state["alink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->auto_filename)."')";
 		} 
 		if (!$tenant->insurance->workerscomp_applicable) {
 			$state["wfile"] = "";
@@ -209,7 +212,7 @@ class Helper
 			$insurance->compliant = false;
 		}
 		else {
-			$state["wlink"] = "window.open('/".$tenant->insurance->filepath.$tenant->insurance->workerscomp_filename."')";
+			$state["wlink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->workerscomp_filename)."')";
 		}    
 		if ($tenant->insurance->liability_end < $today) {
 			$state["lexpire"] = "danger";
@@ -319,5 +322,16 @@ class Helper
 				$message->to($tenant->insurance_contact_email);
 			});
 		}
+	}
+
+	public static function getS3URL($filename)
+	{
+		$s3 = Storage::disk('s3')->getDriver()->getAdapter()->getClient();
+		$getObjectCmd = $s3->getCommand('GetObject', [
+				'Bucket' => env('S3_BUCKET'),
+				'Key' => $filename
+			]);
+		$getObjectReq = $s3->createPresignedRequest($getObjectCmd, '+1 hour');
+		return (string) $getObjectReq->getUri();
 	}
 }
