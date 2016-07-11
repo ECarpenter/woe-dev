@@ -41,12 +41,14 @@
 						<th>Tenant</th>
 						<th>ID</th>
 					</tr>
+
 				@foreach ($tenants as $tenant)
 					<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}" onclick = "location.href='/tenant/{{$tenant->id}}'">
 						<td>{{$tenant->company_name}}</td>
 						<td>{{$tenant->tenant_system_id}}</td>
 					</tr>
 				@endforeach
+
 			</table>
 		</div>
 	</div>

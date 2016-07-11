@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Filesystem;
 
+use Log;
 use Storage;
 use Mail;
 use Response;
@@ -48,7 +50,7 @@ class InsuranceController extends Controller
 			$fname = 'ins-'.$insurance->Tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
 			if (InsuranceController::processInsuranceFile($fname, $insurance, $request)) {
 				$file = $request->insurance_cert;
-				$file->move('files/insurance/', $fname);
+				Storage::put($insurance->filepath.$fname, file_get_contents($file));
 			}
 		}
 		
@@ -93,8 +95,8 @@ class InsuranceController extends Controller
 		if($tenant != null && $tenant->Insurance->upload_token == $request->token)
 		{
 			$fname = 'ins-'.$tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
-			$file = $request->insurance_cert;
-			$file->move($tenant->Insurance->filepath, $fname);
+			$file = $request->file('insurance_cert');
+			Storage::put($tenant->insurance->filepath.$fname, file_get_contents($file));
 			$tenant->Insurance->tempfile = $fname;
 			$tenant->Insurance->save();
 			 
@@ -110,6 +112,7 @@ class InsuranceController extends Controller
 
 			if (!empty($emails)) 
 			{
+				Log::info('Insurance upload notification e-mail sent to',[$emails]);
 				Mail::queue('email.uploadedcert',compact('tenant'), function ($message) use ($emails) {
 					$message->from('davispartners@ejcustom.com', 'EJCustom');
 					$message->subject('New Insurance Upload');
@@ -171,7 +174,7 @@ class InsuranceController extends Controller
 			$insurance->endorsement_filename = $fname;
 			$used = true;
 		}
-
+		$insurance->save();
 		return $used;
 	}
 

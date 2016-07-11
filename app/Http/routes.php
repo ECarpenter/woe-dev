@@ -28,13 +28,15 @@ Route::group(['middleware' => 'web'], function () {
 Route::group(['middleware' => ['web','auth']], function () {
     
 
-    Route::get('/home', 'HomeController@index');
-    Route::get('/submit', 'WorkOrderController@submit');
-    Route::post('/submit-tenant', 'WorkOrderController@save');
+    Route::get('home', 'HomeController@index');
+    Route::get('submit', 'WorkOrderController@submit');
+    Route::post('submit-tenant', 'WorkOrderController@save');
+    Route::get('user/changepassword', 'UserController@changePassword');
+    Route::patch('user/savepassword', 'UserController@savePassword');
 });
 
 //insurance and work orders
-Route::group(['middleware' => ['web', 'auth', 'permission:manage-insurance']], function () {
+Route::group(['middleware' => ['web', 'auth', 'permission:general']], function () {
 	
 
 

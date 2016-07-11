@@ -192,7 +192,7 @@
 							@if ($tenant->Insurance->tempfile == null) 
 								<input type="file" accept=".pdf" name="insurance_cert">
 							@else
-								<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ asset($tenant->Insurance->filepath.$tenant->Insurance->tempfile) }}" > View Insurance Certificate </button>
+								<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Insurance Certificate </button>
 								<br>
 								<h4>Accept tenant's upload</h4>
 								<div class="radio">

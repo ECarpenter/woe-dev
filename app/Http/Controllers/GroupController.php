@@ -75,29 +75,36 @@ class GroupController extends Controller
 
     public function show(Group $group)
     {
-        $group->load('properties', 'properties.owner');
-
-        $tenants = collect();
-        foreach ($group->Properties as $property) 
+        if (\Auth::user()->can('view-all') || $group->Properties->first()->canAccess())
         {
-            foreach ($property->Tenants as $tenant) 
-            {               
-                $tenants->prepend($tenant);
-            }
-        }
-        $tenants = $tenants->sortBy('company_name');
+            $group->load('properties', 'properties.owner');
 
-        $workorders = collect();
-        foreach ($tenants as $tenant)
-        {
-            foreach ($tenant->WorkOrder as $workorder)
+            $tenants = collect();
+            foreach ($group->Properties as $property) 
             {
-                $workorders->prepend($workorder);
+                foreach ($property->Tenants as $tenant) 
+                {               
+                    $tenants->prepend($tenant);
+                }
             }
-        }
-        $workorders = $workorders->sortByDesc('created_at');
+            $tenants = $tenants->sortBy('company_name');
 
-        return view('group.show', compact('group','tenants', 'workorders'));
+            $workorders = collect();
+            foreach ($tenants as $tenant)
+            {
+                foreach ($tenant->WorkOrder as $workorder)
+                {
+                    $workorders->prepend($workorder);
+                }
+            }
+            $workorders = $workorders->sortByDesc('created_at');
+
+            $tenants = TenantController::checkPermissions($tenants);
+
+            return view('group.show', compact('group','tenants', 'workorders'));
+        }
+
+        return redirect('property/list');
     }
 
 

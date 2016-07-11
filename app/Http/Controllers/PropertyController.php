@@ -40,10 +40,8 @@ class PropertyController extends Controller
 		{
 			return redirect('/group/'.$group->id);
 		}
-		elseif ($property != null) 
+		elseif ($property != null)
 		{
-			
-			
 			return PropertyController::show($property);
 		}
 		else 
@@ -56,33 +54,52 @@ class PropertyController extends Controller
 	public function proplist()
 	{
 		$properties = Property::orderBy('name')->get();
+		if (!\Auth::user()->can('view-all'))
+		{
+			$count = 0;
+			foreach ($properties as $property)
+			{
+				if (!$property->canAccess())
+				{	
+					$properties->forget($count);
+				}
+				$count++;
+			}
+		}
 		return view('property.viewlist',compact('properties'));
 	}
 
 	//Shows an individual property to the user
 	public function show(Property $property)
 	{
-		$property->load('owner');
-		$tenants = collect();
-		foreach ($property->Tenants as $tenant) 
-		{   
-			if($tenant->active) 
-			{           
-				$tenants->prepend($tenant);
-			}
-		}
-		$tenants = $tenants->sortBy('company_name');
-
-		$workorders = collect();
-		foreach ($tenants as $tenant)
+		if (\Auth::user()->can('view-all') || $property->canAccess())
 		{
-			foreach ($tenant->WorkOrder as $workorder)
-			{
-				$workorders->prepend($workorder);
+			$property->load('owner');
+			$tenants = collect();
+			foreach ($property->Tenants as $tenant) 
+			{   
+				if($tenant->active) 
+				{           
+					$tenants->prepend($tenant);
+				}
 			}
+			$tenants = $tenants->sortBy('company_name');
+
+			$workorders = collect();
+			foreach ($tenants as $tenant)
+			{
+				foreach ($tenant->WorkOrder as $workorder)
+				{
+					$workorders->prepend($workorder);
+				}
+			}
+			$workorders = $workorders->sortByDesc('created_at');
+			return view('property.show', compact('property', 'tenants','workorders'));
 		}
-		$workorders = $workorders->sortByDesc('created_at');
-		return view('property.show', compact('property', 'tenants','workorders'));
+		else
+		{
+			return PropertyController::proplist();
+		}
 	}
 
 	//Creates the form to add a new property

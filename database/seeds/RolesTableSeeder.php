@@ -41,11 +41,26 @@ class RolesTableSeeder extends Seeder
         $insurance->display_name = 'Manage Insurance';
         $insurance->save();
 
+        $general = new App\Permission;
+        $general->name = 'general';
+        $general->display_name = 'General Access';
+        $general->save();
+        
+        $all = new App\Permission;
+        $all->name = 'view-all';
+        $all->display_name = 'View All Properties';
+        $all->save();
+
         $admin->attachPermission($manage);
         $admin->attachPermission($insurance);
+        $admin->attachPermission($all);
+        $admin->attachPermission($general);
         $manager->attachPermission($manage);
+        $manager->attachPermission($general);
         $accountant->attachPermission($manage);
+        $accountant->attachPermission($general);
         $insuranceadmin->attachPermission($insurance);
-
+        $insuranceadmin->attachPermission($all);
+        $insuranceadmin->attachPermission($general);
     }
 }
