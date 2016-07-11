@@ -13,6 +13,7 @@ class TenantsTableSeeder extends Seeder
     public function run()
     {
         Helper::importTenant('Tenant.xls');
-        Helper::importInsurance('Insurance.xls');
+        Helper::processInsuranceChecks();
+        //Helper::importInsurance('Insurance.xls');
     }
 }

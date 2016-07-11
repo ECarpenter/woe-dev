@@ -105,11 +105,13 @@ class TenantController extends Controller
 	public function tenantuploadlist()
 	{
 		$insurances = Insurance::whereNotNull('tempfile')->get();
-		$tenants = array();
+		$tenants = collect();
 		foreach ($insurances as $insurance) {
-			$tenants[] = $insurance->tenant;
+			$tenants->prepend($insurance->tenant);
 		}
 		$tenants = TenantController::checkPermissions($tenants);
+
+		$tenants = $tenants->sortBy('company_name');
 
 		return view('insurance.viewlist',compact('tenants'));
 	}
@@ -117,14 +119,16 @@ class TenantController extends Controller
 	public function tenantnoncompliancelist()
 	{
 		$insurances = Insurance::where('compliant', false)->get();
-		$tenants = array();
+		$tenants = collect();
 		foreach ($insurances as $insurance) {
 			if ($insurance->tenant->active) {
-				$tenants[] = $insurance->tenant;
+				$tenants->prepend($insurance->tenant);
 			}
 		}
 		
 		$tenants = TenantController::checkPermissions($tenants);
+
+		$tenants = $tenants->sortBy('company_name');
 
 		return view('insurance.viewlist',compact('tenants','active_selector'));
 	}
@@ -241,6 +245,7 @@ class TenantController extends Controller
 		$tenant->tenant_system_id = $request->tenant_system_id;
 		$tenant->unit = $request->unit;
 		$tenant->company_name = $request->company_name;
+		$tenant->insurance_contact_email = $request->insurance_contact_email;
 		if ($request->active_switch == 'true'){
 			$tenant->active = true;
 		}

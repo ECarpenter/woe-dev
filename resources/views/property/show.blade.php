@@ -88,6 +88,32 @@
 			</ul>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-5 col-md-offset-3 text-center">
+			<h4> Insurance Non-Compliance </h4>
+		</div>	
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">	
+			<table class="table table-hover">
+					<tr>
+						<th>Tenant</th>
+						<th>ID</th>
+					</tr>
+
+				@foreach ($tenants as $tenant)
+					@if (!$tenant->insurance->compliant)
+						<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}" onclick = "location.href='/tenant/{{$tenant->id}}'">
+							<td>{{$tenant->company_name}}</td>
+							<td>{{$tenant->tenant_system_id}}</td>
+						</tr>
+					@endif
+				@endforeach
+
+			</table>
+		</div>
+	</div>
 	@if ($property->allow_workorder)
 		<div class="row">
 			<div class="col-md-5 col-md-offset-3 text-center">

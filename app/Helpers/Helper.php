@@ -6,6 +6,7 @@ use Log;
 use Excel;
 use Mail;
 use Storage;
+use DB;
 
 use Illuminate\Support\Str;
 use App\Tenant;
@@ -43,6 +44,44 @@ class Helper
 						$property->req_workerscomp_limit = $row->req_workerscomp_limit;
 						$property->save();
 					}
+					
+				});
+			});
+
+		});      
+	}
+
+	public static function importManager($fname)
+	{
+		Excel::load($fname, function($reader) {
+
+			
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
+					if ($row->property_id != null)
+					{
+						$user = User::where('email', $row->email)->first();
+
+						if ($user == null)
+						{
+							$user = new User;
+							$user->name = $row->first.' '.$row->last;
+							$user->email = $row->email;
+							$user->password = bcrypt($row->last);
+							$user->timezone = "America/Los_Angeles";
+							$user->save();
+							$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
+							$user->Roles()->attach($role);
+						}					
+
+						$property = Property::where('property_system_id', $row->property_id)->first();
+						if ($property != null)
+						{
+							$user->Properties()->attach($property);
+						}
+					}
+
 					
 				});
 			});
@@ -91,14 +130,11 @@ class Helper
 							{
 								$tenant->property_id = $property->id;
 								$tenant->save();
+								$ins = new Insurance;
+								$ins->tenant_id = $tenant->id;
+								$ins->save();
 							}
-
-							
-
-							$ins = new Insurance;
-							$ins->tenant_id = $tenant->id;
-							$ins->save();
-							}
+						}
 					}
 				});
 			});
