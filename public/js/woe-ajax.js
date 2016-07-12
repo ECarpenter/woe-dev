@@ -123,6 +123,17 @@ $(document).ready(function(){
 		}
 	});
 
+    $("#btn-send-notice").click(function (e) {
+        if(confirm("Are you sure you want to send the tenant an insurance notice?"))
+        { 
+            $.ajax({
+                type: "GET",
+                url: '/tenant/' + $('#tenant_id').val() + '/notice'
+            });
+            location.reload();
+        }
+    });
+
     $("input:radio[name='tenantUpload']").click(function(){
         if ($(this).val() == "reject") {
             $('#rejectnote').show();
