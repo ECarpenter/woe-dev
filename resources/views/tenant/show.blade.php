@@ -101,7 +101,8 @@
 		</div>
 		<div class="col-xs-3  col-md-3 ">
 			@if ($state['manual_notice'] == "valid")
-			<a href="/tenant/{{$tenant->id}}/notice" class="btn btn-primary btn-xs" role="button">	Send Insurance Notice </a>
+			<button class="btn btn-primary btn-xs" type="button" id="btn-send-notice">	Send Insurance Notice </button>
+			<input type="hidden" id="tenant_id" name="tenant_id" value={{$tenant->id}}>
 			@else
 			<a href="#" class="btn btn-primary btn-xs disabled" role="button">	Send Insurance Notice </a>
 			@endif
