@@ -15,6 +15,7 @@ use App\Property;
 use App\Owner;
 use App\Group;
 use App\Insurance;
+use Symfony\Component\Process\Process;
 
 class Helper
 {
@@ -369,5 +370,17 @@ class Helper
 			]);
 		$getObjectReq = $s3->createPresignedRequest($getObjectCmd, '+1 hour');
 		return (string) $getObjectReq->getUri();
+	}
+
+	public static function pdfToTiff()
+	{
+		$convert = new Process('gswin64c -o document.tiff -sDEVICE=tiffgray -r720x720 -g6120x7920 -sCompression=lzw test.pdf');
+		$convert->run();
+
+		if (!$convert->isSuccessful()) 
+		{
+    		throw new ProcessFailedException($convert);
+		}
+
 	}
 }
