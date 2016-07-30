@@ -60,7 +60,10 @@ $(document).ready(function(){
                 console.log('passed if');
                 $('#workerscomp_applicable').prop('checked', true);
             }
-            $('#ManageInsuranceModal').modal('show');       
+            $('#ManageInsuranceModal').modal('show');
+            $('#ManageInsuranceModal').draggable({
+                handle: ".modal-header"
+                });       
         })  
     });
 
