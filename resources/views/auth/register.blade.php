@@ -51,9 +51,10 @@
                          <div class="form-group">
                             <label class="col-md-4 control-label">Tenant ID#</label>
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="tenant_system_id" value="{{ old('tenant_system_id') }}">
+                            <div class="col-md-6" id="tenantidform">
+                                <input type="text" class="form-control" name="tenant_system_id" id='tenantidinput' value="{{ old('tenant_system_id') }}">
                             </div>
+
                         </div>                  
 
                         

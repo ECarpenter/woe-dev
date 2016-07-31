@@ -123,4 +123,19 @@ class AuthController extends Controller
         return $property;
     }
 
+    public function id()
+    {
+        $id = Request::get('tenantid');
+        $tenant = Tenant::where('tenant_system_id', 'like', $id)->first();
+        if ($tenant == null)
+        {
+            return response()->json('failure');
+        }
+        else
+        {
+            //$tenant->load('property');
+            return $tenant;
+        }
+    }
+
 }

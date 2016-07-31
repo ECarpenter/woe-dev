@@ -2,6 +2,41 @@ $(document).ready(function(){
 
 
     //Logic for tenant registration page
+    //
+    
+    jQuery.fn.extend({
+        validatetenant: function () {
+            var tenantid = $(this).val();
+            console.log(tenantid);
+            $.ajax({
+                    type: "GET",
+                    url: '/tenantregister/id',
+                    data: {tenantid},
+                    dataType: 'json',
+                    success: function (data){
+                        console.log(data);
+                        $('#tenantidform').removeClass('has-error');
+                        $('#idresult').remove().end();
+                        $('#propresult').remove().end();
+                        if (data == "failure")
+                        {
+                            $('#tenantidform').addClass('has-error');
+                            $('#tenantidform').append('<span class="help-block" id="idresult"><strong>Tenant Id not found</strong></span>');
+                        }
+                        else
+                        {
+                            $('#tenantidform').append('<span class="help-block" id="idresult">' + data.company_name +'</span>');
+                            if ($("select[name='property']").val() != data.property_id)
+                            {
+                                $('#tenantidform').addClass('has-error');
+                                $('#tenantidform').append('<span class="help-block" id="propresult">Property does not match</span>');
+                            }
+                        }
+                    }
+            });
+        }
+    });
+
  
     $("select[name='city']").change(function () {
         var city = escape($(this).val());
@@ -22,7 +57,18 @@ $(document).ready(function(){
             
         });
     });
+    $("select[name='property']").change(function (){
+        console.log($.trim($('#tenantidinput').val()))
+        if ($.trim($('#tenantidinput').val()) != '')
+        {
+            $('#tenantidinput').validatetenant();
+        }
+    });
 
+    $('#tenantidform').change(function(){
+        
+        $('#tenantidinput').validatetenant();
+    });
 
    //display modal form for task editing
     $('.open-billing-modal').click(function(){

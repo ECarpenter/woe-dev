@@ -20,6 +20,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::auth();
     Route::get('/tenantregister', 'Auth\AuthController@tenantregister');
     Route::get('/tenantregister/city', 'Auth\AuthController@city');
+    Route::get('/tenantregister/id', 'Auth\AuthController@id');
     Route::get('/', function () {
         return view('welcome');
     });
