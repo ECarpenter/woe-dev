@@ -12,4 +12,11 @@ class Group extends Model
     {
     	return $this->belongsToMany('App\Property');
     }
+
+    public function  getPropertyAttribute()
+    {
+    	return $this->properties->first();
+    }
 }
+
+
