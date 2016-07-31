@@ -193,7 +193,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="ManageModalLabel">Manage Insurance Certificate</h4>
+                    <h4 class="modal-title" id="ManageModalLabel">Manage Insurance Certificate - {{$tenant->company_name}} ( {{$tenant->tenant_system_id}})</h4>
+
                 </div>
                 <div class="modal-body">
                 <form method="POST" action="/insurance/{{$tenant->Insurance->id}}/update"  enctype="multipart/form-data">

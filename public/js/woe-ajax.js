@@ -1,8 +1,30 @@
 $(document).ready(function(){
 
 
+    //Logic for tenant registration page
+ 
+    $("select[name='city']").change(function () {
+        var city = escape($(this).val());
+        console.log(city);
+        $.ajax({
+                type: "GET",
+                url: '/tenantregister/city',
+                data: {city},
+                dataType: 'json',
+                success: function (data){
+                    $("select[name='property']").find('option').remove().end();
+                    jQuery.each(data, function(index, item) {
+                       $("select[name='property']").append('<option value="' + item.id + '">' + item.name + '</option>')
+                        console.log(item.name); 
+                    });  
+                    $("select[name='property']").prepend('<option value="">Select One</option>').val('');
+                }
+            
+        });
+    });
 
-    //display modal form for task editing
+
+   //display modal form for task editing
     $('.open-billing-modal').click(function(){
         var wo_id = $(this).val();
 
@@ -60,7 +82,10 @@ $(document).ready(function(){
                 console.log('passed if');
                 $('#workerscomp_applicable').prop('checked', true);
             }
-            $('#ManageInsuranceModal').modal('show');       
+            $('#ManageInsuranceModal').modal('show');
+            $('#ManageInsuranceModal').draggable({
+                handle: ".modal-header"
+                });       
         })  
     });
 

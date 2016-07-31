@@ -6,7 +6,10 @@ use DB;
 
 use App\User;
 use App\Tenant;
+use App\Property;
 use Validator;
+use Request;
+use Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -93,7 +96,31 @@ class AuthController extends Controller
 
         return $user;
 
-
-
     }
+
+    public function tenantregister()
+    {
+        $properties = Property::orderBy('name')->get();
+        $cities = collect();
+        foreach ($properties as $property) 
+        {
+           if (!$cities->contains($property->city))
+           {
+                $cities->prepend($property->city);
+           }  
+        }
+
+        $cities = $cities->sort();
+
+        return view('auth.register', compact('properties', 'cities'));
+    }
+
+    public function city()
+    {
+        $city = Request::get('city');
+        $city = str_replace("%20"," ",$city);
+        $property = Property::where('city','=', $city)->get();
+        return $property;
+    }
+
 }
