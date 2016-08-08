@@ -58,10 +58,9 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'suite' => 'required',
-            'company_name' =>'required',
             'job_title' => 'required',
             'property' =>'required',
+            'company_name' =>'required'
         ]);
     }
 
@@ -73,26 +72,28 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-
+        $tenant = Tenant::where('tenant_system_id', '=', $data['tenant_system_id'])->first();
+        $property = Property::find($data['property'])->first();
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'timezone' => "America/Los_Angeles"
+            'timezone' => "America/Los_Angeles",
+            'company_name' => $data['company_name'],
+            'job_title' => $data['job_title']
         ]);
 
         $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
         $user->Roles()->attach($role);
-
-        $tenant = new Tenant;
-        $tenant->user_id = $user->id;
-        $tenant->unit = $data['suite'];
-        $tenant->property_id = $data['property'];
-        $tenant->company_name = $data['company_name'];
-        $tenant->job_title = $data['job_title'];
-        $tenant->tenant_system_id = $data['tenant_system_id'];
-        $tenant->save();
+        $user->Properties()->attach($property);
+        if ($tenant != null)
+        {
+            $user->Tenant()->associate($tenant);
+            $user->verified = true;
+            $user->save();
+        }
+        
 
         return $user;
 
@@ -133,7 +134,6 @@ class AuthController extends Controller
         }
         else
         {
-            //$tenant->load('property');
             return $tenant;
         }
     }

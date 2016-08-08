@@ -11,6 +11,8 @@ use App;
 use PDF;
 use PdfMerger;
 use Response;
+use Log;
+use Excel;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -46,7 +48,7 @@ class WorkOrderController extends Controller
     {
         $this->validate($request, [
             'description' => 'required|min:10',
-            'tenant' => 'required',
+            'property' => 'required',
             'type' => 'required',
             ]);
 
@@ -55,10 +57,8 @@ class WorkOrderController extends Controller
         $newWorkOrder->status = "Open";
         $newWorkOrder->problem_id = $request->type;
         
-        
         $newWorkOrder->tenant_id = $request->tenant;
-        
-
+        $newWorkOrder->user_id = Auth::user()->id;
         $newWorkOrder->save();
 
         WorkOrderController::sendNoticeEmail($newWorkOrder);
@@ -108,16 +108,17 @@ class WorkOrderController extends Controller
     {
         $emails = array();
 
-        foreach ($workorder->Tenant->Property->Managers() as $manager) {
+        foreach ($workorder->Managers() as $manager) {
 
             $emails[] = $manager->email;
         }
 
-        Log::info('Work Order notification e-mail sent to',[$emails]);
+        
         if (!empty($emails)) {
-            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails) {
+            Log::info('Work Order notification e-mail sent to',[$emails]);
+            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder) {
                 $message->from('davispartners@ejcustom.com', 'Notice');
-                $message->subject('New Work Order');
+                $message->subject($workorder->Property()->name.' - New Work Order');
                 $message->to($emails);
             });
         }
@@ -144,6 +145,11 @@ class WorkOrderController extends Controller
 
         $cpdf = PDF::loadView('pdf.cos', compact('workorder'));
         $cpdf->save($workorder->cos_filename);
+
+        Excel::load('files/Invoice_Template.xls', function($file) {
+            //
+
+        })->store('pdf', 'files');
 
         $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
         $tpdf->save($workorder->tenant_invoice_filename);

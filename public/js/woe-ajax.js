@@ -16,6 +16,7 @@ $(document).ready(function(){
                     success: function (data){
                         console.log(data);
                         $('#tenantidform').removeClass('has-error');
+                        $('form button[type="submit"]').prop( "disabled", false );
                         $('#idresult').remove().end();
                         $('#propresult').remove().end();
                         if (data == "failure")
@@ -25,11 +26,13 @@ $(document).ready(function(){
                         }
                         else
                         {
-                            $('#tenantidform').append('<span class="help-block" id="idresult">' + data.company_name +'</span>');
-                            if ($("select[name='property']").val() != data.property_id)
+                            $('#companynameinput').val(data.company_name);
+                            $('form input[name="company_name"]').prop( "readOnly", true );
+                            if ($('select[name="property"]').val() != data.property_id)
                             {
                                 $('#tenantidform').addClass('has-error');
-                                $('#tenantidform').append('<span class="help-block" id="propresult">Property does not match</span>');
+                                $('#tenantidform').append('<span class="help-block" id="propresult"><strong>Property does not match</strong></span>');
+                                $('form button[type="submit"]').prop( "disabled", true );
                             }
                         }
                     }
@@ -103,12 +106,7 @@ $(document).ready(function(){
             else {
                 $('#inactive').prop('checked', true);
             }
-            if(data.verified == 1) {
-                $('#verified').prop('checked', true);
-            }
-            else {
-                $('#unverified').prop('checked', true);
-            }
+            
             $('#EditTenantModal').modal('show');
         })
     });

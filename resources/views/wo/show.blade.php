@@ -4,8 +4,8 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
-			<h4> Property - <small> <a href="/property/{{$workorder->Tenant->Property->id}}">
-				{{$workorder->Tenant->Property->name}}</a>
+			<h4> Property - <small> <a href="/property/{{$workorder->Property()->id}}">
+				{{$workorder->Property()->name}}</a>
 			</small></h4>
 		</div>
 	</div>
@@ -45,13 +45,23 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Tenant - <small><a href="/tenant/{{$workorder->Tenant->id}}">
-			{{$workorder->Tenant->company_name}}</a>
-			</small></h4>
+			
+			@if ($workorder->tenant_id == 0)
+				<h4> Tenant - <small><a href="#">
+				{{$workorder->User->company_name}} - Not Verfied
+			@else
+				<h4> Tenant - <small><a href="/tenant/{{$workorder->Tenant->id}}">
+				{{$workorder->Tenant->company_name}}
+			@endif
+			</a></small></h4>
 		</div>
 		<div class="col-xs-4">
-			<h4> Unit - <small>		
-			{{$workorder->Tenant->unit}}
+			<h4> Unit - <small>	
+			@if ($workorder->tenant_id == 0)
+				Unknown
+			@else	
+				{{$workorder->Tenant->unit}}
+			@endif
 			</small></h4>
 		</div>
 	</div>
@@ -59,11 +69,11 @@
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
 			<h4> User - <small>
-			{{$workorder->Tenant->User->name}}
+			{{$workorder->User->name}}
 			</small></h4>
 		</div>
 		<div class="col-xs-4">
-			<h4> User email - <small><a href="mailto:{{$workorder->Tenant->User->email}}">{{$workorder->Tenant->User->email}}</a>		
+			<h4> User email - <small><a href="mailto:{{$workorder->User->email}}">{{$workorder->User->email}}</a>		
 			
 			</small></h4>
 		</div>
@@ -117,7 +127,11 @@
 		</div>
 
 		<div class="col-xs-2 ">
+			@if ($workorder->tenant_id == 0)
+			<button class="btn btn-primary open-billing-modal" value="{{$workorder->id}}" disabled>Billing</button>
+			@else
 			<button class="btn btn-primary open-billing-modal" value="{{$workorder->id}}">Billing</button>
+			@endif
 		</div>
 
 	</div>

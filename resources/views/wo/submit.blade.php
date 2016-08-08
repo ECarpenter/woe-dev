@@ -8,6 +8,7 @@
 			{{csrf_field()}}
 				
 			@permission('manage-wo')
+				<input type="hidden" name="property" value=1></input>
 				
 				<div class="col-md-6 col-md-offset-3">
 					<h4>Tenant</h4>
@@ -28,7 +29,12 @@
 		        </div>
 			@endpermission
 			@role('tenant')
-				<input type="hidden" name="tenant" value={{Auth::user()->Tenants()->first()->id}}></input>
+					<input type="hidden" name="property" value={{Auth::user()->Properties()->first()->id}}></input>
+				@if (Auth::user()->verified)
+					<input type="hidden" name="tenant" value={{Auth::user()->Tenant()->first()->id}}></input>
+				@else
+					<input type="hidden" name="tenant" value=0></input>
+				@endif
 			@endrole
 
 			<div class="col-md-6 col-md-offset-3">

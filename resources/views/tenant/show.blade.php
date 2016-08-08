@@ -451,19 +451,6 @@
 	                    </div>
 
 	                    <div class="row">
-	                    	<div class="form-group">
-	                    		<div class="col-xs-4 col-xs-offset-4">
-		                    		<label class="radio-inline">
-		                    			<input type="radio" name="verified_switch" id="verified" value="true">Verified
-		                    		</label>
-		                    		<label class="radio-inline">
-		                    			<input type="radio" name="verified_switch" id="unverified" value="false">Unverified
-		                    		</label>
-	                    		</div>
-	                    	</div>
-	                    </div>
-
-	                    <div class="row">
 		                    <div class="col-xs-2 col-xs-offset-4">
 		        				<input class="btn btn-primary" type="submit">
 		        			</div>

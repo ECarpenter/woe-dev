@@ -55,9 +55,21 @@
                                 <input type="text" class="form-control" name="tenant_system_id" id='tenantidinput' value="{{ old('tenant_system_id') }}">
                             </div>
 
-                        </div>                  
+                        </div>      
 
-                        
+                        <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Company Name*</label>
+
+                            <div class="col-md-6" id="companynameform">
+                                <input type="text" class="form-control" id="companynameinput" name="company_name" value="{{ old('company_name') }}">
+
+                                @if ($errors->has('company_name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('company_name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Your Name*</label>
