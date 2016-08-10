@@ -19,7 +19,7 @@
 
 				<ul class="dropdown-menu" role="menu">
 					@foreach ($property->users as $user)
-						<li><a href="#">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
+						<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
 					@endforeach
 				</ul>
 			</li>

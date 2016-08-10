@@ -65,8 +65,7 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> User - <small>
-			{{$workorder->User->name}}
+			<h4> User - <small><a href="/user/{{$workorder->user->id}}">{{$workorder->user->name}}</a>
 			</small></h4>
 		</div>
 		<div class="col-xs-4">

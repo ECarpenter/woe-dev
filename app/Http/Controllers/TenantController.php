@@ -31,6 +31,18 @@ class TenantController extends Controller
 	public function add()
 	{
 		$properties = Property::orderBy('name')->get();
+		if (!\Auth::user()->can('view-all'))
+		{
+			$count = 0;
+			foreach ($properties as $property)
+			{
+				if (!$property->canAccess())
+				{	
+					$properties->forget($count);
+				}
+				$count++;
+			}
+		}
 		return view('tenant.add', compact('properties'));
 	}
 

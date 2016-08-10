@@ -15,8 +15,8 @@
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Tenant - <small>
-			{{$user->company_name}}
+			<h4> Tenant - <small><a href="/tenant/{{$user->tenant->id}}">
+			{{$user->company_name}}</a>
 			</small></h4>
 		</div>
 		<div class="col-xs-4">

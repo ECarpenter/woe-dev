@@ -113,7 +113,7 @@ class UserController extends Controller
 		}
 
 		$workorder->save();
-
+		return view('user.show',compact('user'));
 	}
 
 	public function show(User $user)
