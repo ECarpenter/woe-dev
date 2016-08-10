@@ -71,6 +71,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('tenant/save', 'TenantController@save');
     Route::post('tenant/import', 'TenantController@import');
     Route::post('tenant/refinelist', 'TenantController@refinelist');
+    Route::get('/tenant/unverifiedlist', 'TenantController@unverifiedlist');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/response', 'TenantController@response');
@@ -81,6 +82,9 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::get('user/add',['middleware' => ['role:admin'], 'uses' => 'UserController@add']);
     Route::post('user/save',['middleware' => ['role:admin'], 'uses' => 'UserController@save']);
     Route::get('user/list',['middleware' => ['role:admin'], 'uses' => 'UserController@userlist']);
+    Route::patch('user/verify/update', 'UserController@updateverifyuser');
+    Route::get('user/verify/display/{user}', 'UserController@displayverifyuser');
+    Route::get('user/{user}', 'UserController@show');
 
 });
 

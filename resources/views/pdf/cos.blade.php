@@ -42,9 +42,9 @@
 
 	</div>
 
-	<div class="GenInfoLeftValue"> {{$workorder->Tenant->Property->name}} <br>
-		{{$workorder->Tenant->company_name}} <br>
-		{{$workorder->Tenant->unit}}
+	<div class="GenInfoLeftValue"> {{$workorder->Property()->name}} <br>
+		{{$workorder->Company_Name()}} <br>
+		{{$workorder->Unit()}}
 
 	</div>
 

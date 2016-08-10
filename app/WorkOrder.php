@@ -50,4 +50,28 @@ class WorkOrder extends Model
             return $this->Tenant->Property;
         }
     }
+
+    public function Company_Name()
+    {
+        if($this->tenant_id == 0)
+        {
+            return $this->User->company_name;
+        }
+        else
+        {
+            return $this->Tenant->company_name;
+        }
+    }
+
+    public function Unit()
+    {
+        if($this->tenant_id == 0)
+        {
+            return 'unknown';
+        }
+        else
+        {
+            return $this->Tenant->unit;
+        }
+    }
 }

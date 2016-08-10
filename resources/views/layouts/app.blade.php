@@ -39,6 +39,9 @@
             background-color: #E29A9A;
         } 
         
+        
+      
+    
     </style>
 </head>
 <body id="app-layout">
@@ -107,7 +110,7 @@
                             <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="/tenant/list">Tenant List</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
-                            
+                            <li><a href="/tenant/unverifiedlist">Unverified Tenant List</a></li>
                             @permission('manage-insurance')
                             <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
                             <li><a href="/tenant/noncompliancelist">Insurance Noncompliance List</a></li>

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Role;
 use App\User;
+use App\Tenant;
+use App\Property;
+use App\WorkOrder;
 
 class UserController extends Controller
 {
@@ -59,6 +62,65 @@ class UserController extends Controller
 			$passwordchanged = true;
 		}
 		return view('passwordchanged', compact('passwordchanged'));
+	}
+
+	public function displayverifyuser(User $user)
+	{
+		$user_property_id = $user->Property()->id;
+
+		$properties_all = Property::orderBy('name')->get();
+		$properties = collect();
+		$tenants = collect();
+		
+		foreach ($properties_all as $property)
+		{
+			if (\Auth::user()->can('view-all') || $property->canAccess())
+			{	
+				$properties->prepend($property);
+				foreach ($property->Tenants as $tenant) 
+				{   
+					if($tenant->active) 
+					{           
+						$tenants->prepend($tenant);
+					}
+				}
+			}
+		}
+		return response()->json(['properties' => $properties, 'tenants' => $tenants, 'user' => $user, 'current_property' => $user_property_id]);
+	}
+
+	public function updateverifyuser(Request $request)
+	{
+		$this->validate($request, [ 
+			'tenant' => 'required'
+			]);
+
+		$user = User::where('id', '=', $request->user_id)->first();
+		$tenant = Tenant::where('id', '=', $request->tenant)->first();
+		$user->tenant_id = $request->tenant;
+		$user->company_name = $user->tenant->company_name;
+		if ($user->Property()->id != $request->property)
+		{
+			$user->Properties()->detach($user->Property()->id);
+			$user->Properties()->attach($tenant->property->id);
+		}
+		$user->save();
+
+		$workorders = WorkOrder::where('user_id', '=', $user->id)->get();
+		foreach ($workorders as $workorder) 
+		{
+			$workorder->tenant_id = $user->tenant_id;
+		}
+
+		$workorder->save();
+
+	}
+
+	public function show(User $user)
+	{
+		$user->load('tenant',  'workorder');
+
+		return view('user.show',compact('user'));
 	}
 
 }

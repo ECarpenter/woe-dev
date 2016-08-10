@@ -146,17 +146,13 @@ class WorkOrderController extends Controller
         $cpdf = PDF::loadView('pdf.cos', compact('workorder'));
         $cpdf->save($workorder->cos_filename);
 
-        Excel::load('files/Invoice_Template.xls', function($file) {
-            //
-
-        })->store('pdf', 'files');
 
         $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
         $tpdf->save($workorder->tenant_invoice_filename);
 
         WorkOrderController::sendbillingEmail($workorder);
 
-        return Response::json($workorder);
+        return response()->json($workorder);
     }
 
     public function upload(WorkOrder $workorder, Request $request)
@@ -204,12 +200,8 @@ class WorkOrderController extends Controller
             $ar->merge('file', $ar_file,'P'); 
 
         }
-        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
-            $message->from($manageremail, 'PM');
-            $message->subject('COS');
-            $message->attach($ar_file);
-            $message->to('ecarpen905@gmail.com');
-        });      
+
+           
 
         Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder) {
             $message->from($manageremail, 'PM');
@@ -217,6 +209,13 @@ class WorkOrderController extends Controller
             $message->attach($workorder->tenant_invoice_filename, ['as' => 'Invoice.pdf']);
             $message->to('ecarpen905@gmail.com');
         });
+
+        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
+            $message->from($manageremail, 'PM');
+            $message->subject('COS');
+            $message->attach($ar_file, ['as' => 'COS.pdf']);
+            $message->to('ecarpen905@gmail.com');
+        });   
         
     }
 

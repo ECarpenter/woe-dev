@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Property');
     }
 
+    public function Property()
+    {
+        return $this->Properties()->first();
+    }
+
     public function Tenant()
     {
         return $this->belongsTo('App\Tenant');

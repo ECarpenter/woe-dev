@@ -73,7 +73,7 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         $tenant = Tenant::where('tenant_system_id', '=', $data['tenant_system_id'])->first();
-        $property = Property::find($data['property'])->first();
+        $property = Property::where('id', '=', $data['property'])->first();
 
         $user = User::create([
             'name' => $data['name'],
@@ -91,6 +91,11 @@ class AuthController extends Controller
         {
             $user->Tenant()->associate($tenant);
             $user->verified = true;
+            $user->save();
+        }
+        else
+        {
+            $user->tenant_id = 0;
             $user->save();
         }
         

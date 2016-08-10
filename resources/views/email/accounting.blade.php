@@ -1,2 +1,4 @@
-Sent from Work Order Express
+Hi,
+
+This COS was sent from Work Order Express
 

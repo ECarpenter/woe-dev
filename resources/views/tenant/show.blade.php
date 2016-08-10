@@ -1,6 +1,9 @@
 @extends ('layouts.app')
 
 @section ('content')
+	
+	
+
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
@@ -69,12 +72,22 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Updated - <small>		
-			{{date('F d, Y, g:i a', strtotime($tenant->updated_at->timezone(Auth::user()->timezone)))}}
-			</small></h4>
+		<div class="col-xs-2 col-xs-offset-2">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+				  Users<span class="caret"></span>
+				</a>
+
+				<ul class="dropdown-menu" role="menu">
+					@foreach ($tenant->user as $user)
+						<li><a href="/user/{{$user->id}}">{{$user->name}}</a></li>
+					@endforeach
+				</ul>
+			</li>
+		</ul>
 		</div>
-		<div class="col-xs-4">
+		<div class="col-xs-4 col-xs-offset-2">
 			<h4> Ins. Notice Sent - <small>
 			@if ($tenant->insurance->last_notice_sent != null)		
 			{{date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone(Auth::user()->timezone)))}}
@@ -84,7 +97,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
+		<div class="col-xs-3 col-xs-offset-6 col-md-3 col-md-offset-6">
 			<button class="btn btn-primary open-edit-tenant-modal btn-xs" value="{{$tenant->id}}">Edit Tenant Information</button>
 		</div>
 
@@ -108,81 +121,85 @@
 			@endif
 		</div>
 	</div>
+	<div id="InformationDisplay">
+		<div id="InsuranceDisplay">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3 text-center">
+					<h4> Insurance </h4>
+				</div>
+				
+			</div>
 
-	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3 text-center">
-			<h4> Insurance </h4>
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
+					<table class="table table-hover">
+							<tr class="info">
+								<th>Insurance Type</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Limit</th>
+							</tr>
+							
+							<tr onclick="{{$state['llink']}}">
+								<td class="{{$state['lfile']}}">Liability</td>
+								<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_start))}}</td>
+								<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+								<td class="{{$state['llimit']}}">{{number_format($tenant->Insurance->liability_single_limit)}} / {{number_format($tenant->Insurance->liability_combined_limit)}}</td>
+							</tr>
+							<tr onclick="{{$state['ulink']}}">
+								<td class="{{$state['ufile']}}">Excess/Umbrella</td>
+								<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_start))}}</td>
+								<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_end))}}</td>
+								<td class="{{$state['ulimit']}}">{{number_format($tenant->Insurance->umbrella_limit)}}</td>
+							</tr>
+							<tr onclick="{{$state['alink']}}">
+								<td class="{{$state['afile']}}">Auto</td>
+								<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_start))}}</td>
+								<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_end))}}</td>
+								<td class="{{$state['alimit']}}">{{number_format($tenant->Insurance->auto_limit)}}</td>
+							</tr>
+							@if ($tenant->insurance->workerscomp_applicable)
+							<tr onclick="{{$state['wlink']}}">
+								<td class="{{$state['wfile']}}">Workers Comp</td>
+								<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_start))}}</td>
+								<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_end))}}</td>
+								<td class="{{$state['wlimit']}}">{{number_format($tenant->Insurance->workerscomp_limit)}}</td>
+							</tr>
+							@endif
+							<tr onclick="{{$state['elink']}}">
+								<td class="{{$state['efile']}} text-center" colspan="4" >Endorsement</td>
+							</tr>
+					</table>
+				</div>
+			</div>
 		</div>
-		
-	</div>
+		@permission('manage-wo')
+		<div id="WorkorderDisplay">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3 text-center">
+					<h4> Work Order </h4>
+				</div>
+				
+			</div>
 
-	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
-			<table class="table table-hover">
-					<tr class="info">
-						<th>Insurance Type</th>
-						<th>Start Date</th>
-						<th>End Date</th>
-						<th>Limit</th>
-					</tr>
-					
-					<tr onclick="{{$state['llink']}}">
-						<td class="{{$state['lfile']}}">Liability</td>
-						<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_start))}}</td>
-						<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
-						<td class="{{$state['llimit']}}">{{number_format($tenant->Insurance->liability_single_limit)}} / {{number_format($tenant->Insurance->liability_combined_limit)}}</td>
-					</tr>
-					<tr onclick="{{$state['ulink']}}">
-						<td class="{{$state['ufile']}}">Excess/Umbrella</td>
-						<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_start))}}</td>
-						<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_end))}}</td>
-						<td class="{{$state['ulimit']}}">{{number_format($tenant->Insurance->umbrella_limit)}}</td>
-					</tr>
-					<tr onclick="{{$state['alink']}}">
-						<td class="{{$state['afile']}}">Auto</td>
-						<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_start))}}</td>
-						<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_end))}}</td>
-						<td class="{{$state['alimit']}}">{{number_format($tenant->Insurance->auto_limit)}}</td>
-					</tr>
-					@if ($tenant->insurance->workerscomp_applicable)
-					<tr onclick="{{$state['wlink']}}">
-						<td class="{{$state['wfile']}}">Workers Comp</td>
-						<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_start))}}</td>
-						<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_end))}}</td>
-						<td class="{{$state['wlimit']}}">{{number_format($tenant->Insurance->workerscomp_limit)}}</td>
-					</tr>
-					@endif
-					<tr onclick="{{$state['elink']}}">
-						<td class="{{$state['efile']}} text-center" colspan="4" >Endorsement</td>
-					</tr>
-			</table>
-		</div>
-	</div>
-
-	@permission('manage-wo')
-	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3 text-center">
-			<h4> Work Order </h4>
-		</div>
-		
-	</div>
-
-	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
-			<table class="table table-hover">
-					<tr class="info">
-						<th>Type</th>
-						<th>Status</th>
-						<th>Date</th>
-					</tr>
-					@foreach ($tenant->Workorder()->orderBy('created_at','desc')->get() as $workorder)
-					<tr onclick = "location.href='/workorders/{{$workorder->id}}'">
-						<td>{{$workorder->ProblemType->type}}</td>
-						<td>{{$workorder->status}}</td>
-						<td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
-					</tr>
-					@endforeach
-			</table>
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
+					<table class="table table-hover">
+							<tr class="info">
+								<th>Type</th>
+								<th>Status</th>
+								<th>Date</th>
+							</tr>
+							@foreach ($tenant->Workorder()->orderBy('created_at','desc')->get() as $workorder)
+							<tr onclick = "location.href='/workorders/{{$workorder->id}}'">
+								<td>{{$workorder->ProblemType->type}}</td>
+								<td>{{$workorder->status}}</td>
+								<td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
+							</tr>
+							@endforeach
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 	@endpermission

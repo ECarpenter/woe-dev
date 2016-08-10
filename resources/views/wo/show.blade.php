@@ -48,20 +48,17 @@
 			
 			@if ($workorder->tenant_id == 0)
 				<h4> Tenant - <small><a href="#">
-				{{$workorder->User->company_name}} - Not Verfied
+				{{$workorder->Company_Name()}} - Not Verfied
 			@else
 				<h4> Tenant - <small><a href="/tenant/{{$workorder->Tenant->id}}">
-				{{$workorder->Tenant->company_name}}
+				{{$workorder->Company_Name()}}
 			@endif
 			</a></small></h4>
 		</div>
 		<div class="col-xs-4">
 			<h4> Unit - <small>	
-			@if ($workorder->tenant_id == 0)
-				Unknown
-			@else	
-				{{$workorder->Tenant->unit}}
-			@endif
+			{{$workorder->Unit()}}
+			
 			</small></h4>
 		</div>
 	</div>
