@@ -4,15 +4,13 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class BasicTests extends TestCase
+class BasicTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    
-    use WithoutMiddleware;
     
     public function testExample()
     {

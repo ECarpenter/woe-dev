@@ -161,12 +161,12 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                	@if (!$workorder->billed)
+                <div class="modal-footer">{{-- 
+                	@if (!$workorder->billed) --}}
                     	<button type="button" class="btn btn-primary" id="btn-bill">Bill Tenant</button>
-                    @else
+                   {{--  @else
                     	<button type="button" class="btn btn-primary" disabled="disabled" id="btn-bill">Tenant Billed</button>
-                    @endif
+                    @endif --}}
                     <input type="hidden" id="wo_id" name="wo_id" value="0">
                     <meta name="_token" content="{{ csrf_token() }}">
                     <meta name="app-url" content="http://localhost:8000">

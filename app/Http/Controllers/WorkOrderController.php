@@ -36,8 +36,11 @@ class WorkOrderController extends Controller
     {
     	$problemTypes = ProblemType::all();
     	
+        $tenants = Tenant::where('active', true)->orderBy('company_name')->get();
+        
+        $tenants = TenantController::checkPermissions($tenants);
 
-        $tenants = Tenant::all();
+        
 
     	 
         return view('wo.submit', compact('problemTypes','tenants'));
@@ -133,7 +136,7 @@ class WorkOrderController extends Controller
     public function processbill(WorkOrder $workorder, Request $request)
     {
         $date=date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
-        $workorder->amount_billed =15;
+        $workorder->amount_billed =$request->amount_billed;
         $workorder->billing_description = $request->billing_description;
         $workorder->job_cost = $request->job_cost;
         $workorder->cos_filename = 'files/cos/cos-'.$date.'.pdf';
@@ -150,7 +153,7 @@ class WorkOrderController extends Controller
         $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
         $tpdf->save($workorder->tenant_invoice_filename);
 
-        WorkOrderController::sendbillingEmail($workorder);
+        //WorkOrderController::sendbillingEmail($workorder);
 
         return response()->json($workorder);
     }
