@@ -1,7 +1,7 @@
 @extends ('layouts.app')
 
 @section ('content')
-	
+<p hidden>testTenant1</p>
 	
 
 

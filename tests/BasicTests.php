@@ -18,4 +18,5 @@ class BasicTests extends TestCase
     {
         $this->assertTrue(true);
     }
+
 }

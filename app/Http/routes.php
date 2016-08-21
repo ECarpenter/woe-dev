@@ -71,7 +71,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('tenant/save', 'TenantController@save');
     Route::post('tenant/import', 'TenantController@import');
     Route::post('tenant/refinelist', 'TenantController@refinelist');
-    Route::get('/tenant/unverifiedlist', 'TenantController@unverifiedlist');
+    Route::get('tenant/unverifiedlist', 'TenantController@unverifiedlist');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/response', 'TenantController@response');
@@ -92,7 +92,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
 Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function () {
 
     //Workorder Routes
-    Route::get('/workorders', 'WorkOrderController@viewlist');
+    Route::get('workorders', 'WorkOrderController@viewlist');
     Route::get('workorders/{workorder}',  'WorkOrderController@show');
     Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
     Route::patch('workorders/{workorder}/save',  'WorkOrderController@update');

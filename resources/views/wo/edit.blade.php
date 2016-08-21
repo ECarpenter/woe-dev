@@ -1,6 +1,8 @@
 @extends ('layouts.app')
 
 @section ('content')
+<p hidden>testWorkOrders1Edit</p>
+
 	<form method="POST" action="/workorders/{{$workorder->id}}/save">
 	{{ method_field('PATCH') }}
 	{{ csrf_field() }}
