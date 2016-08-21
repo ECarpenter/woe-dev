@@ -1,6 +1,7 @@
 @extends ('layouts.app')
 
 @section ('content')
+<p hidden>testGroup1</p>
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">

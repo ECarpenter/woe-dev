@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<p hidden>testTenantList</p>
 
 <div class="container">
 	<div class="col-md-8 col-md-offset-2">
