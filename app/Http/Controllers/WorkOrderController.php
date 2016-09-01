@@ -143,6 +143,7 @@ class WorkOrderController extends Controller
         $workorder->tenant_invoice_filename = 'files/tenant_invoices/tenant-'.$date.'.pdf';
         $workorder->billed = true;
         $workorder->status = 'Done';
+        $workorder->invoice_number = $workorder->Tenant->tenant_system_id.'-'.date('ymdH', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->save();
         
 

@@ -19,10 +19,11 @@
 			    </a>
 
 			    <ul class="dropdown-menu" role="menu">
-			        
-		        	@foreach ($group->property->Managers() as $manager)
-		        		<li><a href="#">{{$manager->name}}</a></li>
-		        	@endforeach
+			        @if ($group->property != null)
+			        	@foreach ($group->property->Managers() as $manager)
+			        		<li><a href="#">{{$manager->name}}</a></li>
+			        	@endforeach
+		        	@endif
 			        
 			    </ul>
 			</li>

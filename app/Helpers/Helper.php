@@ -15,6 +15,7 @@ use App\Property;
 use App\Owner;
 use App\Group;
 use App\Insurance;
+use App\Remit;
 use Symfony\Component\Process\Process;
 
 class Helper
@@ -37,6 +38,7 @@ class Helper
 						$property->state = $row->state;
 						$property->zip = $row->zip;
 						$property->insured_name = $row->insured_name;
+						$property->remit_id = $row->remit_id;
 						$property->owner_id = $row->owner_id;
 						$property->req_liability_single_limit = $row->req_liability_single_limit;
 						$property->req_liability_combined_limit = $row->req_liability_combined_limit;
@@ -46,6 +48,30 @@ class Helper
 						$property->save();
 					}
 					
+				});
+			});
+
+		});      
+	}
+
+	public static function importRemit($fname)
+	{
+		Excel::load($fname, function($reader) {
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
+					
+					if ($row->payable_to != null)
+					{
+						$remit = new Remit;
+						$remit->payable_to = $row->payable_to;
+						$remit->address = $row->address;
+						$remit->address_secondline = $row->address_secondline;
+						$remit->city = $row->city;
+						$remit->state = $row->state;
+						$remit->zip = $row->zip;
+						$remit->save();
+					}
 				});
 			});
 
@@ -71,6 +97,12 @@ class Helper
 							$user->email = $row->email;
 							$user->password = bcrypt($row->last);
 							$user->timezone = "America/Los_Angeles";
+							$user->phone = $row->phone;
+							$user->fax = $row->fax;
+							$user->address = $row->address;
+							$user->city = $row->city;
+							$user->state = $row->state;
+							$user->zip = $row->zip;
 							$user->save();
 							$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
 							$user->Roles()->attach($role);
@@ -80,6 +112,8 @@ class Helper
 						if ($property != null)
 						{
 							$user->Properties()->attach($property);
+							$property->primary_manager = $user->id;
+							$property->save();
 						}
 					}
 

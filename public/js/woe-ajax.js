@@ -42,6 +42,10 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$('#my-select').multiSelect();
+
+
 	//
 	///
 	///FIX THIS NAME IS WRONG WILL TRY TO RUN FOR ANY PAGE WITH THIS NAME

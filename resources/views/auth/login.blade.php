@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-9 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
@@ -59,8 +59,19 @@
                         </div>
                     </form>
                 </div>
+
+                
+
             </div>
         </div>
+        
+            <select multiple="multiple" id="my-select" name="my-select[]">
+                <option value='elem_1'>elem 1</option>
+                <option value='elem_2'>elem 2</option>
+                <option value='elem_3'>elem 3</option>
+                <option value='elem_4'>elem 4</option>
+                <option value='elem_100'>elem 100</option>
+            </select>
     </div>
 </div>
 @endsection

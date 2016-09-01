@@ -22,5 +22,17 @@ class ChargeCodeSeeder extends Seeder
         $cc->code = 'cmisc';
         $cc->owner_id = 1;
         $cc->save();
+
+        $cc = new App\ChargeCode;
+        $cc->name = 'Tenant Billback';
+        $cc->code = 'misc';
+        $cc->owner_id = 2;
+        $cc->save();
+
+        $cc = new App\ChargeCode;
+        $cc->name = 'Misc/Other';
+        $cc->code = 'misc';
+        $cc->owner_id = 2;
+        $cc->save();
     }
 }

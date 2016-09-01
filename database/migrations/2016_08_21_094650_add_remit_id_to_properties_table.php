@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTenantIdToUsersTable extends Migration
+class AddRemitIdToPropertiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class AddTenantIdToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users','tenant_id'))
+        Schema::table('properties', function (Blueprint $table) {
+            if (!Schema::hasColumn('properties','remit_id'))
             {
-                $table->integer('tenant_id')->unsigned()->index()->nullable();
+                $table->integer('remit_id')->unsigned()->index()->nullable();
             }
         });
     }
@@ -27,8 +27,7 @@ class AddTenantIdToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::table('properties', function (Blueprint $table) {
+            });
     }
 }

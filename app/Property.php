@@ -46,6 +46,11 @@ class Property extends Model
         return $managers;
     }
 
+    public function PrimaryManager()
+    {   
+        return User::find($this->primary_manager);
+    }
+
     public function canAccess()
     {
 
@@ -64,5 +69,10 @@ class Property extends Model
     public function Group()
     {
         return $this->belongsToMany('App\Group');
+    }
+
+    public function Remit()
+    {
+        return $this->belongsTo('App\Remit');
     }
 }
