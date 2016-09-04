@@ -298,4 +298,21 @@ $(document).ready(function(){
 			$('#tenant_verify').prepend("<option value='' selected> Select Tenant </option>");
 		
 	});
+
+
+
+	//
+	// Work Orders
+	//
+	
+	$('#support_file_upload').change(function(){
+		var filename = this.value;
+    	var lastIndex = filename.lastIndexOf("\\");
+    	if (lastIndex >= 0) {
+        filename = filename.substring(lastIndex + 1);
+    		$('#filename_display').empty();
+			$('#filename_display').prepend(filename);
+    	}
+		
+	});
 });

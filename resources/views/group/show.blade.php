@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
 			<h4> Property - <small>
-				 {{$group->name}}
+				{{$group->name}}
 			</small></h4>
 		</div>
 	</div>

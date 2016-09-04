@@ -60,7 +60,8 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
             'job_title' => 'required',
             'property' =>'required',
-            'company_name' =>'required'
+            'company_name' =>'required',
+            'phone' => 'required'
         ]);
     }
 
@@ -81,7 +82,8 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'timezone' => "America/Los_Angeles",
             'company_name' => $data['company_name'],
-            'job_title' => $data['job_title']
+            'job_title' => $data['job_title'],
+            'phone' => $data['phone']
         ]);
 
         $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');

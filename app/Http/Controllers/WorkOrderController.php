@@ -13,12 +13,16 @@ use PdfMerger;
 use Response;
 use Log;
 use Excel;
+use Storage;
+use Config;
 
 use App\Http\Requests;
+use App\Helpers\Helper;
 use App\ProblemType;
 use App\WorkOrder;
 use App\Tenant;
 use App\Property;
+use App\User;
 
 class WorkOrderController extends Controller
 {
@@ -49,21 +53,42 @@ class WorkOrderController extends Controller
 
     public function save(Request $request)
     {
+
         $this->validate($request, [
             'description' => 'required|min:10',
             'property' => 'required',
             'type' => 'required',
+            'support_file' => 'mimes:jpeg,bmp,png,zip,mp3,avi,mpeg,mp4,mpg,gif,pdf',
+            'phone' => 'required'
             ]);
-
         $newWorkOrder = new WorkOrder;
         $newWorkOrder->description = $request->description;
         $newWorkOrder->status = "Open";
         $newWorkOrder->problem_id = $request->type;
-        
         $newWorkOrder->tenant_id = $request->tenant;
-        $newWorkOrder->user_id = Auth::user()->id;
-        $newWorkOrder->save();
 
+        $user = Auth::user();
+        $newWorkOrder->user_id = $user->id;
+        if ($request->phone != 'NONE')
+        {
+            $user->phone = $request->phone;
+            $user->save();
+        }
+        
+        if ($request->urgent == 'Y') {
+            $newWorkOrder->urgent = true;
+        }
+        
+        $file = $request->file('support_file');
+        if ($file != null){
+            $fname = date('ymd-His', strtotime(\Carbon\Carbon::now())).'-'.$request->file('support_file')->getClientOriginalName();
+
+            Storage::put(SUPPORT_PATH.$fname, file_get_contents($file));
+            $newWorkOrder->support_file = $fname;
+        }
+
+        $newWorkOrder->save();
+        
         WorkOrderController::sendNoticeEmail($newWorkOrder);
 
         return view('thankyou');
@@ -116,12 +141,23 @@ class WorkOrderController extends Controller
             $emails[] = $manager->email;
         }
 
+        $file = null;
+        $mime = null;
+        if ($workorder->support_file != null)
+        {
+            $file = Helper::getS3URL(SUPPORT_PATH.$workorder->support_file);
+        }
+        
         
         if (!empty($emails)) {
             Log::info('Work Order notification e-mail sent to',[$emails]);
-            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder) {
+            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder, $file, $mime) {
                 $message->from('davispartners@ejcustom.com', 'Notice');
                 $message->subject($workorder->Property()->name.' - New Work Order');
+                if ($file != null)
+                {
+                    $message->attach($file, ['as' => $workorder->support_file]);
+                }
                 $message->to($emails);
             });
         }

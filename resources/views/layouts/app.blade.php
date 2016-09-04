@@ -118,6 +118,15 @@
                             @endpermission
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Setup<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Add Remitance Info</a></li>
+                        <li><a href="#">Edit Problem Types</a></li>
+                        </ul>
+                    </li>
                     @endpermission
                     @permission('admin')
                     <li class="dropdown">
