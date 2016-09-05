@@ -3,7 +3,7 @@
 @section ('content')
 
         
-            <select multiple="multiple" id="my-select" name="my-select[]">
+            <select multiple="multiple" id="remit-property" name="remit-property[]">
                 <option value='elem_1'>elem 1</option>
                 <option value='elem_2'>elem 2</option>
                 <option value='elem_3'>elem 3</option>

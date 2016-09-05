@@ -51,7 +51,7 @@ class HomeController extends Controller
             $tenants = Helper::checkPermissions($tenants);
             foreach ($tenants as $tenant) 
             {
-                $tempworkorders = $tenant->WorkOrder()->where('status', '=','Open')->orWhere('status', '=','In Process')->get();
+                $tempworkorders = $tenant->WorkOrder()->where('status', '!=','Closed')->get();
                 foreach ($tempworkorders as $workorder) 
                 {
                     $workorders->prepend($workorder);

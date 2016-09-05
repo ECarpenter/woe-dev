@@ -123,6 +123,16 @@
 			<h4><small>{{$workorder->description}}</small> </h4>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-xs-6 col-xs-offset-4">
+			<h4> Manager's Comments </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6 col-xs-offset-2">
+			<h4><small>{{$workorder->manager_notes}}</small> </h4>
+		</div>
+	</div>
 	<br>
 
 	<div class="row">

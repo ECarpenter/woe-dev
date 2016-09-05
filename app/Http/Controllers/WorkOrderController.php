@@ -63,7 +63,7 @@ class WorkOrderController extends Controller
             ]);
         $newWorkOrder = new WorkOrder;
         $newWorkOrder->description = $request->description;
-        $newWorkOrder->status = "Open";
+        $newWorkOrder->status = "Submited";
         $newWorkOrder->problem_id = $request->type;
         $newWorkOrder->tenant_id = $request->tenant;
 
@@ -135,10 +135,21 @@ class WorkOrderController extends Controller
 
     public function update(Request $request, WorkOrder $workorder)
     {
+        $useremail = $workorder->User->email;
+        
+        if ($workorder->manager_notes != $request->manager_notes)
+        {
+            $workorder->manager_notes = $request->manager_notes;
+            $workorder->save();
+            Mail::queue('email.response',compact('workorder'), function ($message) use ( $useremail) {
+                $message->from(Auth::user()->email, Auth::user()->name);
+                $message->subject('Work Order Response');
+                $message->to($useremail);
+            });   
+        }
 
         $workorder->problem_id = $request->type;
         $workorder->status = $request->status;
-        $workorder->description = $request->description;
         $workorder->save();
 
         
@@ -190,7 +201,7 @@ class WorkOrderController extends Controller
         $workorder->cos_filename = 'cos-'.$date.'.pdf';
         $workorder->tenant_invoice_filename = 'tenant-'.$date.'.pdf';
         $workorder->billed = true;
-        $workorder->status = 'Done';
+        $workorder->status = 'Closed';
         $workorder->invoice_number = $workorder->Tenant->tenant_system_id.'-'.date('ymdH', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->save();
         
@@ -234,6 +245,7 @@ class WorkOrderController extends Controller
     {
         $managers = $workorder->Managers();
         $manageremail = $managers[0]->email;
+        $useremail = $workorder->User->email;
 
         $cos = Helper::getS3URL(COS_PATH.$workorder->cos_filename);
         $ar_file = $cos;
@@ -258,7 +270,7 @@ class WorkOrderController extends Controller
                 $message->from($manageremail, 'PM');
                 $message->subject('AP Invoice');
                 $message->attach($ap_file);
-                $message->to('ecarpen905@example.com');
+                $message->to(AP_EMAIL);
             });
 
             
@@ -271,18 +283,18 @@ class WorkOrderController extends Controller
 
            
 
-        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder) {
+        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder, $useremail) {
             $message->from($manageremail, 'PM');
             $message->subject('Tenant Invoice');
             $message->attach(Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename), ['as' => 'Invoice.pdf']);
-            $message->to('ecarpen905@gmail.com');
+            $message->to($useremail);
         });
 
         Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
             $message->from($manageremail, 'PM');
             $message->subject('COS');
             $message->attach($ar_file, ['as' => 'COS.pdf']);
-            $message->to('ecarpen905@gmail.com');
+            $message->to(AR_EMAIL);
         });   
         
     }

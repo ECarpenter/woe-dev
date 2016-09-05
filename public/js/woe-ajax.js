@@ -43,7 +43,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#my-select').multiSelect();
+	
 
 
 	//
@@ -315,4 +315,14 @@ $(document).ready(function(){
     	}
 		
 	});
+
+	//
+	//Property-Vendor Interaction
+	//
+	
+	$('remit-property').multiSelect({
+  selectableHeader: "<div class='custom-header'>Remit to</div>",
+  selectionHeader: "<div class='custom-header'>wrong</div>"
+});
+
 });

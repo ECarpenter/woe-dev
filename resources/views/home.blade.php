@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading"></div>
+                <div class="panel-heading">Work Orders</div>
 
                 <div class="panel-body">
                     
@@ -25,6 +25,7 @@
                                     @foreach ($workorders as $workorder)
                                         <tr onclick = "location.href='/workorders/{{$workorder->id}}'">
                                             
+                                            <td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
                                             @if ($workorder->tenant_id == 0)
                                                 <td>{{$workorder->User->company_name}}</td>
                                             @else

@@ -73,10 +73,9 @@
 				<h4> Status - <small>		
 				<select name = 'status' class="form-control">
 						
-						<option <?php if($workorder->status == 'Open'){echo("selected");}?> > Open </option>
+						<option <?php if($workorder->status == 'Submited'){echo("selected");}?> > Submited </option>
 						<option <?php if($workorder->status == 'In Process'){echo("selected");}?> > In Process </option>
-						<option <?php if($workorder->status == 'Done'){echo("selected");}?> > Done </option>
-						<option <?php if($workorder->status == 'Canceled'){echo("selected");}?> > Canceled </option>
+						<option <?php if($workorder->status == 'Closed'){echo("selected");}?> > Closed </option>
 						
 					</select>
 				</small></h4>
@@ -88,8 +87,18 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-xs-4 col-xs-offset-3 ">
+				{{ $workorder->description }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-xs-offset-4">
+				<h4> Manager Notes </h4>
+			</div>
+		</div>
+		<div class="row">
 			<div class="form-group">
-				<textarea name='description'  class="col-xs-4 col-xs-offset-3 "class="form-control">{{ $workorder->description }}</textarea>
+				<textarea name='manager_notes'  class="col-xs-4 col-xs-offset-3 "class="form-control">{{ $workorder->manager_notes }}</textarea>
 			</div>
 		</div>
 		<br>
