@@ -31,7 +31,7 @@
 		</div>
 		@else
 		<div class="col-xs-2 col-xs-offset-3">
-			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ asset($workorder->tenant_invoice_filename) }}" > Invoice </button>
+			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename) }}" > Invoice </button>
 		</div>
 		@endif
 	</div>

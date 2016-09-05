@@ -1,4 +1,5 @@
-Hi,
 
-This COS was sent from Work Order Express
+This was sent from {{Auth::User()->name}}
+
+<br><br>
 

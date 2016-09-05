@@ -155,7 +155,6 @@ class WorkOrderController extends Controller
         }
 
         $file = null;
-        $mime = null;
         if ($workorder->support_file != null)
         {
             $file = Helper::getS3URL(SUPPORT_PATH.$workorder->support_file);
@@ -164,7 +163,7 @@ class WorkOrderController extends Controller
         
         if (!empty($emails)) {
             Log::info('Work Order notification e-mail sent to',[$emails]);
-            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder, $file, $mime) {
+            Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder, $file) {
                 $message->from('davispartners@ejcustom.com', 'Notice');
                 $message->subject($workorder->Property()->name.' - New Work Order');
                 if ($file != null)
@@ -188,8 +187,8 @@ class WorkOrderController extends Controller
         $workorder->amount_billed =$request->amount_billed;
         $workorder->billing_description = $request->billing_description;
         $workorder->job_cost = $request->job_cost;
-        $workorder->cos_filename = 'files/cos/cos-'.$date.'.pdf';
-        $workorder->tenant_invoice_filename = 'files/tenant_invoices/tenant-'.$date.'.pdf';
+        $workorder->cos_filename = 'cos-'.$date.'.pdf';
+        $workorder->tenant_invoice_filename = 'tenant-'.$date.'.pdf';
         $workorder->billed = true;
         $workorder->status = 'Done';
         $workorder->invoice_number = $workorder->Tenant->tenant_system_id.'-'.date('ymdH', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
@@ -205,13 +204,13 @@ class WorkOrderController extends Controller
         }
 
         $cpdf = PDF::loadView('pdf.cos', compact('workorder','chargecode'));
-        $cpdf->save($workorder->cos_filename);
+        Storage::put(COS_PATH.$workorder->cos_filename, $cpdf->output());
 
 
         $tpdf = PDF::loadView('pdf.invoice', compact('workorder'));
-        $tpdf->save($workorder->tenant_invoice_filename);
+        Storage::put(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename, $tpdf->output());
 
-        //WorkOrderController::sendbillingEmail($workorder);
+        WorkOrderController::sendbillingEmail($workorder);
 
         return response()->json($workorder);
     }
@@ -221,10 +220,10 @@ class WorkOrderController extends Controller
         $this->validate($request, [ 'vendorinvoice' => 'required|mimes:pdf'
             ]);
         $fname = 'vendor-'.date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
-        $workorder->vendor_invoice_filename = 'files/vendor_invoices/'.$fname;
+        $workorder->vendor_invoice_filename = $fname;
         $workorder->save();
         $file = $request->vendorinvoice;
-        $file->move('files/vendor_invoices/', $fname);
+        Storage::put(VENDOR_INVOICE_PATH.$fname, file_get_contents($file));
 
 
         return back();
@@ -235,16 +234,24 @@ class WorkOrderController extends Controller
     {
         $managers = $workorder->Managers();
         $manageremail = $managers[0]->email;
-        $ar_file = $workorder->cos_filename;
 
+        $cos = Helper::getS3URL(COS_PATH.$workorder->cos_filename);
+        $ar_file = $cos;
         if ($workorder->vendor_invoice_filename != null)
         {
+
+            
+            $vendor_invoice = Helper::getS3URL(VENDOR_INVOICE_PATH.$workorder->vendor_invoice_filename);
+
             $ar_file = 'tmp\AR.pdf';
             $ap_file = 'tmp\AP.pdf';
 
+            Log::info($cos);
+            Log::info($vendor_invoice);
+
             $ap = new \LynX39\LaraPdfMerger\PdfManage;
-            $ap->addPDF($workorder->vendor_invoice_filename, 'all');
-            $ap->addPDF($workorder->cos_filename, 'all');
+            $ap->addPDF($vendor_invoice, 'all');
+            $ap->addPDF($cos, 'all');
             $ap->merge('file', $ap_file, 'P');          
 
             Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ap_file) {
@@ -256,8 +263,8 @@ class WorkOrderController extends Controller
 
             
             $ar = new \LynX39\LaraPdfMerger\PdfManage;
-            $ar->addPDF($workorder->cos_filename, 'all');
-            $ar->addPDF($workorder->vendor_invoice_filename, 'all');
+            $ar->addPDF($cos, 'all');
+            $ar->addPDF($vendor_invoice, 'all');
             $ar->merge('file', $ar_file,'P'); 
 
         }
@@ -267,7 +274,7 @@ class WorkOrderController extends Controller
         Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder) {
             $message->from($manageremail, 'PM');
             $message->subject('Tenant Invoice');
-            $message->attach($workorder->tenant_invoice_filename, ['as' => 'Invoice.pdf']);
+            $message->attach(Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename), ['as' => 'Invoice.pdf']);
             $message->to('ecarpen905@gmail.com');
         });
 

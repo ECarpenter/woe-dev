@@ -29,7 +29,7 @@
 		</div>
 		@else
 		<div class="col-xs-2 ">
-			<button  class="btn btn-info btn-xs file-btn" id="vendor-invoice-btn" href="{{ asset($workorder->vendor_invoice_filename) }}" > Vendor Invoice </button>
+			<button  class="btn btn-info btn-xs file-btn" id="vendor-invoice-btn" href="{{ Helper::getS3URL(VENDOR_INVOICE_PATH.$workorder->vendor_invoice_filename) }}" > Vendor Invoice </button>
 		</div>
 		@endif
 
@@ -40,7 +40,7 @@
 		@else
 		<div class="col-xs-1 ">
 			<button class="btn btn-info file-btn btn-xs" id="cos-btn"
-			href="{{ asset($workorder->cos_filename) }}" >  COS </button>
+			href="{{ Helper::getS3URL(COS_PATH.$workorder->cos_filename) }}" >  COS </button>
 		</div> 
 		@endif
 
@@ -50,7 +50,7 @@
 		</div>
 		@else
 		<div class="col-xs-2 ">
-			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ asset($workorder->tenant_invoice_filename) }}" > Tenant Invoice </button>
+			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename) }}" > Tenant Invoice </button>
 		</div>
 		@endif
 	</div>
@@ -127,7 +127,7 @@
 
 	<div class="row">
 		<div class="col-xs-2 col-xs-offset-1 col-md-2 col-md-offset-2">
-			<button class="btn btn-primary open-upload-invoice-modal" value="{{$workorder->id}}">Upload Invoice</button>
+			<button class="btn btn-primary open-upload-invoice-modal" value="{{$workorder->id}}">Upload Vendor Invoice</button>
 		</div>
 
 		<div class="col-xs-2 col-xs-offset-2 col-md-2 col-md-offset-1">
