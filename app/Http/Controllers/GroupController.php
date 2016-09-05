@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Helpers\Helper;
 use App\Group;
 use App\Property;
 
@@ -99,7 +100,7 @@ class GroupController extends Controller
             }
             $workorders = $workorders->sortByDesc('created_at');
 
-            $tenants = TenantController::checkPermissions($tenants);
+            $tenants = Helper::checkPermissions($tenants);
 
             return view('group.show', compact('group','tenants', 'workorders'));
         }

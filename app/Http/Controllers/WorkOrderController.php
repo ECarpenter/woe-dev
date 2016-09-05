@@ -44,7 +44,7 @@ class WorkOrderController extends Controller
     	
         $tenants = Tenant::where('active', true)->orderBy('company_name')->get();
         
-        $tenants = TenantController::checkPermissions($tenants);
+        $tenants = Helper::checkPermissions($tenants);
 
         
         return view('wo.submit', compact('problemTypes','tenants'));
@@ -95,7 +95,7 @@ class WorkOrderController extends Controller
         }
         else
         {
-            return view('home');
+            return redirect('/home');
         }
     }
 
@@ -115,6 +115,14 @@ class WorkOrderController extends Controller
         $workorder->load('tenant.property','problemtype');
 
         return view('wo.show', compact('workorder'));
+    }
+
+    public function showtenant(WorkOrder $workorder)
+    {
+
+        $workorder->load('tenant.property','problemtype');
+
+        return view('wo.showtenant', compact('workorder'));
     }
 
     public function edit(WorkOrder $workorder)

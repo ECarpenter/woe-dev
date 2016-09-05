@@ -36,6 +36,8 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('submit-tenant', 'WorkOrderController@save');
     Route::get('user/changepassword', 'UserController@changePassword');
     Route::patch('user/savepassword', 'UserController@savePassword');
+    Route::get('workorders-tenant/{workorder}',  'WorkOrderController@showtenant');
+
 });
 
 //insurance and work orders

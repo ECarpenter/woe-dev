@@ -108,7 +108,7 @@ class TenantController extends Controller
 		$tenants = Tenant::where('active', true)->orderBy('company_name')->get();
 		$active_selector = 'active';
 		
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 
 		return view('tenant.viewlist',compact('tenants','active_selector'));
@@ -132,7 +132,7 @@ class TenantController extends Controller
 		foreach ($insurances as $insurance) {
 			$tenants->prepend($insurance->tenant);
 		}
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		$tenants = $tenants->sortBy('company_name');
 
@@ -149,7 +149,7 @@ class TenantController extends Controller
 			}
 		}
 		
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		$tenants = $tenants->sortBy('company_name');
 
@@ -251,7 +251,7 @@ class TenantController extends Controller
 		}
 		$active_selector = $request->active_selector;
 
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		return view('tenant.viewlist',compact('tenants', 'active_selector'));
 	}
@@ -300,24 +300,6 @@ class TenantController extends Controller
 		return redirect('/tenant/list');
 	}
 
-	public static function checkPermissions($tenants)
-	{
-		if (!\Auth::user()->can('view-all'))
-		{
-			
-			$tenants = $tenants->keyBy('id');
-			foreach ($tenants as $tenant)
-			{
-				if (!$tenant->property->canAccess())
-				{	
-					$tenants->forget($tenant->id);
-				}
-				
-			}
-		}
-
-		return $tenants;
-	}
 
 	public static function checkUserStatus($users)
 	{

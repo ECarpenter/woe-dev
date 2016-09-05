@@ -63,7 +63,7 @@ class BasicTest extends TestCase
             ->select(2,'type')
             ->type('Shenanigans!','description')
             ->press('Submit')
-            ->seePageIs('/submit-tenant');
+            ->seePageIs('/home');
     }
 
     public function testUserChangePassword()

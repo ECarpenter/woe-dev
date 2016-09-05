@@ -427,4 +427,23 @@ class Helper
 		}
 
 	}
+
+	public static function checkPermissions($tenants)
+	{
+		if (!\Auth::user()->can('view-all'))
+		{
+			
+			$tenants = $tenants->keyBy('id');
+			foreach ($tenants as $tenant)
+			{
+				if (!$tenant->property->canAccess())
+				{	
+					$tenants->forget($tenant->id);
+				}
+				
+			}
+		}
+
+		return $tenants;
+	}
 }
