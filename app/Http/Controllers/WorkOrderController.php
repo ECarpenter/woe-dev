@@ -23,6 +23,8 @@ use App\WorkOrder;
 use App\Tenant;
 use App\Property;
 use App\User;
+use App\Owner;
+use App\ChargeCode;
 
 class WorkOrderController extends Controller
 {
@@ -185,8 +187,16 @@ class WorkOrderController extends Controller
         $workorder->invoice_number = $workorder->Tenant->tenant_system_id.'-'.date('ymdH', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->save();
         
+        if ($request->job_cost > 0)
+        {
+            $chargecode = $workorder->Tenant->Property->Owner->ChargeCodes()->where('name', '=', 'Tenant Billback')->first();
+        }
+        else
+        {
+            $chargecode = $workorder->Tenant->Property->Owner->ChargeCodes()->where('name', '=', 'Misc/Other')->first();
+        }
 
-        $cpdf = PDF::loadView('pdf.cos', compact('workorder'));
+        $cpdf = PDF::loadView('pdf.cos', compact('workorder','chargecode'));
         $cpdf->save($workorder->cos_filename);
 
 

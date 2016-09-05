@@ -44,7 +44,7 @@
 			{{$workorder->Tenant->tenant_system_id}}
 		</div>
 		<div class="BillbackCode">
-			ctenbill  
+			{{ $chargecode->code }}  
 		</div>
 		<div class="BillbackValue">
 			$ {{number_format($workorder->amount_billed , 2)}}
