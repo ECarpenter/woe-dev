@@ -93,12 +93,8 @@
                         <ul class="dropdown-menu" role="menu">
 
                             <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
-                            <li><a href="/property/add">Add Property</a></li>
                             <li><a href="/property/list">All Properties</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#propertyImportModal">Property Import</a></li>
-                            <li><a href="/group/add">Add Property Group</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
-                        </ul>
+                            </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -108,9 +104,7 @@
                         <ul class="dropdown-menu" role="menu">
 
                             <li><a href="#" data-toggle="modal" data-target="#TenantIDModal">View Tenants</a></li>
-                            <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="/tenant/list">Tenant List</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
                             <li><a href="/tenant/unverifiedlist">Unverified Tenant List</a></li>
                             @permission('manage-insurance')
                             <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
@@ -123,8 +117,15 @@
                             Setup<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Add Remitance Info</a></li>
-                        <li><a href="#">Edit Problem Types</a></li>
+                            <li><a href="#">Add Remitance Info</a></li>
+                            <li><a href="#">Edit Problem Types</a></li>
+                            <li><a href="/tenant/add">Add Tenant</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#propertyImportModal">Property Import</a></li>
+                            <li><a href="/property/add">Add Property</a></li>
+                            <li><a href="/group/add">Add Property Group</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
+                        
                         </ul>
                     </li>
                     @endpermission

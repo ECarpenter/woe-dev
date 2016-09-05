@@ -17,6 +17,11 @@ class Property extends Model
     	return $this->hasMany('App\Tenant');
     }
 
+    public function Vendors()
+    {
+        return $this->hasMany('App\Vendor');
+    }
+
     public function Users()
     {
         return $this->belongsToMany('App\User');

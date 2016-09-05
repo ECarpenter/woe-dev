@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRemitTable extends Migration
+class CreateVendorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,19 @@ class CreateRemitTable extends Migration
      */
     public function up()
     {
-        Schema::create('remits', function (Blueprint $table) {
+        Schema::create('vendors', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('system_id');
             $table->string('payable_to');
-            $table->string('address');            
+            $table->string('contact_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('address');
             $table->string('address_secondline')->nullable();
             $table->string('city');
             $table->string('state');
             $table->string('zip');
+            $table->boolean('remit')->default(false);
             $table->timestamps();
         });
     }
@@ -31,6 +36,6 @@ class CreateRemitTable extends Migration
      */
     public function down()
     {
-        Schema::drop('remits');
+        Schema::drop('vendors');
     }
 }

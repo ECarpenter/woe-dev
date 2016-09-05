@@ -45,8 +45,6 @@ class WorkOrderController extends Controller
         $tenants = TenantController::checkPermissions($tenants);
 
         
-
-    	 
         return view('wo.submit', compact('problemTypes','tenants'));
     }
     
@@ -58,7 +56,7 @@ class WorkOrderController extends Controller
             'description' => 'required|min:10',
             'property' => 'required',
             'type' => 'required',
-            'support_file' => 'mimes:jpeg,bmp,png,zip,mp3,avi,mpeg,mp4,mpg,gif,pdf',
+            'support_file' => 'mimes:jpeg,bmp,png,zip,mp3,avi,mpeg,mp4,mpg,gif,pdf,m4a',
             'phone' => 'required'
             ]);
         $newWorkOrder = new WorkOrder;
@@ -88,10 +86,15 @@ class WorkOrderController extends Controller
         }
 
         $newWorkOrder->save();
-        
-        WorkOrderController::sendNoticeEmail($newWorkOrder);
-
-        return view('thankyou');
+        if (\Auth::user()->hasRole('tenant'))
+        {
+            WorkOrderController::sendNoticeEmail($newWorkOrder);
+            return view('thankyou');
+        }
+        else
+        {
+            return view('home');
+        }
     }
 
     public function viewlist()
@@ -156,7 +159,7 @@ class WorkOrderController extends Controller
                 $message->subject($workorder->Property()->name.' - New Work Order');
                 if ($file != null)
                 {
-                    $message->attach($file, ['as' => $workorder->support_file]);
+                    $message->attach($file, ['as' => substr($workorder->support_file, 14)]);
                 }
                 $message->to($emails);
             });

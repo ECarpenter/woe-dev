@@ -16,6 +16,7 @@ use App\Owner;
 use App\Group;
 use App\Insurance;
 use App\Remit;
+use App\Vendor;
 use Symfony\Component\Process\Process;
 
 class Helper
@@ -63,14 +64,23 @@ class Helper
 					
 					if ($row->payable_to != null)
 					{
-						$remit = new Remit;
-						$remit->payable_to = $row->payable_to;
-						$remit->address = $row->address;
-						$remit->address_secondline = $row->address_secondline;
-						$remit->city = $row->city;
-						$remit->state = $row->state;
-						$remit->zip = $row->zip;
-						$remit->save();
+						$vendor = new Vendor;
+						$vendor->payable_to = $row->payable_to;
+						$vendor->address = $row->address;
+						$vendor->address_secondline = $row->address_secondline;
+						$vendor->city = $row->city;
+						$vendor->state = $row->state;
+						$vendor->zip = $row->zip;
+						$vendor->contact_name = $row->contact_name;
+						$vendor->email = $row->email;
+						$vendor->phone = $row->phone;
+						$vendor->system_id = $row->system_id;
+						if ($row->remit == 'TRUE')
+						{
+							$vendor->remit = true;
+						}
+
+						$vendor->save();
 					}
 				});
 			});

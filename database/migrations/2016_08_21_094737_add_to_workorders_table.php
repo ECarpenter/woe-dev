@@ -20,7 +20,7 @@ class AddToWorkordersTable extends Migration
             }
             if (!Schema::hasColumn('work_orders','urgent'))
             {
-                $table->boolean('urgent')->default('false');
+                $table->boolean('urgent')->default(false);
             }
             if (!Schema::hasColumn('work_orders','vendor_id'))
             {
