@@ -52,6 +52,8 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('property/save', 'PropertyController@save');
     Route::get('property/add', 'PropertyController@add');
     Route::post('property/import', 'PropertyController@import');
+    Route::get('/property/remit-display/','PropertyController@remitdisplay');
+    Route::patch('/property/remit/{property}', 'PropertyController@remit');
     Route::get('property/{property}', 'PropertyController@show');
 
     //Group Routes

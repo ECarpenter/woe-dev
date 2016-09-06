@@ -39,8 +39,10 @@
         .table-hover > tbody > tr.ejc-inactive:hover > th {
             background-color: #E29A9A;
         } 
-        
-        
+
+        .button-color {
+            background-color: #5bc0de           
+        }        
       
     
     </style>

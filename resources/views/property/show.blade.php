@@ -83,7 +83,31 @@
 							<li><a href="#">Umbrella - {{ number_format($property->req_umbrella_limit) }}</a></li>
 							<li><a href="#">Auto - {{ number_format($property->req_auto_limit) }}</a></li>
 							<li><a href="#">Workers Comp - {{ number_format($property->req_workerscomp_limit) }}</a></li>
-							<li><a href="#" class="open-property-req-insurance-modal" value="{{$property}}">Edit Requirements</a></li>
+							<li class="button-color"><a href="#" class="open-property-req-insurance-modal" value="">Edit Requirements</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="col-xs-3 col-xs-offset-1">
+			<ul class="nav nav-pills nav-stacked">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+					  Remitance Address<span class="caret"></span>
+					</a>
+
+					<ul class="dropdown-menu" role="menu">
+							@if ($property->Remit != null)
+								<li><a href="#">{{ $property->Remit->payable_to}}</a></li>
+								<li><a href="#">{{ $property->Remit->address}}</a></li>
+								@if ($property->Remit->address_secondline != null)
+									<li><a href="#">{{ $property->Remit->address_secondline}}</a></li>
+								@endif
+								<li><a href="#">{{ $property->Remit->city}}, {{ $property->Remit->state}} {{ $property->Remit->zip}}</a></li>
+							
+							<li class="button-color"><a href="#" class="open-remit-modal" data-value="{{$property->remit_id}}">Change Remit Address</a></li>
+							@else
+							<li class="button-color"><a href="#" class="open-remit-modal" data-value="">Change Remit Address</a></li>
+							@endif
 					</ul>
 				</li>
 			</ul>
@@ -146,7 +170,46 @@
 		</div>
 	@endif
 
-	<!-- InsuranceReq - will update the insurance requirements -->
+	{{-- Remit - change Remit vendor --}}
+	<div class="modal fade" id="RemitModal" tabindex="-1" role="dialog" aria-labelledby="RemitModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" id="RemitModalLabel">Change Remitance</h4>
+				</div>
+				<div class="modal-body">
+					<form method="POST" action="/property/remit/{{$property->id}}" >
+						{{ csrf_field() }}
+						{{ method_field('PATCH') }}
+
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<select id="RemitSelect" name="remit" class="form-control">
+
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<div id="RemitDisplay">
+								
+								</div>
+							</div>
+						</div>
+						<br>
+						<div class="col-xs-offset-5">
+								<input class="btn btn-primary" type="submit">
+
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{-- InsuranceReq - will update the insurance requirements --}}
 	<div class="modal fade" id="InsReqPropertyModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">

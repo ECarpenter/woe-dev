@@ -321,8 +321,58 @@ $(document).ready(function(){
 	//
 	
 	$('remit-property').multiSelect({
-  selectableHeader: "<div class='custom-header'>Remit to</div>",
-  selectionHeader: "<div class='custom-header'>wrong</div>"
-});
+  		selectableHeader: "<div class='custom-header'>Remit to</div>",
+		selectionHeader: "<div class='custom-header'>wrong</div>"
+	});
 
+	//
+	//Remit
+	//
+	
+	$('.open-remit-modal').click(function(){ 
+		var current_remit_id = $(this).data('value');
+		$.get('/property/remit-display/', function(remits){
+			console.log(remits);
+			
+			$('#RemitDisplay').empty();
+
+			$.each(remits, function(index, remit){
+				if (remit.id == current_remit_id) {					
+					$('#RemitSelect').prepend("<option value='" + remit.id + "' selected>" + remit.payable_to + "</option>");
+					$('#RemitDisplay').prepend(remit.payable_to + "<br>" + remit.address  + "<br>");
+					if (remit.address_secondline != null)
+					{
+						$('#RemitDisplay').append(remit.address_secondline + "<br>");
+					}
+					$('#RemitDisplay').append(remit.city + ", " + remit.state + " " + remit.zip)
+				}
+				else {
+					$('#RemitSelect').prepend("<option value='" + remit.id + "'>" + remit.payable_to + "</option>");
+				}
+			});   
+		})       
+
+		$('#RemitModal').modal('show');         
+	});
+
+	$('#RemitSelect').change(function(){
+		$('#RemitDisplay').empty();
+		$.get('/property/remit-display/', function(remits){
+			console.log(remits);
+			$.each(remits, function(index, remit){
+				if (remit.id == $("select option:selected").val()) {					
+					$('#RemitDisplay').prepend(remit.payable_to + "<br>" + remit.address  + "<br>");
+					if (remit.address_secondline != null)
+					{
+						$('#RemitDisplay').append(remit.address_secondline + "<br>");
+					}
+					$('#RemitDisplay').append(remit.city + ", " + remit.state + " " + remit.zip);
+				}
+			});
+			
+			
+		})
+		
+	});
+		
 });

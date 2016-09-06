@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Excel;
 use Helper;
+use Response;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -15,6 +16,7 @@ use App\User;
 use App\Property;
 use App\Owner;
 use App\Group;
+use App\Remit;
 
 
 class PropertyController extends Controller
@@ -172,6 +174,18 @@ class PropertyController extends Controller
 		return redirect('/property/list');
 	}
 
+	public function remit(Property $property, Request $request)
+	{
+		$property->remit_id = $request->remit;
+		$property->save();
+		return back();
+	}
+
+	public function remitdisplay()
+	{
+		$remits = Remit::where('remit','=', '1')->orderBy('payable_to','asc')->get();
+		return Response::json($remits);
+	}
 	
 
 }
