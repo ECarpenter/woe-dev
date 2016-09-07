@@ -84,7 +84,7 @@ class BasicTest extends TestCase
         While($property_id == '')
         {
             $property_id = Str::quickRandom(10);
-            if (Property::where('group_system_id', '=', $property_id)->first() != null)
+            if (Property::where('property_system_id', '=', $property_id)->first() != null)
             {
                 $property_id = '';
             }
