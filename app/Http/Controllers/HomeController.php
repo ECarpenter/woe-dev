@@ -36,8 +36,14 @@ class HomeController extends Controller
             $tempworkorders = WorkOrder::all();
             foreach ($tempworkorders as $workorder) 
             {
-                
-                if ($workorder->Tenant->id == \Auth::user()->Tenant->id)
+                if (\Auth::user()->tenant_id == 0)
+                {
+                    if ($workorder->user_id == \Auth::user()->id)
+                    {
+                        $workorders->prepend($workorder);
+                    }
+                }
+                elseif ($workorder->Tenant->id == \Auth::user()->Tenant->id)
                 {
                     $workorders->prepend($workorder);
                 }   
@@ -59,6 +65,9 @@ class HomeController extends Controller
             }
         }
 
-        return view('home', compact('workorders'));
+        $users = User::all();
+        $users = Helper::CheckUserStatus($users);
+        
+        return view('home', compact('workorders','users'));
     }
 }

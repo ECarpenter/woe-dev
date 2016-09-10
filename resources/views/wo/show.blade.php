@@ -219,6 +219,26 @@
         </div>
     </div>
 
+   <div class="modal fade" id="modal-loading">
+		<div class="modal-dialog modal-sm" role="document">
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				
+					<img src="/ajax-loader.gif">
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
 
 
 @endsection

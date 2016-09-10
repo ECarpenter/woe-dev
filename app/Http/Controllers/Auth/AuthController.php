@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use DB;
+use Mail;
 
 use App\User;
 use App\Tenant;
@@ -97,6 +98,13 @@ class AuthController extends Controller
         }
         else
         {
+            $manageremail = $user->Property()->PrimaryManager()->email;
+            Mail::queue('email.unverified',compact('user'), function ($message) use ($manageremail) {
+            $message->from('Do-Not-Reply@ejcustom.com', 'Update');
+            $message->subject('New Un-Verified Tenant Sign Up');
+            $message->to($manageremail);
+            });   
+
             $user->tenant_id = 0;
             $user->save();
         }

@@ -13,18 +13,20 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-4 col-xs-offset-2">
-			<h4> Tenant - <small><a href="/tenant/{{$user->tenant->id}}">
-			{{$user->company_name}}</a>
-			</small></h4>
+	@if($user->tenant_id !=0)
+		<div class="row">
+			<div class="col-xs-4 col-xs-offset-2">
+				<h4> Tenant - <small><a href="/tenant/{{$user->tenant_id}}">
+				{{$user->company_name}}</a>
+				</small></h4>
+			</div>
+			<div class="col-xs-4">
+				<h4> ID - <small>		
+				{{$user->tenant->tenant_system_id}}
+				</small></h4>
+			</div>
 		</div>
-		<div class="col-xs-4">
-			<h4> ID - <small>		
-			{{$user->tenant->tenant_system_id}}
-			</small></h4>
-		</div>
-	</div>
+	@endif
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-2">

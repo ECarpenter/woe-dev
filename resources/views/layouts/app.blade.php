@@ -19,6 +19,7 @@
     <style>
         body {
             font-family: 'Lato';
+            background-color: #F0F7FF
         }
 
         .fa-btn {
@@ -42,8 +43,9 @@
 
         .button-color {
             background-color: #5bc0de           
-        }        
-      
+        } 
+
+        
     
     </style>
 </head>

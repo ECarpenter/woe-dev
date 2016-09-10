@@ -117,9 +117,7 @@ class TenantController extends Controller
 	public function unverifiedlist()
 	{
 		$users = User::all();
-		
-		
-		$users = TenantController::checkUserStatus($users);
+		$users = Helper::checkUserStatus($users);
 
 
 		return view('user.unverifiedlist',compact('users'));
@@ -301,30 +299,6 @@ class TenantController extends Controller
 	}
 
 
-	public static function checkUserStatus($users)
-	{
-		if (!\Auth::user()->can('view-all'))
-		{
-			
-			$users = $users->keyBy('id');
-			foreach ($users as $user)
-			{
-				if ($user->hasRole('tenant'))
-				{
-					if ($user->property() == null || !$user->property()->canAccess() || $user->tenant_id != 0)
-					{	
-						$users->forget($user->id);
-					}
-				}
-				else
-				{
-					$users->forget($user->id);
-				}
-				
-			}
-		}
-
-		return $users;
-	}
+	
 
 }

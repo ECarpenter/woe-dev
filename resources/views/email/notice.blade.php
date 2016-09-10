@@ -4,7 +4,7 @@
 <br><br> 
 @endif
 	
-{{$workorder->Company_Name()}} has submited a new  <a href="http://localhost:8000/workorders/{{$workorder->id}}">work order,</a> for {{$workorder->Property()->name}}
+{{$workorder->Company_Name()}} has submited a new  <a href="http://{{env('APP_URL')}}/workorders/{{$workorder->id}}">work order,</a> for {{$workorder->Property()->name}}
 <br> <br>
 Problem Type : {{$workorder->ProblemType->type}}
 <br><br>

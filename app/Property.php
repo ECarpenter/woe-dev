@@ -57,15 +57,20 @@ class Property extends Model
     }
 
     public function canAccess()
-    {
-
-        foreach ($this->Users as $user) 
+    {   
+        if (\Auth::user()->can('view-all'))
         {
-            
-            if ($user->id == \Auth::user()->id)
-            {
+            return true;
+        }
+        else
+        {
+            foreach ($this->Users as $user) 
+            { 
+                if ($user->id == \Auth::user()->id)
+                {
 
-                return true;
+                    return true;
+                }
             }
         }
         return false;

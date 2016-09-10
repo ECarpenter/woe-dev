@@ -196,7 +196,9 @@ $(document).ready(function(){
 		})
 
 		if(confirm("Are you sure you want to process the tenant's bill?"))
-		{      
+		{   
+
+			$('#modal-loading').modal('show');
 			e.preventDefault(); 
 
 			var formData = {

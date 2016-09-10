@@ -175,7 +175,7 @@ class WorkOrderController extends Controller
         if (!empty($emails)) {
             Log::info('Work Order notification e-mail sent to',[$emails]);
             Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder, $file) {
-                $message->from('davispartners@ejcustom.com', 'Notice');
+                $message->from('Do-Not-Reply@ejcustom.com', 'Notice');
                 $message->subject($workorder->Property()->name.' - New Work Order');
                 if ($file != null)
                 {
@@ -194,6 +194,9 @@ class WorkOrderController extends Controller
 
     public function processbill(WorkOrder $workorder, Request $request)
     {
+
+        
+        
         $date=date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->amount_billed =$request->amount_billed;
         $workorder->billing_description = $request->billing_description;

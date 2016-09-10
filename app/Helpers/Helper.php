@@ -446,4 +446,30 @@ class Helper
 
 		return $tenants;
 	}
+
+	//processes list of user returns unverified users
+	public static function checkUserStatus($users)
+	{
+		
+			
+			$users = $users->keyBy('id');
+			foreach ($users as $user)
+			{
+				if ($user->hasRole('tenant'))
+				{
+					if ( $user->tenant_id != 0 || !$user->property()->canAccess())
+					{	
+						$users->forget($user->id);
+					}
+				}
+				else
+				{
+					$users->forget($user->id);
+				}
+				
+			}
+		
+
+		return $users;
+	}
 }

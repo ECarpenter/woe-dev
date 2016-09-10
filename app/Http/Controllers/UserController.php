@@ -110,9 +110,10 @@ class UserController extends Controller
 		foreach ($workorders as $workorder) 
 		{
 			$workorder->tenant_id = $user->tenant_id;
+			$workorder->save();
 		}
 
-		$workorder->save();
+		
 		return view('user.show',compact('user'));
 	}
 
