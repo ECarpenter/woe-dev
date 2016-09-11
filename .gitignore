@@ -9,3 +9,7 @@ Homestead.json
 !/vendor/zizaco/entrust/src/Entrust/Middleware/*
 *.xls
 auth.json
+public/document.tiff
+public/out.txt
+public/out2.txt
+public/testoutput.tiff

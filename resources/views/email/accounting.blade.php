@@ -1,2 +1,5 @@
-Sent from Work Order Express
+
+This was sent from {{Auth::User()->name}}
+
+<br><br>
 

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use DB;
+use Mail;
 
 use App\User;
 use App\Tenant;
+use App\Property;
 use Validator;
+use Request;
+use Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -55,10 +59,10 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'suite' => 'required',
-            'company_name' =>'required',
             'job_title' => 'required',
             'property' =>'required',
+            'company_name' =>'required',
+            'phone' => 'required'
         ]);
     }
 
@@ -70,30 +74,83 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-
+        $tenant = Tenant::where('tenant_system_id', '=', $data['tenant_system_id'])->first();
+        $property = Property::where('id', '=', $data['property'])->first();
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'timezone' => "America/Los_Angeles"
+            'timezone' => "America/Los_Angeles",
+            'company_name' => $data['company_name'],
+            'job_title' => $data['job_title'],
+            'phone' => $data['phone']
         ]);
 
         $role = DB::table('roles')->where('name', '=', 'tenant')->pluck('id');
         $user->Roles()->attach($role);
+        $user->Properties()->attach($property);
+        if ($tenant != null)
+        {
+            $user->Tenant()->associate($tenant);
+            $user->verified = true;
+            $user->save();
+        }
+        else
+        {
+            $manageremail = $user->Property()->PrimaryManager()->email;
+            Mail::queue('email.unverified',compact('user'), function ($message) use ($manageremail) {
+            $message->from('Do-Not-Reply@ejcustom.com', 'Update');
+            $message->subject('New Un-Verified Tenant Sign Up');
+            $message->to($manageremail);
+            });   
 
-        $tenant = new Tenant;
-        $tenant->user_id = $user->id;
-        $tenant->unit = $data['suite'];
-        $tenant->property_id = $data['property'];
-        $tenant->company_name = $data['company_name'];
-        $tenant->job_title = $data['job_title'];
-        $tenant->tenant_system_id = $data['tenant_system_id'];
-        $tenant->save();
+            $user->tenant_id = 0;
+            $user->save();
+        }
+        
 
         return $user;
 
-
-
     }
+
+    public function tenantregister()
+    {
+        $properties = Property::orderBy('name')->get();
+        $cities = collect();
+        foreach ($properties as $property) 
+        {
+           if (!$cities->contains($property->city))
+           {
+                $cities->prepend($property->city);
+           }  
+        }
+
+        $cities = $cities->sort();
+
+        return view('auth.register', compact('properties', 'cities'));
+    }
+
+    public function city()
+    {
+        $city = Request::get('city');
+        $city = str_replace("%20"," ",$city);
+        $property = Property::where('city','=', $city)->get();
+        return $property;
+    }
+
+    public function id()
+    {
+        $id = Request::get('tenantid');
+        $tenant = Tenant::where('tenant_system_id', 'like', $id)->first();
+        if ($tenant == null)
+        {
+            return response()->json('failure');
+        }
+        else
+        {
+            return $tenant;
+        }
+    }
+
 }

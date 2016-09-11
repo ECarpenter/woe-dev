@@ -17,6 +17,11 @@ class Property extends Model
     	return $this->hasMany('App\Tenant');
     }
 
+    public function Vendors()
+    {
+        return $this->hasMany('App\Vendor');
+    }
+
     public function Users()
     {
         return $this->belongsToMany('App\User');
@@ -46,16 +51,26 @@ class Property extends Model
         return $managers;
     }
 
+    public function PrimaryManager()
+    {   
+        return User::find($this->primary_manager);
+    }
+
     public function canAccess()
-    {
-
-        foreach ($this->Users as $user) 
+    {   
+        if (\Auth::user()->can('view-all'))
         {
-            
-            if ($user->id == \Auth::user()->id)
-            {
+            return true;
+        }
+        else
+        {
+            foreach ($this->Users as $user) 
+            { 
+                if ($user->id == \Auth::user()->id)
+                {
 
-                return true;
+                    return true;
+                }
             }
         }
         return false;
@@ -64,5 +79,10 @@ class Property extends Model
     public function Group()
     {
         return $this->belongsToMany('App\Group');
+    }
+
+    public function Remit()
+    {
+        return $this->belongsTo('App\Remit');
     }
 }

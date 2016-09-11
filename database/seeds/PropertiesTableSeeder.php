@@ -15,6 +15,7 @@ class PropertiesTableSeeder extends Seeder
     {
     	//factory(App\Property::class, 5)->create();
         //Helper::importGroup('/files/Group.xls');
+        Helper::importRemit('Remit.xls');
         Helper::importProperty('Property.xls');
     	 
     	

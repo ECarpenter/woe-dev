@@ -15,6 +15,9 @@ use App\Property;
 use App\Owner;
 use App\Group;
 use App\Insurance;
+use App\Remit;
+use App\Vendor;
+use Symfony\Component\Process\Process;
 
 class Helper
 {
@@ -36,6 +39,7 @@ class Helper
 						$property->state = $row->state;
 						$property->zip = $row->zip;
 						$property->insured_name = $row->insured_name;
+						$property->remit_id = $row->remit_id;
 						$property->owner_id = $row->owner_id;
 						$property->req_liability_single_limit = $row->req_liability_single_limit;
 						$property->req_liability_combined_limit = $row->req_liability_combined_limit;
@@ -45,6 +49,39 @@ class Helper
 						$property->save();
 					}
 					
+				});
+			});
+
+		});      
+	}
+
+	public static function importRemit($fname)
+	{
+		Excel::load($fname, function($reader) {
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
+					
+					if ($row->payable_to != null)
+					{
+						$vendor = new Vendor;
+						$vendor->payable_to = $row->payable_to;
+						$vendor->address = $row->address;
+						$vendor->address_secondline = $row->address_secondline;
+						$vendor->city = $row->city;
+						$vendor->state = $row->state;
+						$vendor->zip = $row->zip;
+						$vendor->contact_name = $row->contact_name;
+						$vendor->email = $row->email;
+						$vendor->phone = $row->phone;
+						$vendor->system_id = $row->system_id;
+						if ($row->remit == 'TRUE')
+						{
+							$vendor->remit = true;
+						}
+
+						$vendor->save();
+					}
 				});
 			});
 
@@ -70,6 +107,12 @@ class Helper
 							$user->email = $row->email;
 							$user->password = bcrypt($row->last);
 							$user->timezone = "America/Los_Angeles";
+							$user->phone = $row->phone;
+							$user->fax = $row->fax;
+							$user->address = $row->address;
+							$user->city = $row->city;
+							$user->state = $row->state;
+							$user->zip = $row->zip;
 							$user->save();
 							$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
 							$user->Roles()->attach($role);
@@ -79,6 +122,8 @@ class Helper
 						if ($property != null)
 						{
 							$user->Properties()->attach($property);
+							$property->primary_manager = $user->id;
+							$property->save();
 						}
 					}
 
@@ -369,5 +414,62 @@ class Helper
 			]);
 		$getObjectReq = $s3->createPresignedRequest($getObjectCmd, '+1 hour');
 		return (string) $getObjectReq->getUri();
+	}
+
+	public static function pdfToTiff()
+	{
+		$convert = new Process('gswin64c -o document.tiff -sDEVICE=tiffgray -r720x720 -g6120x7920 -sCompression=lzw test.pdf');
+		$convert->run();
+
+		if (!$convert->isSuccessful()) 
+		{
+    		throw new ProcessFailedException($convert);
+		}
+
+	}
+
+	public static function checkPermissions($tenants)
+	{
+		if (!\Auth::user()->can('view-all'))
+		{
+			
+			$tenants = $tenants->keyBy('id');
+			foreach ($tenants as $tenant)
+			{
+				if (!$tenant->property->canAccess())
+				{	
+					$tenants->forget($tenant->id);
+				}
+				
+			}
+		}
+
+		return $tenants;
+	}
+
+	//processes list of user returns unverified users
+	public static function checkUserStatus($users)
+	{
+		
+			
+			$users = $users->keyBy('id');
+			foreach ($users as $user)
+			{
+				if ($user->hasRole('tenant'))
+				{
+					if ( $user->tenant_id != 0 || !$user->property()->canAccess())
+					{	
+						$users->forget($user->id);
+					}
+				}
+				else
+				{
+					$users->forget($user->id);
+				}
+				
+			}
+		
+
+		return $users;
 	}
 }

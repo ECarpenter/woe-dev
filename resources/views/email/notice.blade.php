@@ -1,12 +1,23 @@
 
-Hi,<br><br>
-
-{{$workorder->Tenant->company_name}} has submited a new  <a href="demo.ejcustom.com/workorders/{{$workorder->id}}">work order.</a>
-<br>
-Description from tenant:
+@if ($workorder->urgent)
+-----URGENT-----
+<br><br> 
+@endif
+	
+{{$workorder->Company_Name()}} has submited a new  <a href="http://{{env('APP_URL')}}/workorders/{{$workorder->id}}">work order,</a> for {{$workorder->Property()->name}}
+<br> <br>
+Problem Type : {{$workorder->ProblemType->type}}
+<br><br>
+Description from {{$workorder->User->name}}:
 <br>
 {{$workorder->description}}
 <br><br>
-Thanks,<br><br>
+Contact Phone : {{$workorder->user->phone}}
+<br><br>
 
-WOE
+@if ($workorder->urgent)
+-----URGENT-----
+<br><br> 
+@endif
+	
+

@@ -1,11 +1,12 @@
 @extends ('layouts.app')
 
 @section ('content')
+<p hidden>testGroup1</p>
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
 			<h4> Property - <small>
-				 {{$group->name}}
+				{{$group->name}}
 			</small></h4>
 		</div>
 	</div>
@@ -18,11 +19,12 @@
 			    </a>
 
 			    <ul class="dropdown-menu" role="menu">
-			        @foreach ($group->properties as $property)
-			        	@foreach ($property->Managers() as $manager)
-			        	<li><a href="#">{{$manager->name}}</a></li>
+			        @if ($group->property != null)
+			        	@foreach ($group->property->Managers() as $manager)
+			        		<li><a href="#">{{$manager->name}}</a></li>
 			        	@endforeach
-			        @endforeach
+		        	@endif
+			        
 			    </ul>
 			</li>
 		</ul>

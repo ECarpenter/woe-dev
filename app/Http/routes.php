@@ -18,6 +18,9 @@ Route::group(['middleware' => ['web' ]], function () {
 
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
+    Route::get('/tenantregister', 'Auth\AuthController@tenantregister');
+    Route::get('/tenantregister/city', 'Auth\AuthController@city');
+    Route::get('/tenantregister/id', 'Auth\AuthController@id');
     Route::get('/', function () {
         return view('welcome');
     });
@@ -33,6 +36,8 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('submit-tenant', 'WorkOrderController@save');
     Route::get('user/changepassword', 'UserController@changePassword');
     Route::patch('user/savepassword', 'UserController@savePassword');
+    Route::get('workorders-tenant/{workorder}',  'WorkOrderController@showtenant');
+
 });
 
 //insurance and work orders
@@ -47,6 +52,8 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('property/save', 'PropertyController@save');
     Route::get('property/add', 'PropertyController@add');
     Route::post('property/import', 'PropertyController@import');
+    Route::get('/property/remit-display/','PropertyController@remitdisplay');
+    Route::patch('/property/remit/{property}', 'PropertyController@remit');
     Route::get('property/{property}', 'PropertyController@show');
 
     //Group Routes
@@ -68,6 +75,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('tenant/save', 'TenantController@save');
     Route::post('tenant/import', 'TenantController@import');
     Route::post('tenant/refinelist', 'TenantController@refinelist');
+    Route::get('tenant/unverifiedlist', 'TenantController@unverifiedlist');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/response', 'TenantController@response');
@@ -78,6 +86,9 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::get('user/add',['middleware' => ['role:admin'], 'uses' => 'UserController@add']);
     Route::post('user/save',['middleware' => ['role:admin'], 'uses' => 'UserController@save']);
     Route::get('user/list',['middleware' => ['role:admin'], 'uses' => 'UserController@userlist']);
+    Route::patch('user/verify/update', 'UserController@updateverifyuser');
+    Route::get('user/verify/display/{user}', 'UserController@displayverifyuser');
+    Route::get('user/{user}', 'UserController@show');
 
 });
 
@@ -85,7 +96,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
 Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function () {
 
     //Workorder Routes
-    Route::get('/workorders', 'WorkOrderController@viewlist');
+    Route::get('workorders', 'WorkOrderController@viewlist');
     Route::get('workorders/{workorder}',  'WorkOrderController@show');
     Route::get('workorders/{workorder}/edit',  'WorkOrderController@edit');
     Route::patch('workorders/{workorder}/save',  'WorkOrderController@update');

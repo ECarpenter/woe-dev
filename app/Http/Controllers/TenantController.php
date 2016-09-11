@@ -31,6 +31,18 @@ class TenantController extends Controller
 	public function add()
 	{
 		$properties = Property::orderBy('name')->get();
+		if (!\Auth::user()->can('view-all'))
+		{
+			$count = 0;
+			foreach ($properties as $property)
+			{
+				if (!$property->canAccess())
+				{	
+					$properties->forget($count);
+				}
+				$count++;
+			}
+		}
 		return view('tenant.add', compact('properties'));
 	}
 
@@ -74,7 +86,7 @@ class TenantController extends Controller
 
 	public function show(Tenant $tenant)
 	{
-		if (!\Auth::user()->can('view-all'))
+		if (!\Auth::user()->can('view-all') && !$tenant->property->canAccess())
 		{
 			return TenantController::tenantlist();
 		}
@@ -96,10 +108,19 @@ class TenantController extends Controller
 		$tenants = Tenant::where('active', true)->orderBy('company_name')->get();
 		$active_selector = 'active';
 		
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 
 		return view('tenant.viewlist',compact('tenants','active_selector'));
+	}
+
+	public function unverifiedlist()
+	{
+		$users = User::all();
+		$users = Helper::checkUserStatus($users);
+
+
+		return view('user.unverifiedlist',compact('users'));
 	}
 
 	public function tenantuploadlist()
@@ -109,7 +130,7 @@ class TenantController extends Controller
 		foreach ($insurances as $insurance) {
 			$tenants->prepend($insurance->tenant);
 		}
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		$tenants = $tenants->sortBy('company_name');
 
@@ -126,7 +147,7 @@ class TenantController extends Controller
 			}
 		}
 		
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		$tenants = $tenants->sortBy('company_name');
 
@@ -228,7 +249,7 @@ class TenantController extends Controller
 		}
 		$active_selector = $request->active_selector;
 
-		$tenants = TenantController::checkPermissions($tenants);
+		$tenants = Helper::checkPermissions($tenants);
 
 		return view('tenant.viewlist',compact('tenants', 'active_selector'));
 	}
@@ -277,21 +298,7 @@ class TenantController extends Controller
 		return redirect('/tenant/list');
 	}
 
-	public static function checkPermissions($tenants)
-	{
-		if (!\Auth::user()->can('view-all'))
-		{
-			$tenants = $tenants->keyBy('id');
-			foreach ($tenants as $tenant)
-			{
-				if (!$tenant->property->canAccess())
-				{	
-					$tenants->forget($tenant->id);
-				}
-				
-			}
-		}
 
-		return $tenants;
-	}
+	
+
 }

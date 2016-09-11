@@ -13,7 +13,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','timezone'
+        'name', 'email', 'password','timezone','company_name','job_title', 'phone'
     ];
 
     /**
@@ -32,9 +32,19 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Property');
     }
 
-    public function Tenants()
+    public function Property()
     {
-        return $this->hasOne('App\Tenant');
+        return $this->Properties()->first();
+    }
+
+    public function Tenant()
+    {
+        return $this->belongsTo('App\Tenant');
+    }
+
+    public function WorkOrder()
+    {
+        return $this->hasMany('App\WorkOrder');
     }
  
 }

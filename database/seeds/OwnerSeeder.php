@@ -16,5 +16,11 @@ class OwnerSeeder extends Seeder
         $owner->ar_email = "ar@example.com";
         $owner->ap_email = "ap@example.com";
         $owner->save();
+
+        $owner = new App\Owner;
+        $owner->name = "Davis Partners LLC";
+        $owner->ar_email = "ar@example.com";
+        $owner->ap_email = "ap@example.com";
+        $owner->save();
     }
 }

@@ -13,11 +13,13 @@
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/lou-multi-select-cf6d6c6/css/multi-select.css') }}" media="screen" rel="stylesheet" type="text/css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
         body {
             font-family: 'Lato';
+            background-color: #F0F7FF
         }
 
         .fa-btn {
@@ -38,7 +40,13 @@
         .table-hover > tbody > tr.ejc-inactive:hover > th {
             background-color: #E29A9A;
         } 
+
+        .button-color {
+            background-color: #5bc0de           
+        } 
+
         
+    
     </style>
 </head>
 <body id="app-layout">
@@ -55,8 +63,8 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('http://www.davispartners.com/') }}">
-                    <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="189" height="30">
+                <a class="navbar-brand" href="{{ url('http://site.ejcustom.com/') }}">
+                    <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="74" height="30">
                 </a>
             </div>
 
@@ -89,12 +97,8 @@
                         <ul class="dropdown-menu" role="menu">
 
                             <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
-                            <li><a href="/property/add">Add Property</a></li>
                             <li><a href="/property/list">All Properties</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#propertyImportModal">Property Import</a></li>
-                            <li><a href="/group/add">Add Property Group</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
-                        </ul>
+                            </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -104,14 +108,28 @@
                         <ul class="dropdown-menu" role="menu">
 
                             <li><a href="#" data-toggle="modal" data-target="#TenantIDModal">View Tenants</a></li>
-                            <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="/tenant/list">Tenant List</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
-                            
+                            <li><a href="/tenant/unverifiedlist">Unverified Tenant List</a></li>
                             @permission('manage-insurance')
                             <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
                             <li><a href="/tenant/noncompliancelist">Insurance Noncompliance List</a></li>
                             @endpermission
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Setup<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Add Remitance Info</a></li>
+                            <li><a href="#">Edit Problem Types</a></li>
+                            <li><a href="/tenant/add">Add Tenant</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#tenantImportModal">Tenant Import</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#propertyImportModal">Property Import</a></li>
+                            <li><a href="/property/add">Add Property</a></li>
+                            <li><a href="/group/add">Add Property Group</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
+                        
                         </ul>
                     </li>
                     @endpermission
@@ -135,6 +153,7 @@
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
+                        <li><a href="{{ url('/tenantregister') }}">Tenant Registration</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -158,6 +177,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="{{ asset('vendor/lou-multi-select-cf6d6c6/js/jquery.multi-select.js')}}" type="text/javascript"></script>
     <script src="{{ asset('js/woe-ajax.js') }}"></script> 
 
     <!-- PropertyIDModal (Pop up when view property link clicked) -->

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<p hidden>testTenantLists</p>
 
 <div class="container">
 	<div class="row">
