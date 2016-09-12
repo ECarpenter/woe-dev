@@ -1,4 +1,5 @@
-<?php // Code within app\Helpers\Helper.php
+<?php
+// Code within app\Helpers\Helper.php
 
 namespace App\Helpers;
 
@@ -21,6 +22,7 @@ use Symfony\Component\Process\Process;
 
 class Helper
 {
+
 	public static function importProperty($fname)
 	{
 		Excel::load($fname, function($reader) {
@@ -28,8 +30,8 @@ class Helper
 			$reader->each(function($sheet){
 				$sheet->each(function($row){
 					
-
-					if (Property::where('property_system_id', $row->property_system_id)->first() == null)
+					$property = Property::where('property_system_id', $row->property_system_id)->first();
+					if ($property == null)
 					{
 						$property = new Property;
 						$property->name = $row->name;
@@ -39,7 +41,11 @@ class Helper
 						$property->state = $row->state;
 						$property->zip = $row->zip;
 						$property->insured_name = $row->insured_name;
-						$property->remit_id = $row->remit_id;
+						$remit = Remit::where('system_id','=', $row->remit_id)->first();
+						if ($remit != null)
+						{
+							$property->remit_id = $remit->id;
+						}
 						$property->owner_id = $row->owner_id;
 						$property->req_liability_single_limit = $row->req_liability_single_limit;
 						$property->req_liability_combined_limit = $row->req_liability_combined_limit;
@@ -48,7 +54,15 @@ class Helper
 						$property->req_workerscomp_limit = $row->req_workerscomp_limit;
 						$property->save();
 					}
-					
+					else 
+					{
+						$remit = Remit::where('system_id','=', $row->remit_id)->first();
+						if ($remit != null)
+						{
+							$property->remit_id = $remit->id;
+							$property->save();
+						}
+					}
 				});
 			});
 
@@ -64,23 +78,28 @@ class Helper
 					
 					if ($row->payable_to != null)
 					{
-						$vendor = new Vendor;
-						$vendor->payable_to = $row->payable_to;
-						$vendor->address = $row->address;
-						$vendor->address_secondline = $row->address_secondline;
-						$vendor->city = $row->city;
-						$vendor->state = $row->state;
-						$vendor->zip = $row->zip;
-						$vendor->contact_name = $row->contact_name;
-						$vendor->email = $row->email;
-						$vendor->phone = $row->phone;
-						$vendor->system_id = $row->system_id;
-						if ($row->remit == 'TRUE')
+						$vendor = Vendor::where('system_id', '=', $row->system_id)->first();
+						if ($vendor == null)
 						{
-							$vendor->remit = true;
+							$vendor = new Vendor;
+							$vendor->payable_to = $row->payable_to;
+							$vendor->address = $row->address;
+							$vendor->address_secondline = $row->address_secondline;
+							$vendor->city = $row->city;
+							$vendor->state = $row->state;
+							$vendor->zip = $row->zip;
+							$vendor->contact_name = $row->contact_name;
+							$vendor->email = $row->email;
+							$vendor->phone = $row->phone;
+							$vendor->system_id = $row->system_id;
+							if ($row->remit == 'TRUE')
+							{
+								$vendor->remit = true;
+							}
+
+							$vendor->save();
 						}
 
-						$vendor->save();
 					}
 				});
 			});
@@ -99,29 +118,28 @@ class Helper
 					if ($row->property_id != null)
 					{
 						$user = User::where('email', $row->email)->first();
-
-						if ($user == null)
-						{
-							$user = new User;
-							$user->name = $row->first.' '.$row->last;
-							$user->email = $row->email;
-							$user->password = bcrypt($row->last);
-							$user->timezone = "America/Los_Angeles";
-							$user->phone = $row->phone;
-							$user->fax = $row->fax;
-							$user->address = $row->address;
-							$user->city = $row->city;
-							$user->state = $row->state;
-							$user->zip = $row->zip;
-							$user->save();
-							$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
-							$user->Roles()->attach($role);
-						}					
-
 						$property = Property::where('property_system_id', $row->property_id)->first();
 						if ($property != null)
 						{
-							$user->Properties()->attach($property);
+							if ($user == null)
+							{
+								$user = new User;
+								$user->name = $row->first.' '.$row->last;
+								$user->email = $row->email;
+								$user->password = bcrypt($row->last);
+								$user->timezone = "America/Los_Angeles";
+								$user->phone = $row->phone;
+								$user->fax = $row->fax;
+								$user->address = $row->address;
+								$user->city = $row->city;
+								$user->state = $row->state;
+								$user->zip = $row->zip;
+								$user->save();
+								$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
+								$user->Properties()->attach($property);
+								$user->Roles()->attach($role);
+							}					
+
 							$property->primary_manager = $user->id;
 							$property->save();
 						}
@@ -143,9 +161,9 @@ class Helper
 			$reader->each(function($sheet){
 				$sheet->each(function($row){
 
-
-					if (Tenant::where('tenant_system_id', $row->tenant_system_id)->first() == null)
+					if (Tenant::where('tenant_system_id', '=', $row->tenant_system_id)->first() == null)
 					{
+
 						if ($row->tenant_system_id != null)
 						{
 							$tenant = new Tenant;
@@ -169,10 +187,11 @@ class Helper
 							if ($row->req_liability_single_limit != null) {
 								$tenant->req_workerscomp_limit = $row->req_workerscomp_limit;
 							}
-
-							$property = Property::where('name',$row->property_name)->first();
+							
+							$property = Property::where('name', '=', $row->property_name)->first();
 							if ($property != null)
 							{
+								
 								$tenant->property_id = $property->id;
 								$tenant->save();
 								$ins = new Insurance;
