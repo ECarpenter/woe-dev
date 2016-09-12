@@ -64,23 +64,35 @@ class Helper
 					
 					if ($row->payable_to != null)
 					{
-						$vendor = new Vendor;
-						$vendor->payable_to = $row->payable_to;
-						$vendor->address = $row->address;
-						$vendor->address_secondline = $row->address_secondline;
-						$vendor->city = $row->city;
-						$vendor->state = $row->state;
-						$vendor->zip = $row->zip;
-						$vendor->contact_name = $row->contact_name;
-						$vendor->email = $row->email;
-						$vendor->phone = $row->phone;
-						$vendor->system_id = $row->system_id;
-						if ($row->remit == 'TRUE')
-						{
-							$vendor->remit = true;
+						$vendor = Vendor::where('system_id', '=', $row->system_id)->first();
+						if ($vendor == null)
+						{ 
+							$vendor = new Vendor;
+							$vendor->payable_to = $row->payable_to;
+							$vendor->address = $row->address;
+							$vendor->address_secondline = $row->address_secondline;
+							$vendor->city = $row->city;
+							$vendor->state = $row->state;
+							$vendor->zip = $row->zip;
+							$vendor->contact_name = $row->contact_name;
+							$vendor->email = $row->email;
+							$vendor->phone = $row->phone;
+							$vendor->system_id = $row->system_id;
+							if ($row->remit == 'TRUE')
+							{
+								$vendor->remit = true;
+							}
+
+							$vendor->save();
 						}
 
-						$vendor->save();
+						//adds remit to property
+						$property = Property::where('property_system_id', $row->property_id)->first();
+						if ($property != null)
+						{
+							$property->remit_id = $vendor->id;
+							$property->save();
+						}
 					}
 				});
 			});

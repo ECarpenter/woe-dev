@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'admin@mg.ejcustom.com', 'name' => 'EJCustom'],
+    //'from' => ['address' => 'admin@mg.ejcustom.com', 'name' => 'EJCustom'],
 
     /*
     |--------------------------------------------------------------------------
