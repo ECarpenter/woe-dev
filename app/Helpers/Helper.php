@@ -23,6 +23,15 @@ use Symfony\Component\Process\Process;
 class Helper
 {
 
+	public static function attachPrimary()
+	{
+		$properties = Property::where('id', '>', 147)->get();
+		 foreach ($properties as $property) {
+		 	$user = User::where('id', '=', $property->primary_manager)->first();
+		 	$user->Properties()->attach($property->id);
+		 }        
+		 return "You're a fucking genius";
+	}
 	public static function importProperty($fname)
 	{
 		Excel::load($fname, function($reader) {
@@ -136,7 +145,7 @@ class Helper
 								$user->zip = $row->zip;
 								$user->save();
 								$role = DB::table('roles')->where('name', '=', 'manager')->pluck('id');
-								$user->Properties()->attach($property);
+								$user->Properties()->attach($property->id);
 								$user->Roles()->attach($role);
 							}					
 

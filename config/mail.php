@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'admin@mg.ejcustom.com', 'name' => 'EJCustom'],
+    //'from' => ['address' => 'admin@mg.ejcustom.com', 'name' => 'EJCustom'],
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
     'sendmail' => '/usr/sbin/sendmail -bs',
 
     'to' => [
-        'address' => 'insurance@davispartners.com',
+        'address' => 'eric.carpenter@davispartners.com',
         'name' => 'Insurance Administrator'
     ],
 
