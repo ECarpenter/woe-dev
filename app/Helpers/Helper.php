@@ -116,7 +116,7 @@ class Helper
 							$property->remit_id = $vendor->id;
 							$property->save();
 						}
-						}
+						
 
 					}
 				});

@@ -49,7 +49,7 @@
 			{{$tenant->unit}} 
 			</small></h4>
 		</div>
-		@permission('manage-insurance'))
+		@permission('manage-insurance')
 			<div class="col-xs-4">
 				<ul class="nav nav-pills nav-stacked">
 					<li class="dropdown">
@@ -87,7 +87,7 @@
 				</li>
 			</ul>
 		</div>
-		@permission('manage-insurance'))
+		@permission('manage-insurance')
 			<div class="col-xs-4 col-xs-offset-2">
 				<h4> Ins. Notice Sent - <small>
 					@if ($tenant->insurance->last_notice_sent != null)		
@@ -109,7 +109,7 @@
 	</div>
 
 	<br>
-	@permission('manage-insurance'))
+	@permission('manage-insurance')
 		<div class="row">
 			<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
 				<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant->insurance->id}}"}}">	Manage Insurance Information</button>

@@ -110,7 +110,7 @@ return [
     'sendmail' => '/usr/sbin/sendmail -bs',
 
     'to' => [
-        'address' => 'eric.carpenter@davispartners.com',
+        'address' => 'ecarpen905@gmail.com',
         'name' => 'Insurance Administrator'
     ],
 
