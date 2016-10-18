@@ -14,7 +14,7 @@ $(document).ready(function(){
 			$.ajax({
 				type: "GET",
 				url: '/tenantregister/id',
-				data: {tenantid},
+				data: {tenantid : tenantid},
 				dataType: 'json',
 				success: function (data){
 					console.log(data);
@@ -58,7 +58,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: "GET",
 			url: '/tenantregister/city',
-			data: {city},
+			data: {city : city},
 			dataType: 'json',
 			success: function (data){
 				$("select[name='property']").find('option').remove().end();
