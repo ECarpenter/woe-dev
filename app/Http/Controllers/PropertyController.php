@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Excel;
 use Helper;
 use Response;
+use Log;
 
 use App\Http\Requests;
 use App\ProblemType;
@@ -108,15 +109,8 @@ class PropertyController extends Controller
 	public function add()
 	{
 		
-		$users = User::orderBy('name')->get();
-		$managers = array();
-		foreach ($users as $user)
-		{
-			if ($user->hasRole('manager'))
-			{
-				$managers[] = $user;
-			}
-		}
+		
+		$managers = User::Managers();
 				
 		$owners = Owner::orderBy('name')->get();
 
@@ -187,5 +181,34 @@ class PropertyController extends Controller
 		return Response::json($remits);
 	}
 	
+	public function user(Property $property, Request $request)
+	{
+		$this->validate($request, [
+			'property_user_multiselect'=> 'required',
+			]);
+
+		$property->Users()->sync($request->property_user_multiselect);
+
+		return back();
+	}
+
+	public function multiselectdisplay(Property $property)
+	{
+		$managers = User::Managers();
+		$selected = collect();
+
+		foreach($managers as $key =>$manager)
+		{
+			if ($property->hasUser($manager->id))
+			{
+				$selected->push($manager);
+				unset($managers[$key]);
+			}
+
+		}
+
+		return Response()->json(['managers'=>$managers,'selected'=>$selected]);
+		
+	}
 
 }

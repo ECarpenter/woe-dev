@@ -46,5 +46,20 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\WorkOrder');
     }
+
+    public static function Managers()
+    {
+        $users = User::orderBy('name')->get();
+        $managers = array();
+        foreach ($users as $user)
+        {
+            if ($user->hasRole('manager'))
+            {
+                $managers[] = $user;
+            }
+        }
+
+        return $managers;
+    }
  
 }

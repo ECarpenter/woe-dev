@@ -300,25 +300,25 @@
 								<td class="{{$state['lfile']}}">Liability</td>
 								<td class="{{$state['lexpire']}}"><input type="date" name="liability_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_start))}}"></td>
 								<td class="{{$state['lexpire']}}"><input type="date" name="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}"></td>
-								<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="100000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="100000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
+								<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="50000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="50000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
 							</tr>
 							<tr>
 								<td class="{{$state['ufile']}}">Excess/Umbrella</td>
 								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_start))}}"></td>
 								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_end))}}"></td>
-								<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="100000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
+								<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="50000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
 							</tr>
 							<tr>
 								<td class="{{$state['afile']}}">Auto</td>
 								<td class="{{$state['aexpire']}}"><input type="date" name="auto_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_start))}}"></td>
 								<td class="{{$state['aexpire']}}"><input type="date" name="auto_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_end))}}"></td>
-								<td class="{{$state['alimit']}}"><input type="number" name="auto_limit" step="100000" value="{{$tenant->Insurance->auto_limit}}"></td>
+								<td class="{{$state['alimit']}}"><input type="number" name="auto_limit" step="50000" value="{{$tenant->Insurance->auto_limit}}"></td>
 							</tr>
 							<tr>
 								<td class="{{$state['wfile']}}">Workers Comp</td>
 								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_start))}}"></td>
 								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_end))}}"></td>
-								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="100000" value="{{$tenant->Insurance->workerscomp_limit}}"> - <input type="checkbox" id="workerscomp_applicable" name="workerscomp_applicable" value="N">
+								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="50000" value="{{$tenant->Insurance->workerscomp_limit}}"> - <input type="checkbox" id="workerscomp_applicable" name="workerscomp_applicable" value="N">
 				    					Not Applicable </td>
 							</tr>
 
@@ -352,7 +352,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Liability Single</label>
 		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_liability_single_limit" id="req_liability_single_limit" step="100000" value="{{ $tenant->req_liability_single_limit }}">
+		                            <input type="number" class="form-control" name="req_liability_single_limit" id="req_liability_single_limit" step="50000" value="{{ $tenant->req_liability_single_limit }}">
 		                        </div>
 		                    </div>   
 	                    </div>
@@ -361,7 +361,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Liability Combined</label>
 		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_liability_combined_limit" id="req_liability_combined_limit" step="100000" value="{{ $tenant->req_liability_combined_limit }}">
+		                            <input type="number" class="form-control" name="req_liability_combined_limit" id="req_liability_combined_limit" step="50000" value="{{ $tenant->req_liability_combined_limit }}">
 		                        </div>
 		                    </div>   
 	                    </div>
@@ -370,7 +370,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Excess/Umbrella</label>
 		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_umbrella_limit" id="req_umbrella_limit" step="100000" value="{{ $tenant->req_umbrella_limit }}">
+		                            <input type="number" class="form-control" name="req_umbrella_limit" id="req_umbrella_limit" step="50000" value="{{ $tenant->req_umbrella_limit }}">
 		                        </div>
 		                    </div>   
 	                    </div>
@@ -379,7 +379,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Auto</label>
 		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_auto_limit" id="req_auto_limit" step="100000" value="{{ $tenant->req_auto_limit }}">
+		                            <input type="number" class="form-control" name="req_auto_limit" id="req_auto_limit" step="50000" value="{{ $tenant->req_auto_limit }}">
 		                        </div>
 		                    </div>   
 	                    </div>
@@ -388,7 +388,7 @@
 		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Workers Comp</label>
 		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_workerscomp_limit" id="req_workerscomp_limit" step="100000" value="{{ $tenant->req_workerscomp_limit }}">
+		                            <input type="number" class="form-control" name="req_workerscomp_limit" id="req_workerscomp_limit" step="50000" value="{{ $tenant->req_workerscomp_limit }}">
 		                        </div>
 		                    </div>   
 	                    </div>

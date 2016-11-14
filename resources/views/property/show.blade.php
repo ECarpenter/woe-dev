@@ -2,6 +2,15 @@
 
 @section ('content')
 <p hidden>testProperty1</p>
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-4">
+			@if ($errors->has('property_user_multiselect'))
+				<span class="help-block">
+					<strong><font color="#FF000">There needs to be at least ONE manager attached.</font></strong>
+				</span>
+			@endif
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-xs-4 col-xs-offset-4">
@@ -22,7 +31,9 @@
 					@foreach ($property->users as $user)
 						<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
 					@endforeach
+					<li class="button-color"><a href="#" class="open-user-property-modal" data-value="{{$property->id}}">Edit Users</a></li>
 				</ul>
+
 			</li>
 		</ul>
 		</div>
@@ -118,6 +129,7 @@
 			<h4> Insurance Non-Compliance </h4>
 		</div>	
 	</div>
+
 
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">	
@@ -276,6 +288,34 @@
 			</div>
 		</div>
 	</div>
+
+	{{-- User - Update Users --}}
+	<div class="modal fade" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="UserModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" id="UserModalLabel">Edit Users</h4>
+				</div>
+				<div class="modal-body">
+					<form method="POST" action="/property/user/{{$property->id}}" >
+						{{ csrf_field() }}
+						{{ method_field('PATCH') }}
+
+						<select multiple="multiple" id="property_user_multiselect" name="property_user_multiselect[]">		
+						
+						</select>		
+
+
+						<input class="btn btn-primary" type="submit">
+		
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 
 @endsection

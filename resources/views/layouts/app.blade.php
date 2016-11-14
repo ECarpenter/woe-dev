@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -13,7 +14,7 @@
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('vendor/lou-multi-select-cf6d6c6/css/multi-select.css') }}" media="screen" rel="stylesheet" type="text/css">
+    <link href="{{ asset('vendor/lou-multi-select-7a5354c/css/multi-select.css') }}" media="screen" rel="stylesheet" type="text/css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
@@ -177,7 +178,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="{{ asset('vendor/lou-multi-select-cf6d6c6/js/jquery.multi-select.js')}}" type="text/javascript"></script>
+    <script src="{{ asset('vendor/lou-multi-select-7a5354c/js/jquery.multi-select.js')}}" type="text/javascript"></script>
     <script src="{{ asset('js/woe-ajax.js') }}"></script> 
 
     <!-- PropertyIDModal (Pop up when view property link clicked) -->

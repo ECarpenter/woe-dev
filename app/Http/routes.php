@@ -53,7 +53,9 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::get('property/add', 'PropertyController@add');
     Route::post('property/import', 'PropertyController@import');
     Route::get('/property/remit-display/','PropertyController@remitdisplay');
+    Route::get('/property/multiselectdisplay/{property}', 'PropertyController@multiselectdisplay');
     Route::patch('/property/remit/{property}', 'PropertyController@remit');
+    Route::patch('/property/user/{property}', 'PropertyController@user');
     Route::get('property/{property}', 'PropertyController@show');
 
     //Group Routes

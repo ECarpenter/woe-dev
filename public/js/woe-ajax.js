@@ -319,14 +319,49 @@ $(document).ready(function(){
 	});
 
 	//
-	//Property-Vendor Interaction
-	//
-	
-	$('remit-property').multiSelect({
-  		selectableHeader: "<div class='custom-header'>Remit to</div>",
-		selectionHeader: "<div class='custom-header'>wrong</div>"
-	});
+	//Property-User Edit
+	// 
+	$('#property_user_multiselect').multiSelect({
+				selectableHeader: "<div class='custom-header'>User List</div>",
+				selectionHeader: "<div class='custom-header'>Linked to Property</div>",
+				afterSelect: function(selectedID) {
+					
+				},
+				afterDeselect: function(selectedID) {
 
+				},
+			});
+
+	$('.open-user-property-modal').click(function(){
+		var property_id = $(this).data('value');
+
+		
+
+			$.ajax({
+			    type: 'GET',
+			    url : '/property/multiselectdisplay/'+ property_id +'/',
+			    dataType: 'json',
+			    success : function(data, textStatus, req) {
+			        console.log(data);
+
+					$.each(data.managers, function(index, manager){
+						$('#property_user_multiselect').multiSelect('addOption', { value: manager.id, text: manager.name});
+					});
+					$.each(data.selected, function(index, manager){
+						$('#property_user_multiselect').multiSelect('addOption', { value: manager.id, text: manager.name});
+						$('#property_user_multiselect').multiSelect('select',  String(manager.id));
+					});
+					},
+				error: function(req, textStatus, errorThrown) {
+					//this is going to happen when you send something different from a 200 OK HTTP
+					alert('Ooops, something happened: ' + textStatus + ' ' +errorThrown);
+				}
+
+			});	
+			
+			$('#UserModal').modal('show');
+	
+	});
 	//
 	//Remit
 	//

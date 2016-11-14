@@ -62,16 +62,9 @@ class Property extends Model
         {
             return true;
         }
-        else
+        else if ($this->hasUser(\Auth::user()->id))
         {
-            foreach ($this->Users as $user) 
-            { 
-                if ($user->id == \Auth::user()->id)
-                {
-
-                    return true;
-                }
-            }
+            return true;       
         }
         return false;
     }
@@ -84,5 +77,19 @@ class Property extends Model
     public function Remit()
     {
         return $this->belongsTo('App\Remit');
+    }
+
+    public function hasUser($userid)
+    {
+        foreach ($this->Users as $user) 
+        { 
+            if ($user->id == $userid)
+            {
+
+                return true;
+            }
+        }
+        return false;
+
     }
 }
