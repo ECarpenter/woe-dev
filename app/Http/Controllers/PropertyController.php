@@ -114,7 +114,9 @@ class PropertyController extends Controller
 				
 		$owners = Owner::orderBy('name')->get();
 
-		return view('property.add', compact('managers','owners'));
+		$remits = Remit::where('remit','=', '1')->orderBy('payable_to','asc')->get();
+
+		return view('property.add', compact('managers','owners','remits'));
 	}
 
 	//validates and saves a new property
@@ -122,6 +124,7 @@ class PropertyController extends Controller
 	{
 		$this->validate($request, [
 			'owner_id'=> 'required',
+			'remit' => 'required',
 			'manager'=> 'required',
 			'name'=> 'required',
 			'property_system_id'=> 'required',
@@ -148,7 +151,9 @@ class PropertyController extends Controller
 			'req_liability_combined_limit' => $request->req_liability_combined_limit,
 			'req_auto_limit' => $request->req_auto_limit,
 			'req_umbrella_limit' => $request->req_umbrella_limit,
-			'req_workerscomp_limit' => $request->req_workerscomp_limit
+			'req_workerscomp_limit' => $request->req_workerscomp_limit,
+			'primary_manager' => $request->manager,
+			'remit_id' => $request->remit,
 		]);
 
 		$property->Users()->attach(User::find($request->manager));
@@ -185,9 +190,27 @@ class PropertyController extends Controller
 	{
 		$this->validate($request, [
 			'property_user_multiselect'=> 'required',
+			'primary_manager'=> 'required',
 			]);
 
 		$property->Users()->sync($request->property_user_multiselect);
+
+		$primary_included = false;
+
+		foreach ($request->property_user_multiselect as $selected) {
+			if ($selected == $request->primary_manager)
+			{
+				$primary_included = true;
+			}
+		}
+
+		if (!$primary_included)
+		{
+			$property->Users()->attach(User::find($request->primary_manager));
+		}
+
+		$property->primary_manager = $request->primary_manager;
+		$property->save();
 
 		return back();
 	}
@@ -195,6 +218,7 @@ class PropertyController extends Controller
 	public function multiselectdisplay(Property $property)
 	{
 		$managers = User::Managers();
+		usort($managers, array($this,"cmp"));
 		$selected = collect();
 
 		foreach($managers as $key =>$manager)
@@ -207,8 +231,13 @@ class PropertyController extends Controller
 
 		}
 
-		return Response()->json(['managers'=>$managers,'selected'=>$selected]);
+		return Response()->json(['managers'=>$managers,'selected'=>$selected, 'primary_manager'=>$property->primary_manager]);
 		
+	}
+
+	public function cmp($a, $b)
+	{
+    	return strcmp($a->name, $b->name);
 	}
 
 }

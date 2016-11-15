@@ -325,7 +325,7 @@ $(document).ready(function(){
 				selectableHeader: "<div class='custom-header'>User List</div>",
 				selectionHeader: "<div class='custom-header'>Linked to Property</div>",
 				afterSelect: function(selectedID) {
-					
+
 				},
 				afterDeselect: function(selectedID) {
 
@@ -343,14 +343,27 @@ $(document).ready(function(){
 			    dataType: 'json',
 			    success : function(data, textStatus, req) {
 			        console.log(data);
+			        $('#primary_manager').empty();
 
 					$.each(data.managers, function(index, manager){
 						$('#property_user_multiselect').multiSelect('addOption', { value: manager.id, text: manager.name});
+						$('#primary_manager').prepend("<option value='" + manager.id + "'>" + manager.name + "</option>");
 					});
 					$.each(data.selected, function(index, manager){
 						$('#property_user_multiselect').multiSelect('addOption', { value: manager.id, text: manager.name});
 						$('#property_user_multiselect').multiSelect('select',  String(manager.id));
+						if (manager.id == data.primary_manager)
+						{
+							$('#primary_manager').prepend("<option value='" + manager.id + "' selected>" + manager.name + "</option>");
+
+						}
+						else
+						{
+							$('#primary_manager').prepend("<option value='" + manager.id + "'>" + manager.name + "</option>");
+
+						}
 					});
+
 					},
 				error: function(req, textStatus, errorThrown) {
 					//this is going to happen when you send something different from a 200 OK HTTP
@@ -396,8 +409,9 @@ $(document).ready(function(){
 		$('#RemitDisplay').empty();
 		$.get('/property/remit-display/', function(remits){
 			console.log(remits);
+			console.log($("#RemitSelect option:selected").val());
 			$.each(remits, function(index, remit){
-				if (remit.id == $("select option:selected").val()) {					
+				if (remit.id == $("#RemitSelect option:selected").val()) {					
 					$('#RemitDisplay').prepend(remit.payable_to + "<br>" + remit.address  + "<br>");
 					if (remit.address_secondline != null)
 					{

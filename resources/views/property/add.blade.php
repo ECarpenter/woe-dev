@@ -32,25 +32,29 @@
 							</div>
 						</div> 
 
-						<div class="form-group{{ $errors->has('manager') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">Manager*</label>
+						@if (Auth::user()->hasRole('manager'))
+							<input type="hidden" name="manager" value={{Auth::user()->id}}>
+						@else
+							<div class="form-group{{ $errors->has('manager') ? ' has-error' : '' }}">
+								<label class="col-md-4 control-label">Manager*</label>
 
-							<div class="col-md-6">
-							<select name = 'manager' class="form-control">
-								<option value=''>Select One</option>
-								@foreach ($managers as $manager)
-									<option value={{$manager->id}}> {{ $manager->name }} </option>
-								@endforeach
-							</select>
+								<div class="col-md-6">
+								<select name = 'manager' class="form-control">
+									<option value=''>Select One</option>
+									@foreach ($managers as $manager)
+										<option value={{$manager->id}}> {{ $manager->name }} </option>
+									@endforeach
+								</select>
 
-							
-								@if ($errors->has('manager'))
-									<span class="help-block">
-										<strong>{{ $errors->first('manager') }}</strong>
-									</span>
-								@endif
-							</div>
-						</div> 
+								
+									@if ($errors->has('manager'))
+										<span class="help-block">
+											<strong>{{ $errors->first('manager') }}</strong>
+										</span>
+									@endif
+								</div>
+							</div> 
+						@endif
 
 						<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 							<label class="col-md-4 control-label">Property Name</label>
@@ -134,11 +138,36 @@
 							</div>
 						</div>
 
+						<div class="form-group{{ $errors->has('remit') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">Remintance Info*</label>
+
+							<div class="col-md-6">
+								<select id="RemitSelect" name="remit" class="form-control">
+									<option value=''>Select One</option>
+									@foreach ($remits as $remit)
+										<option value='{{$remit->id}}'> {{ $remit->payable_to }} </option>
+									@endforeach
+								</select>
+
+								@if ($errors->has('remit'))
+									<span class="help-block">
+										<strong>{{ $errors->first('remit') }}</strong>
+									</span>
+								@endif
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<div id="RemitDisplay">
+								</div>
+							</div>
+						</div>
+
 						<div class="form-group{{ $errors->has('req_liability_single_limit') ? ' has-error' : '' }}">
 							<label class="col-md-4 control-label">Liability Single Limit*</label>
 
 							<div class="col-md-6">
-								<input type="number" class="form-control" name="req_liability_single_limit" step="100000" value="{{ old('req_liability_single_limit') }}">
+								<input type="number" class="form-control" name="req_liability_single_limit" step="100000" value="2000000">
 
 								@if ($errors->has('req_liability_single_limit'))
 									<span class="help-block">
@@ -152,7 +181,7 @@
 							<label class="col-md-4 control-label">Liability Combined Limit*</label>
 
 							<div class="col-md-6">
-								<input type="number" class="form-control" name="req_liability_combined_limit" step="100000" value="{{ old('req_liability_combined_limit') }}">
+								<input type="number" class="form-control" name="req_liability_combined_limit" step="100000" value="3000000">
 
 								@if ($errors->has('req_liability_combined_limit'))
 									<span class="help-block">
@@ -166,7 +195,7 @@
 							<label class="col-md-4 control-label">Auto Limit*</label>
 
 							<div class="col-md-6">
-								<input type="number" class="form-control" name="req_auto_limit" step="100000" value="{{ old('req_auto_limit') }}">
+								<input type="number" class="form-control" name="req_auto_limit" step="100000" value="1000000">
 
 								@if ($errors->has('req_auto_limit'))
 									<span class="help-block">
@@ -180,7 +209,7 @@
 							<label class="col-md-4 control-label">Umbrella Limit*</label>
 
 							<div class="col-md-6">
-								<input type="number" class="form-control" name="req_umbrella_limit" step="100000" value="{{ old('req_umbrella_limit') }}">
+								<input type="number" class="form-control" name="req_umbrella_limit" step="100000" value="2000000">
 
 								@if ($errors->has('req_umbrella_limit'))
 									<span class="help-block">
@@ -194,7 +223,7 @@
 							<label class="col-md-4 control-label">Workers Comp Limit*</label>
 
 							<div class="col-md-6">
-								<input type="number" class="form-control" name="req_workerscomp_limit" step="100000" value="{{ old('req_workerscomp_limit') }}">
+								<input type="number" class="form-control" name="req_workerscomp_limit" step="100000" value="1000000">
 
 								@if ($errors->has('req_workerscomp_limit'))
 									<span class="help-block">

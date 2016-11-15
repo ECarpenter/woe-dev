@@ -302,14 +302,45 @@
 						{{ csrf_field() }}
 						{{ method_field('PATCH') }}
 
-						<select multiple="multiple" id="property_user_multiselect" name="property_user_multiselect[]">		
+						<div class="row">
+							<div class="col-xs-8 col-xs-offset-4">
+								<h4>Primary Manager</h4>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<select class="form-control" id="primary_manager" name="primary_manager">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-8 col-xs-offset-4">
+								<h4>Associated Users</h4>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-2 col-xs-offset-2">
+	
+
+								<select multiple="multiple" id="property_user_multiselect" name="property_user_multiselect[]">		
 						
-						</select>		
+								</select>	
+							</div>
+						</div>	
 
+						<div class="row">
+							<div class="col-xs-10 col-xs-offset-1">
+								<hr width="75%">
+							</div>
+						</div>
 
-						<input class="btn btn-primary" type="submit">
-		
-
+						<div class="row">
+							<div class="col-xs-2 col-xs-offset-5">
+								<input class="btn btn-primary" type="submit">
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>

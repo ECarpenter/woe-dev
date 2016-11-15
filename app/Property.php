@@ -9,7 +9,7 @@ use App\User;
 class Property extends Model
 {
 
-    protected $fillable = ['name', 'property_system_id', 'address', 'city','state','zip','owner_id','active', 'req_liability_single_limit', 'req_liability_combined_limit', 'req_auto_limit', 'req_umbrella_limit', 'req_workerscomp_limit'
+    protected $fillable = ['name', 'property_system_id', 'address', 'city','state','zip','owner_id','active', 'req_liability_single_limit', 'req_liability_combined_limit', 'req_auto_limit', 'req_umbrella_limit', 'req_workerscomp_limit','remit_id', 'primary_manager'
     ];
 
     public function Tenants()
