@@ -34,7 +34,15 @@ class User extends Authenticatable
 
     public function Property()
     {
-        return $this->Properties()->first();
+        //Checks to see if user is a tenant or manager
+        if ($this->tenant_id == null)
+        {
+            return $this->Properties()->first();
+        }   
+        else
+        {
+            return $this->Tenant->Property;
+        }
     }
 
     public function Tenant()

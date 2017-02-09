@@ -21,21 +21,21 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-2 col-xs-offset-2">
-		<ul class="nav nav-pills nav-stacked">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-				  Users<span class="caret"></span>
-				</a>
+			<ul class="nav nav-pills nav-stacked">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Users<span class="caret"></span>
+					</a>
 
-				<ul class="dropdown-menu" role="menu">
-					@foreach ($property->users as $user)
-						<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
-					@endforeach
-					<li class="button-color"><a href="#" class="open-user-property-modal" data-value="{{$property->id}}">Edit Users</a></li>
-				</ul>
+					<ul class="dropdown-menu" role="menu">
+						@foreach ($property->users as $user)
+							<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
+						@endforeach
+						<li class="button-color"><a href="#" class="open-user-property-modal" data-value="{{$property->id}}">Edit Users</a></li>
+					</ul>
 
-			</li>
-		</ul>
+				</li>
+			</ul>
 		</div>
 		<div class="col-xs-2 col-xs-offset-2">
 		<ul class="nav nav-pills nav-stacked">

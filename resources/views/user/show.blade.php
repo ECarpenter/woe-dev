@@ -67,13 +67,15 @@
 								<th>Status</th>
 								<th>Date</th>
 							</tr>
-							@foreach ($user->tenant->Workorder()->orderBy('created_at','desc')->get() as $workorder)
-							<tr onclick = "location.href='/workorders/{{$workorder->id}}'">
-								<td>{{$workorder->ProblemType->type}}</td>
-								<td>{{$workorder->status}}</td>
-								<td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
-							</tr>
-							@endforeach
+							@if($user->tenant != null)
+								@foreach ($user->tenant->Workorder()->orderBy('created_at','desc')->get() as $workorder)
+								<tr onclick = "location.href='/workorders/{{$workorder->id}}'">
+									<td>{{$workorder->ProblemType->type}}</td>
+									<td>{{$workorder->status}}</td>
+									<td>{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}</td>
+								</tr>
+								@endforeach
+							@endif
 					</table>
 				</div>
 			</div>
