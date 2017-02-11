@@ -84,6 +84,22 @@ class TenantController extends Controller
 		}
 	}
 
+	public function changeactive(Tenant $tenant)
+	{
+
+		if ($tenant->active)
+		{
+			$tenant->active = false;
+		}
+		else
+		{
+			$tenant->active = true;
+		}
+		$tenant->save();
+		return redirect('tenant/list');
+	}
+
+
 	public function show(Tenant $tenant)
 	{
 		if (!\Auth::user()->can('view-all') && !$tenant->property->canAccess())

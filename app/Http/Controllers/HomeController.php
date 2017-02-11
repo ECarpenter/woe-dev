@@ -91,7 +91,6 @@ class HomeController extends Controller
             Helper::importPastTenant('tmp/import.xls');
         }
         
-
         return redirect('/home');
     }
 }

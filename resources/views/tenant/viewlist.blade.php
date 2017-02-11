@@ -8,7 +8,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><h5>Refine Tenant List</h5></div>
 			<div class="panel-body">
-			    <form class="form-horizontal" role="form" method="POST" action="/tenant/refinelist">
+			    <form class="form-horizontal" id="refinelistform" role="form" method="POST" action="/tenant/refinelist">
 			        {!! csrf_field() !!}
 			        <div class="row">
 				        <label for="inputPropID" class="col-xs-3 control-label">Enter Property ID</label>
@@ -41,12 +41,14 @@
 					<tr>
 						<th>Tenant</th>
 						<th>ID</th>
+						<th>Active/Inactive</th>
 					</tr>
 
 				@foreach ($tenants as $tenant)
-					<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}" onclick = "location.href='/tenant/{{$tenant->id}}'">
-						<td>{{$tenant->company_name}}</td>
-						<td>{{$tenant->tenant_system_id}}</td>
+					<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}">
+						<td onclick = "location.href='/tenant/{{$tenant->id}}'">{{$tenant->company_name}}</td>
+						<td onclick = "location.href='/tenant/{{$tenant->id}}'">{{$tenant->tenant_system_id}}</td>
+						<td class = "{{$tenant->active ? 'success' : 'danger'}}" onclick = "location.href='/tenant/changeactive/{{$tenant->id}}'">{{$tenant->active ? 'Active' : 'Inactive'}} </td>
 					</tr>
 				@endforeach
 

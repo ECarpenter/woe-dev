@@ -54,6 +54,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('property/import', 'PropertyController@import');
     Route::get('property/remit-display/','PropertyController@remitdisplay');
     Route::get('property/multiselectdisplay/{property}', 'PropertyController@multiselectdisplay');
+    Route::get('property/changeactive/{property}','PropertyController@changeactive');
     Route::patch('property/remit/{property}', 'PropertyController@remit');
     Route::patch('property/user/{property}', 'PropertyController@user');
     Route::get('property/{property}', 'PropertyController@show');
@@ -78,6 +79,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('tenant/import', 'TenantController@import');
     Route::post('tenant/refinelist', 'TenantController@refinelist');
     Route::get('tenant/unverifiedlist', 'TenantController@unverifiedlist');
+    Route::get('tenant/changeactive/{tenant}','TenantController@changeactive');
     Route::get('tenant/{tenant}','TenantController@show');
     Route::post('tenant/{tenant}/upload', 'TenantController@upload');
     Route::get('tenant/{tenant}/response', 'TenantController@response');

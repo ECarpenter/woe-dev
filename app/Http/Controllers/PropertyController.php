@@ -161,6 +161,21 @@ class PropertyController extends Controller
 		return redirect('/property/'.$property->id);
 	}
 
+	public function changeactive(Property $property)
+	{
+
+		if ($property->active)
+		{
+			$property->active = false;
+		}
+		else
+		{
+			$property->active = true;
+		}
+		$property->save();
+		return redirect('/property/list');
+	}
+
 
 	//takes an .xls file to import in a mass amount of properties at once. 
 	public function import(Request $request)
