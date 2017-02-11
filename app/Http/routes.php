@@ -12,15 +12,15 @@
 */
 Route::group(['middleware' => ['web' ]], function () {
 
-    Route::get('/upload/insurance/{token?}', 'InsuranceController@upload');
-    Route::post('/upload/insurance/save', 'InsuranceController@save');
+    Route::get('upload/insurance/{token?}', 'InsuranceController@upload');
+    Route::post('upload/insurance/save', 'InsuranceController@save');
 });
 
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
-    Route::get('/tenantregister', 'Auth\AuthController@tenantregister');
-    Route::get('/tenantregister/city', 'Auth\AuthController@city');
-    Route::get('/tenantregister/id', 'Auth\AuthController@id');
+    Route::get('tenantregister', 'Auth\AuthController@tenantregister');
+    Route::get('tenantregister/city', 'Auth\AuthController@city');
+    Route::get('tenantregister/id', 'Auth\AuthController@id');
     Route::get('/', function () {
         return view('welcome');
     });
@@ -43,8 +43,8 @@ Route::group(['middleware' => ['web','auth']], function () {
 //insurance and work orders
 Route::group(['middleware' => ['web', 'auth', 'permission:general']], function () {
 	
-
-
+    //Misc Routes 
+    Route::post('import', 'HomeController@import');
 
     //Property Routes
     Route::post('property', 'PropertyController@showid');
@@ -52,10 +52,10 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('property/save', 'PropertyController@save');
     Route::get('property/add', 'PropertyController@add');
     Route::post('property/import', 'PropertyController@import');
-    Route::get('/property/remit-display/','PropertyController@remitdisplay');
-    Route::get('/property/multiselectdisplay/{property}', 'PropertyController@multiselectdisplay');
-    Route::patch('/property/remit/{property}', 'PropertyController@remit');
-    Route::patch('/property/user/{property}', 'PropertyController@user');
+    Route::get('property/remit-display/','PropertyController@remitdisplay');
+    Route::get('property/multiselectdisplay/{property}', 'PropertyController@multiselectdisplay');
+    Route::patch('property/remit/{property}', 'PropertyController@remit');
+    Route::patch('property/user/{property}', 'PropertyController@user');
     Route::get('property/{property}', 'PropertyController@show');
 
     //Group Routes

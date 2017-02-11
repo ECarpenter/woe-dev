@@ -26,11 +26,11 @@ class Helper
 	public static function attachPrimary()
 	{
 		$properties = Property::where('id', '>', 147)->get();
-		 foreach ($properties as $property) {
+		foreach ($properties as $property) 
+		{
 		 	$user = User::where('id', '=', $property->primary_manager)->first();
 		 	$user->Properties()->attach($property->id);
-		 }        
-		 return "You're a fucking genius";
+		}        
 	}
 	public static function importProperty($fname)
 	{
@@ -129,9 +129,8 @@ class Helper
 	{
 		Excel::load($fname, function($reader) {
 
-			
-		   
 			$reader->each(function($sheet){
+
 				$sheet->each(function($row){
 					if ($row->property_id != null)
 					{
@@ -162,15 +161,29 @@ class Helper
 							$property->save();
 						}
 					}
-
-					
 				});
 			});
-
 		});      
 	}
 
+	public static function importPastTenant($fname)
+	{
+		Excel::load($fname, function($reader) {
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
 
+					$tenant = Tenant::where('tenant_system_id', '=', $row->tenant_system_id)->first();
+					if ( $tenant != null)
+					{
+						$tenant->active = false;
+						$tenant->save();
+					}
+				});
+			});
+
+		});
+	}	
 
 	public static function importTenant($fname)
 	{

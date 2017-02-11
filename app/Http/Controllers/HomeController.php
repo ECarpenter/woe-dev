@@ -70,4 +70,28 @@ class HomeController extends Controller
         
         return view('home', compact('workorders','users'));
     }
+
+    //takes an .xls file to import in a mass amount of data at once. 
+    public function import(Request $request)
+    {
+
+        $file = $request->importFile;
+        $file->move('tmp/','import.xls');
+
+        if ($request->importType == 'property')
+        {
+            Helper::importProperty('tmp/import.xls');
+        }
+        elseif ($request->importType == 'tenant')
+        {
+            Helper::importTenant('tmp/import.xls');
+        }
+        elseif ($request->importType == 'past')
+        {
+            Helper::importPastTenant('tmp/import.xls');
+        }
+        
+
+        return redirect('/home');
+    }
 }
