@@ -185,6 +185,29 @@ class Helper
 		});
 	}	
 
+	public static function importSoldProperties($fname)
+	{
+		Excel::load($fname, function($reader) {
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
+					$property = Property::where('property_system_id', '=', $row->property)->first();
+					if ( $property != null)
+					{
+						$tenants = Helper::filterbyproperty($property->property_system_id);
+						foreach ($tenants as $tenant) 
+						{
+							$tenant->active = false;
+							$tenant->save();
+						}
+						$property->active = false;
+						$property->save();
+					}
+				});
+			});
+		});
+	}	
+
 	public static function importTenant($fname)
 	{
 		Excel::load($fname, function($reader) {

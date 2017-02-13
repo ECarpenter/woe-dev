@@ -289,6 +289,10 @@
                                         <input type="radio" name="importType" value="past">
                                         Past Tenants
                                     </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="sold">
+                                        Sold Properties
+                                    </label>
                                 </div>
                             </div>
                             <br>

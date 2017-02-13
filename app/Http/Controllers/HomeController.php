@@ -92,6 +92,10 @@ class HomeController extends Controller
         {
             Helper::importPastTenant('tmp/import.xls');
         }
+        elseif ($request->importType == 'sold')
+        {
+            Helper::importSoldProperties('tmp/import.xls');
+        }
         
         return redirect('/home');
     }
