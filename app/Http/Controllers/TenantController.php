@@ -225,33 +225,7 @@ class TenantController extends Controller
 
 	public function refinelist(Request $request)
 	{
-		$tenants = collect();
-		$property = Property::where('property_system_id',$request->property_system_id)->first();
-		$group = Group::where('group_system_id', $request->property_system_id)->first();
-		if ($group != null) 
-		{
-			$group->load('properties', 'properties.owner');
-			
-			foreach ($group->Properties as $property) 
-			{
-				foreach ($property->tenants as $tenant) {
-					$tenants->prepend($tenant);
-				}
-			}
-			$tenants = $tenants->sortBy('company_name');
-		}
-		elseif ($property != null) 
-		{
-			foreach ($property->Tenants as $tenant) 
-			{               
-				$tenants->prepend($tenant);
-			}
-			$tenants = $tenants->sortBy('company_name');
-		}
-		else 
-		{
-			$tenants = Tenant::orderBy('company_name')->get();
-		}
+		$tenants = Helper::filterbyproperty($request->property_system_id);
 		
 		if ($request->active_selector == 'active') {
 			$tenants = $tenants->filter(function ($tenant) {

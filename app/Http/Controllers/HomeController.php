@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -91,6 +93,31 @@ class HomeController extends Controller
             Helper::importPastTenant('tmp/import.xls');
         }
         
+        return redirect('/home');
+    }
+
+    public function insurancereport(Request $request)
+    {
+        
+        $tenants = Helper::filterbyproperty($request->property_system_id);
+        $tenants = $tenants->filter(function ($tenant) {
+                return $tenant->active;
+            });
+
+        $tenants = Helper::processInsuranceChecks($tenants);
+        Excel::create('Filename', function($excel) use($tenants) {
+
+            $excel->sheet('Insurance', function($sheet) use($tenants) {
+
+                $sheet->appendRow(array('Property ID','Property Name','Tenant ID', 'Tenant Name'));
+                foreach($tenants as $tenant)
+                {
+                    $sheet->appendRow(array($tenant->Property->property_system_id,$tenant->Property->name,$tenant->tenant_system_id, $tenant->company_name));
+                }
+
+            });
+
+        })->export('xls');
         return redirect('/home');
     }
 }

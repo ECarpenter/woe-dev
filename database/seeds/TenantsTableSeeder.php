@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Helper;
+use App\Tenant;
 use Illuminate\Database\Seeder;
 
 class TenantsTableSeeder extends Seeder
@@ -13,7 +14,8 @@ class TenantsTableSeeder extends Seeder
     public function run()
     {
         Helper::importTenant('Tenant.xls');
-        Helper::processInsuranceChecks();
+        $tenants = Tenant::all();
+        Helper::processInsuranceChecks($tenants);
         //Helper::importInsurance('Insurance.xls');
     }
 }

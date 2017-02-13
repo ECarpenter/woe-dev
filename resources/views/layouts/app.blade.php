@@ -99,6 +99,7 @@
 
                             <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
                             <li><a href="/property/list">All Properties</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#InsuranceReportModal">Insurance Report</a></li>
                             </ul>
                     </li>
                     <li class="dropdown">
@@ -224,6 +225,33 @@
                                 <input type="text" class="form-control" name="tenant_system_id"  placeholder="Yardi ID" value="">
                             </div>
                             
+                            
+                            <div class="col-xs-3" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Enter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- InsuranceReportModal (Pop up when report link clicked) -->
+    <div class="modal fade" id="InsuranceReportModal" tabindex="-1" role="dialog" aria-labelledby="InsuranceReportLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="InsuranceReportLabel">View Property</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/insurancereport" class="form-horizontal">
+                    {{ csrf_field() }}
+                        <div class="form-group">
+                            <label for="inputPropID" class="col-xs-3 control-label">Enter Property ID</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" name="property_system_id"  placeholder="Yardi ID" value="">
+                            </div>
                             
                             <div class="col-xs-3" class="form-group">
                                 <button type='submit' class="btn btn-primary btn-md">Enter</button>

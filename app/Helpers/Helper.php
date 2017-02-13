@@ -421,19 +421,19 @@ class Helper
 		return $state;
 	}
 
-	public static function processInsuranceChecks()
+	public static function processInsuranceChecks($tenants)
 	{
-		$tenants = Tenant::all();
+		$noncompliancecollection = collect();
 		foreach ($tenants as $tenant) {
 			$state = Helper::insuranceCheck($tenant);
 			if (!$tenant->Insurance->compliant) {
 				
-				echo "$tenant->company_name ";
+				$noncompliancecollection->push($tenant);
 				// Auto send of notice turned off for intial setup
 				// Helper::sendInsuranceNotice($tenant, 'firstnotice');
 			}
 		}
-		return true;
+		return $noncompliancecollection;
 	}
 
 	public static function sendInsuranceNotice(Tenant $tenant, $type)
@@ -522,4 +522,39 @@ class Helper
 
 		return $users;
 	}
+
+	public static function filterbyproperty($property_system_id)
+	{
+		$tenants = collect();
+		$property = Property::where('property_system_id',$property_system_id)->first();
+		$group = Group::where('group_system_id', $property_system_id)->first();
+		if ($group != null) 
+		{
+			$group->load('properties', 'properties.owner');
+			
+			foreach ($group->Properties as $property) 
+			{
+				foreach ($property->tenants as $tenant) {
+					$tenants->prepend($tenant);
+				}
+			}
+			$tenants = $tenants->sortBy('company_name');
+		}
+		elseif ($property != null) 
+		{
+			foreach ($property->Tenants as $tenant) 
+			{               
+				$tenants->prepend($tenant);
+			}
+			$tenants = $tenants->sortBy('company_name');
+		}
+		else 
+		{
+			$tenants = Tenant::orderBy('company_name')->get();
+		}
+
+		return $tenants;
+
+	}
+
 }
