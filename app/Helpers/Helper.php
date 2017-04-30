@@ -346,14 +346,14 @@ class Helper
 		}    
 		if ($tenant->Insurance->umbrella_filename == null) {
 			$state["ufile"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		else {
 			$state["ulink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->umbrella_filename)."')";
 		} 
 		if ($tenant->insurance->auto_filename == null) {
 			$state["afile"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		else {
 			$state["alink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->auto_filename)."')";
@@ -363,7 +363,7 @@ class Helper
 		}
 		elseif ($tenant->insurance->workerscomp_filename == null) {
 			$state["wfile"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		else {
 			$state["wlink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->workerscomp_filename)."')";
@@ -374,49 +374,49 @@ class Helper
 		}  
 		if ($tenant->insurance->umbrella_end < $today) {
 			$state["uexpire"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		if ($tenant->insurance->auto_end < $today) {
 			$state["aexpire"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		if (!$tenant->insurance->workerscomp_applicable) {
 			$state["wexpire"] = "";
 		}
 		elseif ($tenant->insurance->workerscomp_end < $today) {
 			$state["wexpire"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		if ($tenant->req_liability_single_limit > 0 &&  $tenant->req_liability_combined_limit > 0  ) {
 			if ( $tenant->req_liability_single_limit > $tenant->insurance->liability_single_limit || $tenant->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
 				$state["llimit"] = "danger";
-				$insurance->compliant = false;
+				//$insurance->compliant = false;
 			}
 		}
 		elseif ($tenant->Property->req_liability_single_limit > $tenant->insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
 			$state["llimit"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		if ($tenant->req_umbrella_limit > 0){
 			if ($tenant->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
 				$state["ulimit"] = "danger";
-				$insurance->compliant = false;
+				//$insurance->compliant = false;
 			}
 		}
 		elseif ($tenant->Property->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
 			$state["ulimit"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 
 		if ($tenant->req_auto_limit > 0){
 			if ($tenant->req_auto_limit > $tenant->insurance->auto_limit) {
 				$state["alimit"] = "danger";
-				$insurance->compliant = false;
+				//$insurance->compliant = false;
 			}
 		}
 		elseif ($tenant->Property->req_auto_limit > $tenant->insurance->auto_limit) {
 			$state["alimit"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 		if (!$tenant->insurance->workerscomp_applicable) {
 			$state["wlimit"] = "disabled";
@@ -424,12 +424,12 @@ class Helper
 		elseif ($tenant->req_workerscomp_limit > 0){
 			if ($tenant->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
 				$state["wlimit"] = "danger";
-				$insurance->compliant = false;
+				//$insurance->compliant = false;
 			}
 		}
 		elseif ($tenant->Property->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
 			$state["wlimit"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}
 
 		if ($insurance->compliant){
@@ -452,8 +452,6 @@ class Helper
 			if (!$tenant->Insurance->compliant) {
 				
 				$noncompliancecollection->push($tenant);
-				// Auto send of notice turned off for intial setup
-				// Helper::sendInsuranceNotice($tenant, 'firstnotice');
 			}
 		}
 		return $noncompliancecollection;
