@@ -227,7 +227,7 @@ class PropertyController extends Controller
 		$property->primary_manager = $request->primary_manager;
 		$property->save();
 
-		return back();
+		return redirect('/property/'.$property->id);
 	}
 
 	public function multiselectdisplay(Property $property)

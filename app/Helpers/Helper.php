@@ -50,17 +50,17 @@ class Helper
 						$property->state = $row->state;
 						$property->zip = $row->zip;
 						$property->insured_name = $row->insured_name;
-						$remit = Remit::where('system_id','=', $row->remit_id)->first();
-						if ($remit != null)
-						{
-							$property->remit_id = $remit->id;
-						}
 						$property->owner_id = $row->owner_id;
 						$property->req_liability_single_limit = $row->req_liability_single_limit;
 						$property->req_liability_combined_limit = $row->req_liability_combined_limit;
 						$property->req_auto_limit = $row->req_auto_limit;
 						$property->req_umbrella_limit = $row->req_umbrella_limit;
 						$property->req_workerscomp_limit = $row->req_workerscomp_limit;
+						$remit = Remit::where('system_id','=', $row->remit_id)->first();
+						if ($remit != null)
+						{
+							$property->remit_id = $remit->id;
+						}
 						$property->save();
 					}
 					else 

@@ -102,11 +102,18 @@ class WorkOrderController extends Controller
     public function viewlist()
     {
         $workorders = WorkOrder::all();
-        $properties = Property::all();
-        $tenants = Tenant::all();
+        $workorders = $workorders->keyBy('id');
+
+        foreach ($workorders as $workorder)
+        {
+            if(!$workorder->property()->canAccess())
+            {
+                $workorders->forget($workorder->id);
+            }
+        }
 
 
-        return view('wo.viewlist',compact('workorders','properties','tenants'));
+        return view('wo.viewlist',compact('workorders'));
     }
 
     public function show(WorkOrder $workorder)

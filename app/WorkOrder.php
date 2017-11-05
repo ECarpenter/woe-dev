@@ -8,7 +8,7 @@ class WorkOrder extends Model
 {
 	protected $fillable = [
         'billing_description', 'job_cost', 'amount_billed', 'cos_filename'
-            ];
+    ];
 
     public function Tenant()
     {
