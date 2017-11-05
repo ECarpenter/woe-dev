@@ -142,22 +142,25 @@ class WorkOrderController extends Controller
 
     public function update(Request $request, WorkOrder $workorder)
     {
-        $useremail = $workorder->User->email;
-        
-        if ($workorder->manager_notes != $request->manager_notes)
+        if ($request->update == "submit")
         {
-            $workorder->manager_notes = $request->manager_notes;
-            $workorder->save();
-            Mail::queue('email.response',compact('workorder'), function ($message) use ( $useremail) {
-                $message->from(Auth::user()->email, Auth::user()->name);
-                $message->subject('Work Order Response');
-                $message->to($useremail);
-            });   
-        }
+            $useremail = $workorder->User->email;
+            
+            if ($workorder->manager_notes != $request->manager_notes)
+            {
+                $workorder->manager_notes = $request->manager_notes;
+                $workorder->save();
+                Mail::queue('email.response',compact('workorder'), function ($message) use ( $useremail) {
+                    $message->from(Auth::user()->email, Auth::user()->name);
+                    $message->subject('Work Order Response');
+                    $message->to($useremail);
+                });   
+            }
 
-        $workorder->problem_id = $request->type;
-        $workorder->status = $request->status;
-        $workorder->save();
+            $workorder->problem_id = $request->type;
+            $workorder->status = $request->status;
+            $workorder->save();
+        }
 
         
         return redirect()->action('WorkOrderController@show', [$workorder->id]);

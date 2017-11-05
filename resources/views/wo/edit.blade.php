@@ -45,14 +45,14 @@
 			</div>
 			<div class="col-xs-4">
 				<h4> Updated - <small>		
-				{{date('F d, Y, g:i a', strtotime($workorder->updated_at))}}
+				{{date('F d, Y, g:i a', strtotime($workorder->updated_at->timezone(Auth::user()->timezone)))}}
 				</small></h4>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-4 col-xs-offset-2">
 				<h4> Sent - <small>
-					{{date('F d, Y, g:i a', strtotime($workorder->created_at))}}
+					{{date('F d, Y, g:i a', strtotime($workorder->created_at->timezone(Auth::user()->timezone)))}}
 				</small></h4>
 			</div>
 			<div class="col-xs-4">
@@ -103,8 +103,12 @@
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-xs-2 col-xs-offset-4" class="form-group">
-				<button type='submit' class="btn btn-primary">Save</button>
+			<div class="col-xs-2 col-xs-offset-3" class="form-group">
+				<button type='submit' class="btn btn-primary" name="update" value="submit">Save</button>
+
+			</div>
+			<div class="col-xs-2 col-xs-offset-1" class="form-group">
+				<button type='submit' class="btn btn-primary" name="update" value="cancel">Cancel</button>
 			</div>
 		</div>
 	</form>
