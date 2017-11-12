@@ -159,7 +159,7 @@ class PropertyController extends Controller
 			'req_auto_limit' => 'required',
 			'req_umbrella_limit' => 'required',
 			'req_workerscomp_limit' => 'required',
-			]);
+		]);
 
 		$property = Property::create([
 			'name' => $request->name,
@@ -217,11 +217,7 @@ class PropertyController extends Controller
 		return back();
 	}
 
-	public function remitdisplay()
-	{
-		$remits = Remit::where('remit','=', '1')->orderBy('payable_to','asc')->get();
-		return Response::json($remits);
-	}
+
 
 	public function response(Property $property)
 	{

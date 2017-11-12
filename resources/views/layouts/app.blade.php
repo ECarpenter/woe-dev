@@ -123,7 +123,7 @@
                             Setup<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Add Remitance Info</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#AddRemitModal">Add Remitance Info</a></li>
                             <li><a href="#">Edit Problem Types</a></li>
                             <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#importModal">Import from Excel</a></li>
@@ -339,5 +339,94 @@
             </div>
         </div>
     </div>
+
+    <!-- RemitanceModal (Pop up when view add remitance link clicked) -->
+    <div class="modal fade" id="AddRemitModal" tabindex="-1" role="dialog" aria-labelledby="AddRemitLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="AddRemitLabel">Add Remitance Info</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/vendor/add" class="form-horizontal">
+                    {{ csrf_field() }}
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">System ID# *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="system_id" id="system_id" value="{{ old('property_system_id') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Payable To *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="payable_to" id="payable_to" value="{{ old('payable_to') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Address *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Address 2</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="addres_secondline" id="address_secondline" value="{{ old('address_secondline') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">City *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="city" id="city" value="{{ old('city') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">State *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="state" id="state" value="{{ old('state') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Zip *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="zip" id="zip" value="{{ old('zip') }}">
+                                </div>
+                            </div>   
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-2 col-xs-offset-2 control-label">* Required</label>
+                            
+                            <div class="col-xs-3 col-xs-offset-1" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Add</button>
+                            </div>
+                        </div>
+
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

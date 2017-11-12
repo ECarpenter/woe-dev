@@ -47,13 +47,13 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('import', 'HomeController@import');
     Route::post('insurancereport', 'HomeController@insurancereport');
 
+
     //Property Routes
     Route::post('property', 'PropertyController@showid');
     Route::get('property/list', 'PropertyController@proplist');
     Route::post('property/save', 'PropertyController@save');
     Route::get('property/add', 'PropertyController@add');
     Route::post('property/import', 'PropertyController@import');
-    Route::get('property/remit-display/','PropertyController@remitdisplay');
     Route::get('property/multiselectdisplay/{property}', 'PropertyController@multiselectdisplay');
     Route::get('property/changeactive/{property}','PropertyController@changeactive');
     Route::patch('property/remit/{property}', 'PropertyController@remit');
@@ -96,6 +96,10 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::patch('user/verify/update', 'UserController@updateverifyuser');
     Route::get('user/verify/display/{user}', 'UserController@displayverifyuser');
     Route::get('user/{user}', 'UserController@show');
+
+    //Vendor Routes
+    Route::post('/vendor/add', 'VendorController@add');
+    Route::get('/vendor/remit-display/','VendorController@remitdisplay');
 
 });
 

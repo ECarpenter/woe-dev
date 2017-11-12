@@ -411,13 +411,16 @@ $(document).ready(function(){
 			$('#UserModal').modal('show');
 	
 	});
+
+	
 	//
 	//Remit
 	//
 	
+
 	$('.open-remit-modal').click(function(){ 
 		var current_remit_id = $(this).data('value');
-		$.get('/property/remit-display/', function(remits){
+		$.get('/vendor/remit-display/', function(remits){
 			console.log(remits);
 			
 			$('#RemitDisplay').empty();
@@ -443,7 +446,7 @@ $(document).ready(function(){
 
 	$('#RemitSelect').change(function(){
 		$('#RemitDisplay').empty();
-		$.get('/property/remit-display/', function(remits){
+		$.get('/vendor/remit-display/', function(remits){
 			console.log(remits);
 			console.log($("#RemitSelect option:selected").val());
 			$.each(remits, function(index, remit){
