@@ -16,7 +16,7 @@
 					<tr>
 						<td onclick = "location.href='/property/{{$property->id}}'">{{$property->name}}</td>
 						<td onclick = "location.href='/property/{{$property->id}}'">{{$property->property_system_id}}</td>
-						<td class = "{{$property->active ? 'success' : 'danger'}}" onclick = "location.href='/property/changeactive/{{$property->id}}'">{{$property->active ? 'Active' : 'Inactive'}} </td>
+						<td class = "{{$property->active ? 'success' : 'danger'}}" onclick = "location.href='/property/{{$property->id}}'">{{$property->active ? 'Active' : 'Inactive'}} </td>
 					</tr>
 				@endforeach
 			</table>

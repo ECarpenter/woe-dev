@@ -119,6 +119,28 @@ class PropertyController extends Controller
 		return view('property.add', compact('managers','owners','remits'));
 	}
 
+	public function update(Property $property, Request $request)
+	{
+		$property->name = $request->property_name;
+		$property->address = $request->address;
+		$property->city = $request->city;
+		$property->state = $request->state;
+		$property->zip = $request->zip;
+		$property->owner_id = $request->owner;
+		if ($request->active_switch == 'false')
+		{
+			$property->active = false;
+		}
+		else
+		{
+			$property->active = true;
+		}
+
+		$property->save();
+
+		return redirect('/property/'.$property->id);
+	}
+
 	//validates and saves a new property
 	public function save(Request $request)
 	{
@@ -200,7 +222,15 @@ class PropertyController extends Controller
 		$remits = Remit::where('remit','=', '1')->orderBy('payable_to','asc')->get();
 		return Response::json($remits);
 	}
+
+	public function response(Property $property)
+	{
+		$owners = Owner::all();
+		return Response::json(['property'=>$property, 'owners'=>$owners]);
+	}
 	
+
+	//fix to include tenants, seperate out then recombine
 	public function user(Property $property, Request $request)
 	{
 		$this->validate($request, [

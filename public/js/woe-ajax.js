@@ -111,6 +111,42 @@ $(document).ready(function(){
 	});
 
 	//
+	//display modal form for property editing
+	//
+	$('.open-edit-property-modal').click(function(){
+		var property_id = $(this).val();
+
+		$.get('/property/' + property_id + '/response', function (data) {
+			//success data
+			console.log(data);
+
+			$('#property_system_id').val(data.property.property_system_id);
+			$('#property_name').val(data.property.name);
+			$('#address').val(data.property.address);
+			$('#city').val(data.property.city);
+			$('#state').val(data.property.state);
+			$('#zip').val(data.property.zip);
+			$.each(data.owners, function(index, owner){
+				if (owner.id == data.property.owner_id) {					
+					$('#OwnerSelect').prepend("<option value='" + owner.id + "' selected>" + owner.name + "</option>");
+				}
+				else {
+					$('#OwnerSelect').prepend("<option value='" + owner.id + "'>" + owner.name + "</option>");
+				}
+			});   
+
+			if(data.property.active == 1) {
+				$('#active').prop('checked', true);
+			}
+			else {
+				$('#inactive').prop('checked', true);
+			}
+			
+			$('#EditPropertyModal').modal('show');
+		})
+	});
+
+	//
 	//Insurance modal functions 
 	//
 	$('.open-manage-insurance-modal').click(function(){ 

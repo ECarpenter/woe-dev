@@ -59,6 +59,8 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::patch('property/remit/{property}', 'PropertyController@remit');
     Route::patch('property/user/{property}', 'PropertyController@user');
     Route::get('property/{property}', 'PropertyController@show');
+    Route::get('property/{property}/response', 'PropertyController@response');
+    Route::post('property/{property}/update', 'PropertyController@update');
 
     //Group Routes
     Route::post('group', 'GroupController@showid');

@@ -125,6 +125,15 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="col-xs-3 col-xs-offset-6 col-md-3 col-md-offset-6">
+			<button class="btn btn-primary open-edit-property-modal btn-xs" value="{{$property->id}}">Edit Property Information</button>
+		</div>
+
+		<div class="col-xs-3">
+			
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-5 col-md-offset-3 text-center">
 			<h4> Insurance Non-Compliance </h4>
 		</div>	
@@ -345,6 +354,108 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+
+	{{-- EditPropertyModal --}}
+	<div class="modal fade" id="EditPropertyModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="EditModalLabel">Edit Property Information</h4>
+                </div>
+                <div class="modal-body">
+	                <form method="POST" action="/property/{{$property->id}}/update"  enctype="multipart/form-data">
+						{{ csrf_field() }}
+						
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Property ID#</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="property_system_id" id="property_system_id" value="{{ old('property_system_id') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Property Name</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="property_name" id="property_name" value="{{ old('property_name') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Address</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">City</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="city" id="city" value="{{ old('city') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">State</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="state" id="state" value="{{ old('state') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Zip</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="zip" id="zip" value="{{ old('zip') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+	                    	<div class="form-group">
+	                    		<label class="col-xs-4 control-label">Owner</label>
+								<div class="col-xs-6">
+									<select id="OwnerSelect" name="owner" class="form-control">
+
+									</select>
+								</div>
+							</div>
+						</div>
+
+	                    <div class="row">
+	                    	<div class="form-group">
+	                    		<div class="col-xs-4 col-xs-offset-4">
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="active_switch" id="active" value="true">Active
+		                    		</label>
+		                    		<label class="radio-inline">
+		                    			<input type="radio" name="active_switch" id="inactive" value="false">Inactive
+		                    		</label>
+	                    		</div>
+	                    	</div>
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="col-xs-2 col-xs-offset-4">
+		        				<input class="btn btn-primary" type="submit">
+		        			</div>
+	        			</div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>		
 	</div>
 
 
