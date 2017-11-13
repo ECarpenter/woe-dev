@@ -101,6 +101,8 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::post('/vendor/add', 'VendorController@add');
     Route::get('/vendor/remit-display/','VendorController@remitdisplay');
 
+    //Owner Routes
+    Route::post('/owner/add', 'OwnerController@add');
 });
 
 //only workorders

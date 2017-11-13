@@ -79,7 +79,7 @@ class UserController extends Controller
 				$properties->prepend($property);
 				foreach ($property->Tenants as $tenant) 
 				{   
-					if($tenant->active) 
+					if($tenant->active == '1') 
 					{           
 						$tenants->prepend($tenant);
 					}

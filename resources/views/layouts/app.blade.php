@@ -124,6 +124,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#" data-toggle="modal" data-target="#AddRemitModal">Add Remitance Info</a></li>
+                            <li><a herf="#" data-toggle="modal" data-target="#AddOwnerModal">Add Owner</a></li>
                             <li><a href="#">Edit Problem Types</a></li>
                             <li><a href="/tenant/add">Add Tenant</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#importModal">Import from Excel</a></li>
@@ -355,7 +356,7 @@
                             <div class="form-group">
                                 <label class="col-xs-4 control-label">System ID# *</label>
                                 <div class="col-xs-6">
-                                    <input type="text" class="form-control" name="system_id" id="system_id" value="{{ old('property_system_id') }}">
+                                    <input type="text" class="form-control" name="system_id" id="system_id" value="{{ old('system_id') }}">
                                 </div>
                             </div>   
                         </div>
@@ -427,6 +428,59 @@
             </div>
         </div>
     </div>
+
+
+    <!-- AddOWnerModal (Pop up when view add remitance link clicked) -->
+    <div class="modal fade" id="AddOwnerModal" tabindex="-1" role="dialog" aria-labelledby="AddOwnerLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="AddOwnerLabel">Add Owner Info</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/owner/add" class="form-horizontal">
+                    {{ csrf_field() }}
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Name *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="owner_name" id="owner_name" value="{{ old('owner_name') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">AP - Email *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="ap_email" id="ap_email" value="{{ old('ap_email') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">AR Email *</label>
+                                <div class="col-xs-6">
+                                    <input type="text" class="form-control" name="ar_email" id="ar_email" value="{{ old('ar_email') }}">
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="row">
+                            <label class="col-xs-2 col-xs-offset-2 control-label">* Required</label>
+                            
+                            <div class="col-xs-3 col-xs-offset-1" class="form-group">
+                                <button type='submit' class="btn btn-primary btn-md">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </body>
 </html>
