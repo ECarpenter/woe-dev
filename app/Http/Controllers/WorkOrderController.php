@@ -256,8 +256,7 @@ class WorkOrderController extends Controller
 
     public function sendbillingEmail(WorkOrder $workorder)
     {
-        $managers = $workorder->Managers();
-        $manageremail = $managers[0]->email;
+       
         $useremail = $workorder->User->email;
 
         $cos = Helper::getS3URL(COS_PATH.$workorder->cos_filename);
@@ -279,8 +278,8 @@ class WorkOrderController extends Controller
             $ap->addPDF($cos, 'all');
             $ap->merge('file', $ap_file, 'P');          
 
-            Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ap_file) {
-                $message->from($manageremail, 'PM');
+            Mail::queue('email.accounting',compact('workorder'), function ($message) use ($ap_file) {
+                $message->from(Auth::user()->email, Auth::user()->name);
                 $message->subject('AP Invoice');
                 $message->attach($ap_file);
                 $message->to(AP_EMAIL);
@@ -296,15 +295,15 @@ class WorkOrderController extends Controller
 
            
 
-        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($manageremail, $workorder, $useremail) {
-            $message->from($manageremail, 'PM');
+        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($workorder, $useremail) {
+            $message->from(Auth::user()->email, Auth::user()->name);
             $message->subject('Tenant Invoice');
             $message->attach(Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename), ['as' => 'Invoice.pdf']);
             $message->to($useremail);
         });
 
-        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($manageremail, $ar_file) {
-            $message->from($manageremail, 'PM');
+        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($ar_file) {
+            $message->from(Auth::user()->email, Auth::user()->name);
             $message->subject('COS');
             $message->attach($ar_file, ['as' => 'COS.pdf']);
             $message->to(AR_EMAIL);

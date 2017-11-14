@@ -217,8 +217,6 @@ class PropertyController extends Controller
 		return back();
 	}
 
-
-
 	public function response(Property $property)
 	{
 		$owners = Owner::all();
@@ -234,7 +232,18 @@ class PropertyController extends Controller
 			'primary_manager'=> 'required',
 			]);
 
+		$users = $property->Users->all();
+		$tenants = [];
+
+		foreach ($users as $user) {
+			if (!$user->hasRole('manager'))
+            {
+                $tenants[] = $user->id;
+            }
+		}
+
 		$property->Users()->sync($request->property_user_multiselect);
+		$property->Users()->attach($tenants);
 
 		$primary_included = false;
 
