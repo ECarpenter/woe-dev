@@ -48,7 +48,7 @@
 					<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}">
 						<td onclick = "location.href='/tenant/{{$tenant->id}}'">{{$tenant->company_name}}</td>
 						<td onclick = "location.href='/tenant/{{$tenant->id}}'">{{$tenant->tenant_system_id}}</td>
-						<td class = "{{$tenant->active ? 'success' : 'danger'}}" onclick = "location.href='/tenant/changeactive/{{$tenant->id}}'">{{$tenant->active ? 'Active' : 'Inactive'}} </td>
+						<td class = "{{$tenant->active ? 'success' : 'danger'}}" onclick = "location.href='/tenant/{{$tenant->id}}">{{$tenant->active ? 'Active' : 'Inactive'}} </td>
 					</tr>
 				@endforeach
 

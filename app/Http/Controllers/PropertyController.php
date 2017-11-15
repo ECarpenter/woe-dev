@@ -121,6 +121,7 @@ class PropertyController extends Controller
 
 	public function update(Property $property, Request $request)
 	{
+		$property->property_system_id = $request->property_system_id;
 		$property->name = $request->property_name;
 		$property->address = $request->address;
 		$property->city = $request->city;
@@ -224,7 +225,7 @@ class PropertyController extends Controller
 	}
 	
 
-	//fix to include tenants, seperate out then recombine
+	//changes the managers linked to a property
 	public function user(Property $property, Request $request)
 	{
 		$this->validate($request, [
