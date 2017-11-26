@@ -25,6 +25,11 @@ class WorkOrder extends Model
     	return $this->belongsTo('App\ProblemType','problem_id');
     }
 
+    public function Post()
+    {
+        return $this->hasMany('App\Post');
+    }
+
     public function Managers()
     {
     	$managers = array();

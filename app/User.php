@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->hasMany('App\WorkOrder');
     }
 
+    public function Post()
+    {
+        return $this->hasMany('App\Post');
+    } 
     public static function Managers()
     {
         $users = User::orderBy('name')->get();

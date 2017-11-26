@@ -10,13 +10,15 @@ use Storage;
 use DB;
 
 use Illuminate\Support\Str;
-use App\Tenant;
-use App\User;
-use App\Property;
-use App\Owner;
 use App\Group;
 use App\Insurance;
+use App\Owner;
+use App\Post;
+use App\Property;
 use App\Remit;
+use App\Tenant;
+use App\WorkOrder;
+use App\User;
 use App\Vendor;
 use Symfony\Component\Process\Process;
 
@@ -593,6 +595,35 @@ class Helper
 		}
 
 		return $tenants;
+
+	}
+
+
+	//Transfers existing workorder comments to posts
+	public static function transferToPost()
+	{
+		$workorders = WorkOrder::all();
+
+		foreach($workorders as $workorder)
+		{
+			$post = new Post;
+			$post->created_at = $workorder->created_at;
+			$post->message = $workorder->description;
+			$post->user_id = $workorder->user_id;
+			$post->work_order_id = $workorder->id;
+			$post->save();
+
+			if ($workorder->manager_notes != null)
+			{
+				$post = new Post;
+				$post->created_at = $workorder->updated_at;
+				$post->message = $workorder->manager_notes;
+				$post->user_id = $workorder->Property()->primary_manager;
+				$post->work_order_id = $workorder->id;
+				$post->save();
+			}
+		}
+
 
 	}
 
