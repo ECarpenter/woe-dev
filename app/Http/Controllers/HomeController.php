@@ -96,6 +96,10 @@ class HomeController extends Controller
         {
             Helper::importSoldProperties('tmp/import.xls');
         }
+        elseif ($request->importType == 'transfer');
+        {
+            Helper::importTransfer('tmp/import.xls');
+        }
         
         return redirect('/home');
     }
@@ -123,5 +127,10 @@ class HomeController extends Controller
 
         })->export('xls');
         return redirect('/home');
+    }
+
+    public function autoUpdate()
+    {
+
     }
 }

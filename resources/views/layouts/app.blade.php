@@ -295,6 +295,10 @@
                                         <input type="radio" name="importType" value="sold">
                                         Sold Properties
                                     </label>
+                                    <label>
+                                        <input type="radio" name="inportType" value="transfer">
+                                        Transfer Tenants
+                                    </label>
                                 </div>
                             </div>
                             <br>

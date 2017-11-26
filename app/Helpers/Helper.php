@@ -260,6 +260,24 @@ class Helper
 		});
 	}
 
+	public static function importTransfer($fname)
+	{
+		Excel::load($fname, function($reader) {
+		   
+			$reader->each(function($sheet){
+				$sheet->each(function($row){
+
+					$tenant = Tenant::where('tenant_system_id', $row->old_id)->first();
+					if ($tenant != null )
+					{
+						$tenant->tenant_system_id = $row->new_id;
+						$tenant->save();
+					} 
+				});
+			});
+		});	
+	}
+
 	public static function importInsurance($fname)
 	{
 		Excel::load($fname, function($reader) {
