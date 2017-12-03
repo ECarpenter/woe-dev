@@ -389,6 +389,15 @@
 
 	                    <div class="row">
 		                    <div class="form-group">
+		                        <label class="col-xs-4 control-label">Additional Insured</label>
+		                        <div class="col-xs-6">
+		                            <input type="text" class="form-control" name="insured_name" id="insured_name" value="{{ old('insured_name') }}">
+		                        </div>
+		                    </div>   
+	                    </div>
+
+	                    <div class="row">
+		                    <div class="form-group">
 		                        <label class="col-xs-4 control-label">Address</label>
 		                        <div class="col-xs-6">
 		                            <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}">

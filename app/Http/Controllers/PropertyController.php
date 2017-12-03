@@ -128,6 +128,7 @@ class PropertyController extends Controller
 		$property->state = $request->state;
 		$property->zip = $request->zip;
 		$property->owner_id = $request->owner;
+		$property->insured_name = $request->insured_name;
 		if ($request->active_switch == 'false')
 		{
 			$property->active = false;

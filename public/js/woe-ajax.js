@@ -263,6 +263,10 @@ $(document).ready(function(){
 		}
 	});
 
+	//
+	//Manually Send Insurance Notice
+	//
+
 	$("#btn-send-notice").click(function (e) {
 		if(confirm("Are you sure you want to send the tenant an insurance notice?"))
 		{ 

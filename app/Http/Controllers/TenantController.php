@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 use DB;
 use Response;
@@ -272,6 +273,8 @@ class TenantController extends Controller
 	public function notice(Tenant $tenant)
 	{
 		Helper::sendInsuranceNotice($tenant, 'manual');
+
+		Session::flash('success','Notice has been sent!');
 
 		return back();
 	}

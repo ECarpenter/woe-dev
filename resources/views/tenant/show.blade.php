@@ -92,6 +92,8 @@
 				<h4> Ins. Notice Sent - <small>
 					@if ($tenant->insurance->last_notice_sent != null)		
 						{{date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone(Auth::user()->timezone)))}}
+					@else
+						None
 					@endif
 				</small></h4>
 			</div>
