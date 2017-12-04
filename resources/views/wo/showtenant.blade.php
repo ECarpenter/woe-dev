@@ -94,27 +94,69 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-4">
-			<h4> Description </h4>
+		<div class="row">
+		<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+			<table class="table table-bordered text-center">
+				<tr class="info" >
+					<td>
+						<h4> Description </h4>
+					</td>
+				</tr>
+				<tr>	
+					<td>
+						{{$workorder->description}}
+					</td>
+				</tr>	
+			</table>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-6 col-xs-offset-2">
-			<h4><small>{{$workorder->description}}</small> </h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-4">
-			<h4> Manager's Comments </h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-2">
-			<h4><small>{{$workorder->manager_notes}}</small> </h4>
-		</div>
-	</div>
+		<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">	
+			<table class="table table-bordered text-center">
+				<tr class="info" >
+					<td>
+						<h4> Comments </h4>
+					</td>
+				</tr>
+				@foreach ($workorder->Post as $post)
+				<tr>
+					<td>
+						{{$post->message}}
+					<br> <br>
+						<small> {{$post->User->name}} - {{date('F d, Y, g:i a', strtotime($post->created_at->timezone(Auth::user()->timezone)))}} </small>
+					</td>
+				</tr>
+				@endforeach
 
+			</table>
+		</div>
+	</div>
+	<form method="POST" action="/workorders-tenant/{{$workorder->id}}/post">
+	{{ method_field('PATCH') }}
+	{{ csrf_field() }}
+		<div class="row">
+			<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+				<div  class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+					<textarea class="form-control" placeholder="Enter new message . . . " rows="5" name='post_message'></textarea>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-xs-2 col-xs-offset-3" class="form-group">
+				<button type='submit' class="btn btn-primary" name="post" value="submit">Send</button>
+
+			</div>
+			<div class="col-xs-2 col-xs-offset-1" class="form-group">
+				<button type='submit' class="btn btn-primary" name="post" value="cancel">Cancel</button>
+			</div>
+		</div>	
+	</form>
 	<br>
 
 

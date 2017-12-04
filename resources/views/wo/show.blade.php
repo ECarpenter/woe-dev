@@ -1,6 +1,8 @@
 @extends ('layouts.app')
 
 @section ('content')
+
+	
 <p hidden>testWorkOrders1</p>
 
 	<div class="row">
@@ -14,11 +16,11 @@
 	<div class="row">
 
 		@if($workorder->support_file == NULL)
-		<div class="col-xs-2 col-xs-offset-2">
+		<div class="col-xs-2 col-xs-offset-1">
 			<button  class="btn btn-default btn-xs" id="vendor-invoice-btn" disabled = 'disabled'> No File </button>
 		</div>
 		@else
-		<div class="col-xs-2 col-xs-offset-2">
+		<div class="col-xs-2 col-xs-offset-1">
 			<button  class="btn btn-info btn-xs file-btn" id="vendor-invoice-btn" href="{{ Helper::getS3URL(SUPPORT_PATH.$workorder->support_file) }}" > {{substr($workorder->support_file, 14)}} </button>
 		</div>
 		@endif
@@ -34,22 +36,22 @@
 		@endif
 
 		@if($workorder->cos_filename == NULL)
-		<div class="col-xs-1 ">
+		<div class="col-xs-1  col-xs-offset-1">
 				<button  class="btn btn-default file-btn btn-xs" id="cos-btn" disabled = 'disabled' > COS </button>
 		</div>
 		@else
-		<div class="col-xs-1 ">
+		<div class="col-xs-1  col-xs-offset-1">
 			<button class="btn btn-info file-btn btn-xs" id="cos-btn"
 			href="{{ Helper::getS3URL(COS_PATH.$workorder->cos_filename) }}" >  COS </button>
 		</div> 
 		@endif
 
 		@if($workorder->tenant_invoice_filename == NULL)
-		<div class="col-xs-2 ">
+		<div class="col-xs-2  col-xs-offset-1">
 			<button  class="btn btn-default btn-xs" id="tenant-invoice-btn" disabled = 'disabled'> Tenant Invoice </button>
 		</div>
 		@else
-		<div class="col-xs-2 ">
+		<div class="col-xs-2  col-xs-offset-1">
 			<button  class="btn btn-info btn-xs file-btn" id="tenant-invoice-btn" href="{{ Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename) }}" > Tenant Invoice </button>
 		</div>
 		@endif
@@ -113,34 +115,15 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-4">
-			<h4> Description </h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-2">
-			<h4><small>{{$workorder->description}}</small> </h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-4">
-			<h4> Manager's Comments </h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-2">
-			<h4><small>{{$workorder->manager_notes}}</small> </h4>
-		</div>
-	</div>
 	<br>
+
 
 	<div class="row">
 		<div class="col-xs-2 col-xs-offset-1 col-md-2 col-md-offset-2">
 			<button class="btn btn-primary open-upload-invoice-modal" value="{{$workorder->id}}">Upload Vendor Invoice</button>
 		</div>
 
-		<div class="col-xs-2 col-xs-offset-2 col-md-2 col-md-offset-1">
+		<div class="col-xs-2 col-xs-offset-3 col-md-2 col-md-offset-1">
 			<a class="btn btn-primary" href="/workorders/{{$workorder->id}}/edit" role="button" >Edit</a>
 		</div>
 
@@ -153,6 +136,73 @@
 		</div>
 
 	</div>
+
+	<br>
+
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+			<table class="table table-bordered text-center">
+				<tr class="info" >
+					<td>
+						<h4> Description </h4>
+					</td>
+				</tr>
+				<tr>	
+					<td>
+						{{$workorder->description}}
+					</td>
+				</tr>	
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">	
+			<table class="table table-bordered text-center">
+				<tr class="info" >
+					<td>
+						<h4> Comments </h4>
+					</td>
+				</tr>
+				@foreach ($workorder->Post as $post)
+				<tr>
+					<td>
+						{{$post->message}}
+					<br> <br>
+						<small> {{$post->User->name}} - {{date('F d, Y, g:i a', strtotime($post->created_at->timezone(Auth::user()->timezone)))}} </small>
+					</td>
+				</tr>
+				@endforeach
+
+			</table>
+		</div>
+	</div>
+	<form method="POST" action="/workorders/{{$workorder->id}}/post">
+	{{ method_field('PATCH') }}
+	{{ csrf_field() }}
+		<div class="row">
+			<div class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+				<div  class="col-xs-10 col-xs-offset-1 col-md-7 col-md-offset-2">
+					<textarea class="form-control" placeholder="Enter new message . . . " rows="5" name='post_message'></textarea>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-xs-2 col-xs-offset-3" class="form-group">
+				<button type='submit' class="btn btn-primary" name="post" value="submit">Send</button>
+
+			</div>
+			<div class="col-xs-2 col-xs-offset-1" class="form-group">
+				<button type='submit' class="btn btn-primary" name="post" value="cancel">Cancel</button>
+			</div>
+		</div>	
+	</form>
+	<br>
 
 
 <!-- BillingModal (Pop up when billing button clicked) -->

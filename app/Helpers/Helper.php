@@ -496,6 +496,15 @@ class Helper
 		}
 	}
 
+	public static function sendPost(Post $post, $workorder, $useremail)
+	{
+		Mail::queue('email.response',compact('workorder', 'post'), function ($message) use ($useremail) {
+                    $message->from(\Auth::user()->email, \Auth::user()->name);
+                    $message->subject('Work Order - New Message');
+                    $message->to($useremail);
+                });   
+	}
+
 	public static function getS3URL($filename)
 	{
 		$s3 = Storage::disk('s3')->getDriver()->getAdapter()->getClient();
@@ -606,13 +615,6 @@ class Helper
 
 		foreach($workorders as $workorder)
 		{
-			$post = new Post;
-			$post->created_at = $workorder->created_at;
-			$post->message = $workorder->description;
-			$post->user_id = $workorder->user_id;
-			$post->work_order_id = $workorder->id;
-			$post->save();
-
 			if ($workorder->manager_notes != null)
 			{
 				$post = new Post;

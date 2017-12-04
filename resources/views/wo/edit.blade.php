@@ -91,16 +91,7 @@
 				{{ $workorder->description }}
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-6 col-xs-offset-4">
-				<h4> Manager Notes </h4>
-			</div>
-		</div>
-		<div class="row">
-			<div class="form-group">
-				<textarea name='manager_notes'  class="col-xs-4 col-xs-offset-3 "class="form-control">{{ $workorder->manager_notes }}</textarea>
-			</div>
-		</div>
+
 		<br>
 		<div class="row">
 			<div class="col-xs-2 col-xs-offset-3" class="form-group">

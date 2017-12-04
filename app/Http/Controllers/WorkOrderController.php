@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 use DB;
 use Auth;
@@ -25,6 +26,7 @@ use App\Property;
 use App\User;
 use App\Owner;
 use App\ChargeCode;
+use App\Post;
 
 class WorkOrderController extends Controller
 {
@@ -144,26 +146,63 @@ class WorkOrderController extends Controller
     {
         if ($request->update == "submit")
         {
-            $useremail = $workorder->User->email;
-            
-            if ($workorder->manager_notes != $request->manager_notes)
-            {
-                $workorder->manager_notes = $request->manager_notes;
-                $workorder->save();
-                Mail::queue('email.response',compact('workorder'), function ($message) use ( $useremail) {
-                    $message->from(Auth::user()->email, Auth::user()->name);
-                    $message->subject('Work Order Response');
-                    $message->to($useremail);
-                });   
-            }
-
             $workorder->problem_id = $request->type;
             $workorder->status = $request->status;
             $workorder->save();
+
+            Session::flash('success', 'Your Changes have been saved!');
+        }
+        else
+        {
+            Session::flash('warning', 'Your changes have been discarded');
         }
 
         
         return redirect()->action('WorkOrderController@show', [$workorder->id]);
+    }
+
+    public function post(Request $request, WorkOrder $workorder)
+    {
+        if ($request->post == 'submit')
+        {
+            if ($request->post_message != null)
+            {
+                $post = new Post;
+                $post->user_id = Auth::user()->id;
+                $post->message = $request->post_message;
+                $post->work_order_id = $workorder->id;
+                $post->save();
+
+                $emails = array();
+
+                if (Auth::user()->hasRole('tenant'))
+                {
+                    foreach ($workorder->Managers() as $manager) 
+                    {
+                        $emails[] = $manager->email;
+                    }
+                }
+                else
+                {
+                    $emails[] = $workorder->User->email;
+                }
+
+                Helper::sendPost($post, $workorder, $emails);
+
+                Session::flash('success', 'Your message was sent!');
+            }
+            else 
+            {
+                Session::flash('danger', 'Your message was blank');
+            }
+            
+        }
+        else 
+        {
+            Session::flash('warning', 'Your message has been deleted');
+        }
+
+        return back();
     }
 
     public function sendNoticeEmail(WorkOrder $workorder)

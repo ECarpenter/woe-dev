@@ -37,6 +37,8 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('user/changepassword', 'UserController@changePassword');
     Route::patch('user/savepassword', 'UserController@savePassword');
     Route::get('workorders-tenant/{workorder}',  'WorkOrderController@showtenant');
+    Route::patch('workorders-tenant/{workorder}/post', 'WorkOrderController@post');
+
 
 });
 
@@ -116,6 +118,7 @@ Route::group(['middleware' => ['web', 'auth','permission:manage-wo']], function 
     Route::get('workorders/{workorder}/bill',  'WorkOrderController@bill');
     Route::patch('workorders/{workorder}/bill',  'WorkOrderController@processbill');
     Route::post('workorders/{workorder}/upload', 'WorkOrderController@upload');
+    Route::patch('workorders/{workorder}/post', 'WorkOrderController@post');
 
 });
 
