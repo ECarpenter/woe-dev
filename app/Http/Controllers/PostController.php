@@ -25,7 +25,6 @@ use App\Property;
 use App\User;
 use App\Owner;
 use App\ChargeCode;
-use App\WorkOrder;
 use App\Post;
 
 class PostController extends Controller
@@ -40,9 +39,15 @@ class PostController extends Controller
         $this->middleware('auth');
     }
 
-    public function newPost(int $id, Request $request)
+    public static function newPost($id, Request $request)
     {
-    	
+    	$post = new Post;
+        $post->user_id = Auth::user()->id;
+        $post->message = $request->post_message;
+        $post->work_order_id = $id;
+        $post->save();
+
+        return $post;
     }
 
 

@@ -167,11 +167,7 @@ class WorkOrderController extends Controller
         {
             if ($request->post_message != null)
             {
-                $post = new Post;
-                $post->user_id = Auth::user()->id;
-                $post->message = $request->post_message;
-                $post->work_order_id = $workorder->id;
-                $post->save();
+                $post = PostController::newPost($workorder->id, $request);
 
                 $emails = array();
 
