@@ -4,7 +4,7 @@
 <br><br> 
 @endif
 	
-There is a new message about a <a href="{{env('APP_URL')}}/workorders-tenant/{{$workorder->id}}">work order request,</a> for {{$workorder->Property()->name}}
+There is a new message about a <a href="{{env('APP_URL')}}/workorders{{Auth::User()->hasRole('tenant') ? '' : '-tenant'}}/{{$workorder->id}}">work order request,</a> for {{$workorder->Property()->name}}
 <br> <br>
 Problem Type : {{$workorder->ProblemType->type}}
 <br><br>
