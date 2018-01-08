@@ -272,9 +272,12 @@ $(document).ready(function(){
 		{ 
 			$.ajax({
 				type: "GET",
-				url: '/tenant/' + $('#tenant_id').val() + '/notice'
+				url: '/tenant/' + $('#tenant_id').val() + '/notice',
+				success: function(data){
+					window.location = "/tenant/" + data;
+				}
 			});
-			location.reload();
+			
 		}
 	});
 

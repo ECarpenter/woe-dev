@@ -276,7 +276,7 @@ class TenantController extends Controller
 
 		Session::flash('success','Notice has been sent!');
 
-		return back();
+		return Response::json($tenant->id);
 	}
 
 	//takes an .xls file to import in a mass amount of tenants at once. 
