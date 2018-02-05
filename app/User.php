@@ -65,7 +65,7 @@ class User extends Authenticatable
         $managers = array();
         foreach ($users as $user)
         {
-            if ($user->hasRole('manager'))
+            if (($user->hasRole('manager')) && $user->active)
             {
                 $managers[] = $user;
             }

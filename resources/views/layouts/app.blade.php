@@ -135,7 +135,7 @@
                         </ul>
                     </li>
                     @endpermission
-                    @permission('admin')
+                    @role('admin')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             Users<span class="caret"></span>
@@ -147,7 +147,7 @@
                             <li><a href="/user/add">Add Users</a></li>
                         </ul>
                     </li>
-                    @endpermission
+                    @endrole
                 </ul>
 
                 <!-- Right Side Of Navbar -->
