@@ -37,7 +37,7 @@
 		@role('tenant')
 				<input type="hidden" name="property" value={{Auth::user()->Properties()->first()->id}}></input>
 			@if (Auth::user()->verified)
-				<input type="hidden" name="tenant" value={{Auth::user()->Tenant()->first()->id}}></input>
+				<input type="hidden" name="tenant" value={{Auth::user()->tenant_id}}></input>
 			@else
 				<input type="hidden" name="tenant" value=0></input>
 			@endif

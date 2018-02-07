@@ -99,6 +99,7 @@ class UserController extends Controller
 		$tenant = Tenant::where('id', '=', $request->tenant)->first();
 		$user->tenant_id = $request->tenant;
 		$user->company_name = $user->tenant->company_name;
+		$user->verified = true;
 		if ($user->Property()->id != $request->property)
 		{
 			$user->Properties()->detach($user->Property()->id);

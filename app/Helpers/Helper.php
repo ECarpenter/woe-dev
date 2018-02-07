@@ -557,7 +557,7 @@ class Helper
 			{
 				if ($user->hasRole('tenant'))
 				{
-					if ( $user->tenant_id != 0 || !$user->property()->canAccess())
+					if ( $user->verified)
 					{	
 						$users->forget($user->id);
 					}
