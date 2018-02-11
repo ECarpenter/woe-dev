@@ -20,7 +20,7 @@
     <style>
         body {
             font-family: 'Lato';
-            background-color: #F0F7FF
+            background-color: #F0F7FF;
         }
 
         .fa-btn {
@@ -32,7 +32,7 @@
             margin:0 auto;
         }
         .ejc-inactive {
-            background-color: #835A5A
+            background-color: #835A5A;
         }
         .table-hover > tbody > tr > td.ejc-inactive:hover,
         .table-hover > tbody > tr > th.ejc-inactive:hover,
@@ -43,8 +43,13 @@
         } 
 
         .button-color {
-            background-color: #5bc0de           
+            background-color: #5bc0de;           
         } 
+
+        .disclaimer {
+            background-color: #F0F7FF;
+            color: red;
+        }
 
         
     

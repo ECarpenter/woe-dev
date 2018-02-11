@@ -12,6 +12,17 @@
 		@permission('manage-wo')
 			<input type="hidden" name="property" value=1></input>
 
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 disclaimer text-center">
+					<h5>
+						{{env("DISCLAIMER", "")}}
+						<br><br>
+						{{env("DISCLAIMER2","")}}
+
+					</h5>
+				</div>
+			</div>
+
 			<div class="row">			
 				<div class="col-md-6 col-md-offset-3">
 					<h4>Tenant</h4>

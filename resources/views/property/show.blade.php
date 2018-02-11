@@ -29,9 +29,9 @@
 
 					<ul class="dropdown-menu" role="menu">
 						@foreach ($property->users as $user)
-							<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : ''}}</a></li>
+							<li><a href="{{$user->hasRole('manager') ? ' #' : '/user/'.$user->id}}">{{$user->name}} - {{$user->hasRole('manager') ? ' Manager' : $user->company_name}}</a></li>
 						@endforeach
-						<li class="button-color"><a href="#" class="open-user-property-modal" data-value="{{$property->id}}">Edit Users</a></li>
+						<li class="button-color"><a href="#" class="open-user-property-modal" data-value="{{$property->id}}">Edit Managers</a></li>
 					</ul>
 
 				</li>
