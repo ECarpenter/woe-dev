@@ -12,16 +12,7 @@
 		@permission('manage-wo')
 			<input type="hidden" name="property" value=1></input>
 
-			<div class="row">
-				<div class="col-md-6 col-md-offset-3 disclaimer text-center">
-					<h5>
-						{{env("DISCLAIMER", "")}}
-						<br><br>
-						{{env("DISCLAIMER2","")}}
-
-					</h5>
-				</div>
-			</div>
+			
 
 			<div class="row">			
 				<div class="col-md-6 col-md-offset-3">
@@ -52,6 +43,17 @@
 			@else
 				<input type="hidden" name="tenant" value=0></input>
 			@endif
+
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 disclaimer text-center">
+					<h5>
+						{{env("DISCLAIMER", "")}}
+						<br><br>
+						{{env("DISCLAIMER2","")}}
+
+					</h5>
+				</div>
+			</div>
 		@endrole
 
 		{{-- Problem Type --}}
