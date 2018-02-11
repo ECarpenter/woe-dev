@@ -108,14 +108,6 @@ return [
     */
 
     'sendmail' => '/usr/sbin/sendmail -bs',
-
-    'to' => [
-        'address' => 'ecarpen905@gmail.com',
-        'name' => 'tester'
-    ],
-    'cc' => [
-        'address' => 'ecarpen905@gmail.com',
-        'name' => 'tester cc'
-    ]
+   
 
 ];

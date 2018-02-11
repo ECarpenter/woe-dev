@@ -390,7 +390,7 @@ class Helper
 		}    
 		if ($tenant->insurance->liability_end < $today) {
 			$state["lexpire"] = "danger";
-			$insurance->compliant = false;
+			//$insurance->compliant = false;
 		}  
 		if ($tenant->insurance->umbrella_end < $today) {
 			$state["uexpire"] = "danger";
@@ -489,7 +489,7 @@ class Helper
 
 			Log::info('Insurance notification e-mail sent to '.$tenant->insurance_contact_email);
 			Mail::send('email.insurance-notice',compact('tenant', 'token','type'), function ($message) use ($tenant) {
-				$message->from('insurance@davispartners.com', 'Insurance Administrator');
+				$message->from('insurance@davispartners.com', 'Davis Partners, Insurance Admin');
 				$message->subject('Insurance Certificate Needs Update');
 				$message->to($tenant->insurance_contact_email);
 			});

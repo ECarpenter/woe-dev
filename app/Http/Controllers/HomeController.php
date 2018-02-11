@@ -38,17 +38,18 @@ class HomeController extends Controller
             $tempworkorders = WorkOrder::all();
             foreach ($tempworkorders as $workorder) 
             {
-                if (\Auth::user()->tenant_id == 0)
-                {
+               // if (\Auth::user()->tenant_id == 0)
+               // {
                     if ($workorder->user_id == \Auth::user()->id)
                     {
                         $workorders->prepend($workorder);
                     }
-                }
-                elseif ($workorder->Tenant->id == \Auth::user()->Tenant->id)
-                {
-                    $workorders->prepend($workorder);
-                }   
+                //}
+                //elseif ($workorder->Tenant->id == \Auth::user()->tenant_id)
+                //{
+                    
+               //     $workorders->prepend($workorder);
+               // }   
                 
             }
         }

@@ -70,7 +70,9 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('http://www.davispartners.com/') }}">
-                    <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="74" height="30">
+
+                    <img border="0" alt="Davis Partners" src="/images/logo_transparent.png" width="189" height="30">
+
                 </a>
             </div>
 
