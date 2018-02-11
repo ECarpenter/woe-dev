@@ -147,7 +147,15 @@ class WorkOrderController extends Controller
         if ($request->update == "submit")
         {
             $workorder->problem_id = $request->type;
-            $workorder->status = $request->status;
+            if ($workorder->status != $request->status)
+            {
+                $workorder->status = $request->status;
+                if ($workorder->status = 'Closed')
+                {
+                    WorkOrderController::closeout($workorder);
+                }
+
+            }
             $workorder->save();
 
             Session::flash('success', 'Your Changes have been saved!');
@@ -167,6 +175,7 @@ class WorkOrderController extends Controller
         {
             if ($request->post_message != null)
             {
+
                 $post = PostController::newPost($workorder->id, $request);
 
                 $emails = array();
@@ -353,6 +362,18 @@ class WorkOrderController extends Controller
             $message->to(AR_EMAIL);
         });   
         
+    }
+
+    public function closeout(WorkOrder $workorder)
+    {
+        $useremail = $workorder->User->email;
+
+
+        Mail::queue('email.wo-closeout',compact('workorder'), function ($message) use ($workorder, $useremail) {
+            $message->from(Auth::user()->email, Auth::user()->name);
+            $message->subject('Work Order - Complete');
+            $message->to($useremail);
+        });
     }
 
 }
