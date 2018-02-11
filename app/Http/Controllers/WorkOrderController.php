@@ -42,7 +42,7 @@ class WorkOrderController extends Controller
 
     public function submit()
     {
-    	$problemTypes = ProblemType::all();
+    	$problemTypes = ProblemType::orderBy('type')->get();
     	
         $tenants = Tenant::where('active', true)->orderBy('company_name')->get();
         
@@ -220,7 +220,7 @@ class WorkOrderController extends Controller
         if (!empty($emails)) {
             Log::info('Work Order notification e-mail sent to',[$emails]);
             Mail::queue('email.notice',compact('workorder'), function ($message) use ($emails, $workorder, $file) {
-                $message->from('Do-Not-Reply@ejcustom.com', 'Notice');
+                $message->from('Do-Not-Reply@ejcustom.com', 'NEW WORK ORDER - '.$workorder->Property()->name);
                 $message->subject($workorder->Property()->name.' - New Work Order');
                 if ($file != null)
                 {
@@ -291,8 +291,10 @@ class WorkOrderController extends Controller
 
     public function sendbillingEmail(WorkOrder $workorder)
     {
-       
+
         $useremail = $workorder->User->email;
+        $tenantemail = $workorder->Tenant->insurance_contact_email;
+        
 
         $cos = Helper::getS3URL(COS_PATH.$workorder->cos_filename);
         $ar_file = $cos;
@@ -302,8 +304,8 @@ class WorkOrderController extends Controller
             
             $vendor_invoice = Helper::getS3URL(VENDOR_INVOICE_PATH.$workorder->vendor_invoice_filename);
 
-            $ar_file = 'tmp\AR.pdf';
-            $ap_file = 'tmp\AP.pdf';
+            $ar_file = 'tmp/AR.pdf';
+            $ap_file = 'tmp/AP.pdf';
 
             Log::info($cos);
             Log::info($vendor_invoice);
@@ -328,19 +330,26 @@ class WorkOrderController extends Controller
 
         }
 
-           
+        
 
-        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($workorder, $useremail) {
+        Mail::queue('email.tenantbill',compact('workorder'), function ($message) use ($workorder, $useremail, $tenantemail) {
             $message->from(Auth::user()->email, Auth::user()->name);
             $message->subject('Tenant Invoice');
             $message->attach(Helper::getS3URL(TENANT_INVOICE_PATH.$workorder->tenant_invoice_filename), ['as' => 'Invoice.pdf']);
             $message->to($useremail);
+            if ($useremail != $tenantemail)
+            {
+                $message->cc($tenantemail);
+            }
         });
 
-        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($ar_file) {
+        $cos_accountingname = 'COS_'.$workorder->Tenant->company_name.'_'.$workorder->Property()->property_system_id.'_'.date('mdy', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone))).'.pdf';
+        Log::info($cos_accountingname);
+
+        Mail::queue('email.accounting',compact('workorder'), function ($message) use ($ar_file, $cos_accountingname) {
             $message->from(Auth::user()->email, Auth::user()->name);
             $message->subject('COS');
-            $message->attach($ar_file, ['as' => 'COS.pdf']);
+            $message->attach($ar_file, ['as' => $cos_accountingname]);
             $message->to(AR_EMAIL);
         });   
         
