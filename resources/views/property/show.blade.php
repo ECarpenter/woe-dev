@@ -133,6 +133,7 @@
 			
 		</div>
 	</div>
+	@permission('manage-insurance')
 	<div class="row">
 		<div class="col-md-5 col-md-offset-3 text-center">
 			<h4> Insurance Non-Compliance </h4>
@@ -160,6 +161,8 @@
 			</table>
 		</div>
 	</div>
+	@endpermission
+	
 	@if ($property->allow_workorder)
 		<div class="row">
 			<div class="col-md-5 col-md-offset-3 text-center">
