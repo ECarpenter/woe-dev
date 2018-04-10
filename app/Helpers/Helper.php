@@ -8,6 +8,7 @@ use Excel;
 use Mail;
 use Storage;
 use DB;
+use PHPExcel;
 
 use Illuminate\Support\Str;
 use App\Group;
@@ -316,6 +317,15 @@ class Helper
 				});
 			});
 
+		});
+	}
+
+	public static function importInsuranceRequirements($fname)
+	{
+
+		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
+			log::info($sheet->valueByindex('lease_1.firstname'));
+			log::info($sheet->valueByindex('lease_1.lastname'));
 		});
 	}
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use Log;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -79,7 +80,6 @@ class HomeController extends Controller
 
         $file = $request->importFile;
         $file->move('tmp/','import.xls');
-
         if ($request->importType == 'property')
         {
             Helper::importProperty('tmp/import.xls');
@@ -96,9 +96,13 @@ class HomeController extends Controller
         {
             Helper::importSoldProperties('tmp/import.xls');
         }
-        elseif ($request->importType == 'transfer');
+        elseif ($request->importType == 'transfer')
         {
             Helper::importTransfer('tmp/import.xls');
+        }
+        elseif ($request->importType == 'insreq')
+        {
+        Helper::importInsuranceRequirements('tmp/import.xls');
         }
         
         return redirect('/home');

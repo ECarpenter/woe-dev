@@ -329,8 +329,12 @@
                                         Sold Properties
                                     </label>
                                     <label>
-                                        <input type="radio" name="inportType" value="transfer">
+                                        <input type="radio" name="importType" value="transfer">
                                         Transfer Tenants
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="insreq">
+                                        Insurance Requirements
                                     </label>
                                 </div>
                             </div>

@@ -508,6 +508,10 @@ return array(
             | Example sheet "test" will grab the firstname at cell A2
             |
             */
+           'lease_1' => array(
+            'firstname' => 'B1',
+            'lastname' => 'A2' 
+            ),
 
             'test' => array(
 
