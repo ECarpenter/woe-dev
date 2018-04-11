@@ -79,30 +79,31 @@ class HomeController extends Controller
     {
 
         $file = $request->importFile;
-        $file->move('tmp/','import.xls');
+        $extension = $request->importFile->getClientOriginalExtension();
+        $file->move('tmp/','import.' . $extension);
         if ($request->importType == 'property')
         {
-            Helper::importProperty('tmp/import.xls');
+            Helper::importProperty('tmp/import.' . $extension);
         }
         elseif ($request->importType == 'tenant')
         {
-            Helper::importTenant('tmp/import.xls');
+            Helper::importTenant('tmp/import.' . $extension);
         }
         elseif ($request->importType == 'past')
         {
-            Helper::importPastTenant('tmp/import.xls');
+            Helper::importPastTenant('tmp/import.' . $extension);
         }
         elseif ($request->importType == 'sold')
         {
-            Helper::importSoldProperties('tmp/import.xls');
+            Helper::importSoldProperties('tmp/import.' . $extension);
         }
         elseif ($request->importType == 'transfer')
         {
-            Helper::importTransfer('tmp/import.xls');
+            Helper::importTransfer('tmp/import.' . $extension);
         }
         elseif ($request->importType == 'insreq')
         {
-        Helper::importInsuranceRequirements('tmp/import.xls');
+        Helper::importInsuranceRequirements('tmp/import.' . $extension);
         }
         
         return redirect('/home');

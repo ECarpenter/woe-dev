@@ -340,7 +340,7 @@
                             </div>
                             <br>
                             <div class="col-xs-3" >
-                                <input type="file" accept=".xls" name="importFile">
+                                <input type="file" accept=".xls,.xlsx" name="importFile">
                             </div>
                             <br>
                             <br>
