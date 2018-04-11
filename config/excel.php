@@ -508,16 +508,74 @@ return array(
             | Example sheet "test" will grab the firstname at cell A2
             |
             */
+           //Insurance requirement form, the form specifies a lease to pull the standard requirements from in the general information
+           'general-ins-req' => array(
+                'propertyname' => 'C6',
+                'property-id' => 'C7',
+                'lease-to-use' => 'C8',
+                'additional-insured' => 'C9'
+           ),
            'lease_1' => array(
-            'firstname' => 'B1',
-            'lastname' => 'A2' 
+                'CGL' => 'B16',
+                'CGL-Other' => 'D16',
+                'CGL-Deductible' => 'F16',
+                'CGL-Deductible-Other' => 'H16',
+                'Excess' => 'B18', 
+                'Excess-Coverage' => 'D18',
+                'Excess-Coverage-Other' => 'F18',
+                'Umbrella' => 'B19',
+                'Umbrella-Coverage' => 'D19',
+                'Umbrella-Coverage-Other' => 'F19',
+                'Pollution-Exclusion' => 'C22',
+                'Additional-Insured-Managers' => 'D23',
+                'Cause-of-Loss' => 'B25',
+                'TPP' => 'D25',
+                'TI' => 'F25',
+                'Tenants-fixtures' => 'H25',
+                'Earthquake' => 'B29',
+                'Flood' => 'B31',
+                'Pollution-Liability' => 'B33',
+                'Pollution-Liability-Other' => 'D33',
+                'Workers-Comp' => 'B35',
+                'Employers-Liability' => 'B37',
+                'Employers-Liability-Other' => 'D37',
+                'Auto-Liability' => 'B39',
+                'Auto-Liability-Coverage' => 'D39',
+                'Auto-Liability-Coverage-Other' => 'F39',
+                'Business-Interruption' => 'B41',
+                'Waiver-of-Subrogation' => 'B43'
             ),
 
-            'test' => array(
-
-                'firstname' => 'A2'
-
-            )
+            'lease_2' => array(
+                'CGL' => 'B50',
+                'CGL-Other' => 'D50',
+                'CGL-Deductible' => 'F50',
+                'CGL-Deductible-Other' => 'H50',
+                'Excess' => 'B52', 
+                'Excess-Coverage' => 'D52',
+                'Excess-Coverage-Other' => 'F52',
+                'Umbrella' => 'B53',
+                'Umbrella-Coverage' => 'D53',
+                'Umbrella-Coverage-Other' => 'F53',
+                'Pollution-Exclusion' => 'C56',
+                'Additional-Insured-Managers' => 'D57',
+                'Cause-of-Loss' => 'B59',
+                'TPP' => 'D59',
+                'TI' => 'F59',
+                'Tenants-fixtures' => 'H59',
+                'Earthquake' => 'B63',
+                'Flood' => 'B65',
+                'Pollution-Liability' => 'B67',
+                'Pollution-Liability-Other' => 'D67',
+                'Workers-Comp' => 'B69',
+                'Employers-Liability' => 'B71',
+                'Employers-Liability-Other' => 'D71',
+                'Auto-Liability' => 'B73',
+                'Auto-Liability-Coverage' => 'D73',
+                'Auto-Liability-Coverage-Other' => 'F73',
+                'Business-Interruption' => 'B75',
+                'Waiver-of-Subrogation' => 'B77'
+            ),
 
         )
     ),

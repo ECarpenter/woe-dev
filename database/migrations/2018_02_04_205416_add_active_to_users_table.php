@@ -18,8 +18,6 @@ class AddActiveToUsersTable extends Migration
                 $table->boolean('active')->default(true);
             } 
         });
-
-        \DB::statement('UPDATE users SET active = true');
     }
 
     /**

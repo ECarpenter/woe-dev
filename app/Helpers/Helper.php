@@ -9,6 +9,7 @@ use Mail;
 use Storage;
 use DB;
 use PHPExcel;
+use Config;
 
 use Illuminate\Support\Str;
 use App\Group;
@@ -324,9 +325,165 @@ class Helper
 	{
 
 		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
-			log::info($sheet->valueByindex('lease_1.firstname'));
-			log::info($sheet->valueByindex('lease_1.lastname'));
+			$property_id = $sheet->valueByindex('general-ins-req.property-id');
+			$property = Property::where('property_system_id', '=', $property_id)->first();
+			if ($property != null)
+			{
+				$property->insured_name = $sheet->valueByindex('general-ins-req.additional-insured');
+				$property->save();
+				$lease = $sheet->valueByindex('general-ins-req.lease-to-use');
+				if ($lease != null)
+				{
+					$success = Helper::readInsuranceRequirements($property, $sheet, 'lease_' . $lease);
+					if ($success)
+					{
+						log::info($property_id . ' - Success');
+					}
+					else
+					{
+						log::info($property_id . '- Failure on lease data');
+					}
+				}
+				else
+				{
+					log::info($property_id . ' - No Lease Selected');
+				}
+				
+			}
+			else
+			{
+				log::info($property_id . ' - Not found in system');
+			}
 		});
+	}
+
+	protected static function readInsuranceRequirements(Property $property, $sheet, $index)
+	{
+
+		
+		
+		$property->req_cgl = $sheet->valueByindex($index . '.CGL');
+		if ($property->req_cgl == 'Other')
+		{
+			$property->req_cgl = $sheet->valueByindex($index . '.CGL-Other');
+		}
+        $property->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible');
+        if ($property->req_cgl_deducatible == 'Other')
+		{
+			$property->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
+		}
+        $property->req_excess = $sheet->valueByindex($index . '.Excess');
+        $property->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage');
+        if ($property->req_excess_coverage == 'Other')
+		{
+			$property->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage-Other');
+		}
+        $property->req_umbrella = $sheet->valueByindex($index . '.Umbrella');
+        $property->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage');
+        if ($property->req_umbrella_coverage == 'Other')
+		{
+			$property->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage-Other');
+		}
+        $property->req_cause_of_loss = $sheet->valueByindex($index . '.Cause-of-Loss');
+        $property->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability');
+        if ($property->req_pollution == 'Other')
+		{
+			$property->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability-Other');
+		}
+        $property->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability');
+        if ($property->req_employers_liability == 'Other')
+		{
+			$property->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability-Other');
+		}
+        $property->req_auto_liability = $sheet->valueByindex($index . '.Auto-Liability');
+        $property->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage');
+        if ($property->req_auto_liability_coverage == 'Other')
+		{
+			$property->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage-Other');
+		}
+		if ($sheet->valueByindex($index . '.Pollution-Exclusion') != 'Yes')
+		{
+        	$property->req_pollution_amend = $sheet->valueByindex($index . '.Pollution-Exclusion');
+		}
+		else
+		{
+			$property->req_pollution_amend = true;
+		}
+		if ($sheet->valueByindex($index . '.Additional-Insured-Managers') != 'Yes')
+		{
+        	$property->req_additional_ins_endorsement = false;
+		}
+		else
+		{
+			$property->req_additional_ins_endorsement = true;
+		}
+		if ($sheet->valueByindex($index . '.TPP') != 'Yes')
+		{
+       		$property->req_tenants_pp = false;
+		}
+		else
+		{
+			$property->req_tenants_pp = true;
+		}
+		if ($sheet->valueByindex($index . '.TI') != 'Yes')
+		{
+        	$property->req_tenant_improvements = false;
+		}
+		else
+		{
+			$property->req_tenant_improvements = true;
+		}
+		if ($sheet->valueByindex($index . '.Tenants-fixtures') != 'Yes')
+		{
+        	$property->req_tenant_fixtures = false;
+		}
+		else
+		{
+			$property->req_tenant_fixtures = true;
+		}
+		if ($sheet->valueByindex($index . '.Earthquake') != 'Yes')
+		{
+        	$property->req_earthquake = false;
+		}
+		else
+		{
+			$property->req_earthquake = true;
+		}
+		if ($sheet->valueByindex($index . '.Flood') != 'Yes')
+		{
+        	$property->req_flood = false;
+		}
+		else
+		{
+			$property->req_flood = true;
+		}
+		if ($sheet->valueByindex($index . '.Workers-Comp') != 'Yes')
+		{
+        	$property->req_workers_comp = false;
+		}
+		else
+		{
+			$property->req_workers_comp = true;
+		}
+		if ($sheet->valueByindex($index . '.Business-Interruption') != 'Yes')
+		{
+    	    $property->req_business_interruption = false;
+		}
+		else
+		{
+			$property->req_business_interruption = true;
+		}
+		if ($sheet->valueByindex($index . '.Waiver-of-Subrogation') != 'Yes')
+		{
+	        $property->req_waiver_of_subrogation = false;
+		}
+		else
+		{
+			$property->req_waiver_of_subrogation = true;
+		}
+        $property->save();
+
+		return true;	
 	}
 
 	//Check for insurance compliance
