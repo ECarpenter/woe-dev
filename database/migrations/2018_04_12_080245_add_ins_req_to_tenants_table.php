@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddNewInsuranceRequirementsToPropertiesTable extends Migration
+class AddInsReqToTenantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddNewInsuranceRequirementsToPropertiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('properties', function (Blueprint $table) {
-            //New Values
+        Schema::table('tenants', function (Blueprint $table) {
+            
             $table->string('req_cgl')->nullable();
             $table->string('req_cgl_deducatible')->nullable();
             $table->string('req_excess')->nullable();
@@ -35,8 +35,11 @@ class AddNewInsuranceRequirementsToPropertiesTable extends Migration
             $table->boolean('req_workers_comp')->default(false);
             $table->boolean('req_business_interruption')->default(false);
             $table->boolean('req_waiver_of_subrogation')->default(false);
+            $table->boolean('use_default_ins_req')->default(true);
             $table->text('req_cause_of_loss_detail')->nullable();
             $table->text('note')->nullable();
+
+
         });
     }
 
@@ -47,7 +50,7 @@ class AddNewInsuranceRequirementsToPropertiesTable extends Migration
      */
     public function down()
     {
-        Schema::table('properties', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             //
         });
     }

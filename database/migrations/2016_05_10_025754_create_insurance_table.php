@@ -13,6 +13,12 @@ class CreateInsuranceTable extends Migration
     public function up()
     {
         Schema::create('insurance', function (Blueprint $table) {
+
+            //Liability_filename is used for the Accord 25 form or both together. 
+            //endorsement_filename is used for the Accord 28 alone.
+            //added new_filename2 later for when uploading a Accord 28 form.
+            //
+
             $table->increments('id');
             $table->integer('tenant_id');
             $table->string('new_filename')->nullable();
