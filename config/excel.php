@@ -510,10 +510,10 @@ return array(
             */
            //Insurance requirement form, the form specifies a lease to pull the standard requirements from in the general information
            'general-ins-req' => array(
-                'propertyname' => 'C6',
-                'property-id' => 'C7',
-                'lease-to-use' => 'C8',
-                'additional-insured' => 'C9'
+                'Property-Name' => 'C6',
+                'Property-ID' => 'C7',
+                'Lease-to-Use' => 'C8',
+                'Additional-Insured' => 'C9'
            ),
            'lease_1' => array(
                 'CGL' => 'B16',
@@ -532,6 +532,7 @@ return array(
                 'TPP' => 'D25',
                 'TI' => 'F25',
                 'Tenants-fixtures' => 'H25',
+                'Cause-of-Loss-Detail' => 'F26',
                 'Earthquake' => 'B29',
                 'Flood' => 'B31',
                 'Pollution-Liability' => 'B33',
@@ -563,6 +564,7 @@ return array(
                 'TPP' => 'D59',
                 'TI' => 'F59',
                 'Tenants-fixtures' => 'H59',
+                'Cause-of-Loss-Detail' => 'F60',
                 'Earthquake' => 'B63',
                 'Flood' => 'B65',
                 'Pollution-Liability' => 'B67',
@@ -575,6 +577,45 @@ return array(
                 'Auto-Liability-Coverage-Other' => 'F73',
                 'Business-Interruption' => 'B75',
                 'Waiver-of-Subrogation' => 'B77'
+            ),
+
+            'lease_summary' => array(
+                'Desired-Version' => '4.11.18',
+                'Property-ID' =>'C6',
+                'Version' => 'B159',
+                'Tenant-ID' => 'C12',
+                'Tenant-Name' => 'C11',
+                'Suite' => 'C8',
+                'E-Mail' => 'C21',
+                'CGL' => 'B130',
+                'CGL-Other' => 'D130',
+                'CGL-Deductible' => 'F130',
+                'CGL-Deductible-Other' => 'H130',
+                'Excess' => 'B132', 
+                'Excess-Coverage' => 'D132',
+                'Excess-Coverage-Other' => 'F132',
+                'Umbrella' => 'B133',
+                'Umbrella-Coverage' => 'D133',
+                'Umbrella-Coverage-Other' => 'F133',
+                'Pollution-Exclusion' => 'C136',
+                'Additional-Insured-Managers' => 'D137',
+                'Cause-of-Loss' => 'B139',
+                'TPP' => 'D139',
+                'TI' => 'F139',
+                'Tenants-fixtures' => 'H139',
+                'Cause-of-Loss-Detail' => 'F140',
+                'Earthquake' => 'B143',
+                'Flood' => 'B145',
+                'Pollution-Liability' => 'B147',
+                'Pollution-Liability-Other' => 'D147',
+                'Workers-Comp' => 'B149',
+                'Employers-Liability' => 'B151',
+                'Employers-Liability-Other' => 'D151',
+                'Auto-Liability' => 'B153',
+                'Auto-Liability-Coverage' => 'D153',
+                'Auto-Liability-Coverage-Other' => 'F153',
+                'Business-Interruption' => 'B155',
+                'Waiver-of-Subrogation' => 'B157'
             ),
 
         )

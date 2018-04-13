@@ -10,6 +10,7 @@ use Storage;
 use DB;
 use PHPExcel;
 use Config;
+use Response;
 
 use Illuminate\Support\Str;
 use App\Group;
@@ -23,6 +24,7 @@ use App\WorkOrder;
 use App\User;
 use App\Vendor;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Session;
 
 class Helper
 {
@@ -321,17 +323,88 @@ class Helper
 		});
 	}
 
+	public static function importNewLease($fname)
+	{
+		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
+			if ($sheet->sheetName == 'Lease Summary')
+			{
+				if ($sheet->valueByindex('lease_summary.Version') == config('excel.import.sheets.lease_summary.Desired-Version'))
+				{
+					$property_id = $sheet->valueByindex('lease_summary.Property-ID');
+					$property = Property::where('property_system_id', '=', $property_id)->first();
+					if ($property != null)
+					{
+						$tenant_id = $sheet->valueByindex('lease_summary.Tenant-ID');
+						if ($tenant_id != null)
+						{
+							
+							if ($sheet->valueByindex('lease_summary.Suite') == null)
+							{
+								Session::flash('warning', $tenant_id . ' - No suite entered');
+							}
+							elseif ($sheet->valueByIndex('lease_summary.Tenant-Name') == null)
+							{
+								Session::flash('warning', $tenant_id . ' - No name entered');
+							}
+							else
+							{
+								$newTenant = false;
+								$tenant = Tenant::where('tenant_system_id', '=', $tenant_id)->first();
+								if ($tenant == null)
+								{
+									$tenant = New Tenant;
+									$tenant->tenant_system_id = $tenant_id;
+									$newTenant = true;
+								}
+								
+								$tenant->company_name = $sheet->valueByindex('lease_summary.Tenant-Name');
+								$tenant->unit = $sheet->valueByindex('lease_summary.Suite');
+								$tenant->insurance_contact_email = $sheet->valueByindex('lease_summary.E-Mail');
+								$tenant->property_id = $property->id;
+								$tenant->save();
+								if ($newTenant)
+								{
+									$ins = new Insurance;
+									$ins->tenant_id = $tenant->id;
+									$ins->save();
+								}
+
+								$success = Helper::readInsuranceRequirements($tenant, $sheet, 'lease_summary');
+								if ($success)
+								{
+									Session::flash('success', ' New Tenant Created and Saved');
+								}
+							}
+						}
+						else
+						{
+							Session::flash('warning', 'No tenant id entered');
+						}
+		 			}
+					else
+					{
+						Session::flash('warning', $property_id . ' - Not found in system');	 
+					}
+				}
+				else
+				{
+					Session::flash('warning', 'Wrong version of lease summary please use version - ' . config('excel.import.sheets.lease_summary.Desired-Version'));
+				}
+			}
+		});
+	}
+
 	public static function importInsuranceRequirements($fname)
 	{
 
 		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
-			$property_id = $sheet->valueByindex('general-ins-req.property-id');
+			$property_id = $sheet->valueByindex('general-ins-req.Property-ID');
 			$property = Property::where('property_system_id', '=', $property_id)->first();
 			if ($property != null)
 			{
-				$property->insured_name = $sheet->valueByindex('general-ins-req.additional-insured');
+				$property->insured_name = $sheet->valueByindex('general-ins-req.Additional-Insured');
 				$property->save();
-				$lease = $sheet->valueByindex('general-ins-req.lease-to-use');
+				$lease = $sheet->valueByindex('general-ins-req.Lease-to-Use');
 				if ($lease != null)
 				{
 					$success = Helper::readInsuranceRequirements($property, $sheet, 'lease_' . $lease);
@@ -357,131 +430,131 @@ class Helper
 		});
 	}
 
-	protected static function readInsuranceRequirements(Property $property, $sheet, $index)
+	protected static function readInsuranceRequirements( $object, $sheet, $index)
 	{
 
 		
 		
-		$property->req_cgl = $sheet->valueByindex($index . '.CGL');
-		if ($property->req_cgl == 'Other')
+		$object->req_cgl = $sheet->valueByindex($index . '.CGL');
+		if ($object->req_cgl == 'Other')
 		{
-			$property->req_cgl = $sheet->valueByindex($index . '.CGL-Other');
+			$object->req_cgl = $sheet->valueByindex($index . '.CGL-Other');
 		}
-        $property->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible');
-        if ($property->req_cgl_deducatible == 'Other')
+        $object->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible');
+        if ($object->req_cgl_deducatible == 'Other')
 		{
-			$property->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
+			$object->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
 		}
-        $property->req_excess = $sheet->valueByindex($index . '.Excess');
-        $property->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage');
-        if ($property->req_excess_coverage == 'Other')
+        $object->req_excess = $sheet->valueByindex($index . '.Excess');
+        $object->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage');
+        if ($object->req_excess_coverage == 'Other')
 		{
-			$property->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage-Other');
+			$object->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage-Other');
 		}
-        $property->req_umbrella = $sheet->valueByindex($index . '.Umbrella');
-        $property->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage');
-        if ($property->req_umbrella_coverage == 'Other')
+        $object->req_umbrella = $sheet->valueByindex($index . '.Umbrella');
+        $object->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage');
+        if ($object->req_umbrella_coverage == 'Other')
 		{
-			$property->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage-Other');
+			$object->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage-Other');
 		}
-        $property->req_cause_of_loss = $sheet->valueByindex($index . '.Cause-of-Loss');
-        $property->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability');
-        if ($property->req_pollution == 'Other')
+        $object->req_cause_of_loss = $sheet->valueByindex($index . '.Cause-of-Loss');
+        $object->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability');
+        if ($object->req_pollution == 'Other')
 		{
-			$property->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability-Other');
+			$object->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability-Other');
 		}
-        $property->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability');
-        if ($property->req_employers_liability == 'Other')
+        $object->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability');
+        if ($object->req_employers_liability == 'Other')
 		{
-			$property->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability-Other');
+			$object->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability-Other');
 		}
-        $property->req_auto_liability = $sheet->valueByindex($index . '.Auto-Liability');
-        $property->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage');
-        if ($property->req_auto_liability_coverage == 'Other')
+        $object->req_auto_liability = $sheet->valueByindex($index . '.Auto-Liability');
+        $object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage');
+        if ($object->req_auto_liability_coverage == 'Other')
 		{
-			$property->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage-Other');
+			$object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage-Other');
 		}
 		if ($sheet->valueByindex($index . '.Pollution-Exclusion') != 'Yes')
 		{
-        	$property->req_pollution_amend = $sheet->valueByindex($index . '.Pollution-Exclusion');
+        	$object->req_pollution_amend = false;
 		}
 		else
 		{
-			$property->req_pollution_amend = true;
+			$object->req_pollution_amend = true;
 		}
 		if ($sheet->valueByindex($index . '.Additional-Insured-Managers') != 'Yes')
 		{
-        	$property->req_additional_ins_endorsement = false;
+        	$object->req_additional_ins_endorsement = false;
 		}
 		else
 		{
-			$property->req_additional_ins_endorsement = true;
+			$object->req_additional_ins_endorsement = true;
 		}
 		if ($sheet->valueByindex($index . '.TPP') != 'Yes')
 		{
-       		$property->req_tenants_pp = false;
+       		$object->req_tenants_pp = false;
 		}
 		else
 		{
-			$property->req_tenants_pp = true;
+			$object->req_tenants_pp = true;
 		}
 		if ($sheet->valueByindex($index . '.TI') != 'Yes')
 		{
-        	$property->req_tenant_improvements = false;
+        	$object->req_tenant_improvements = false;
 		}
 		else
 		{
-			$property->req_tenant_improvements = true;
+			$object->req_tenant_improvements = true;
 		}
 		if ($sheet->valueByindex($index . '.Tenants-fixtures') != 'Yes')
 		{
-        	$property->req_tenant_fixtures = false;
+        	$object->req_tenant_fixtures = false;
 		}
 		else
 		{
-			$property->req_tenant_fixtures = true;
+			$object->req_tenant_fixtures = true;
 		}
 		if ($sheet->valueByindex($index . '.Earthquake') != 'Yes')
 		{
-        	$property->req_earthquake = false;
+        	$object->req_earthquake = false;
 		}
 		else
 		{
-			$property->req_earthquake = true;
+			$object->req_earthquake = true;
 		}
 		if ($sheet->valueByindex($index . '.Flood') != 'Yes')
 		{
-        	$property->req_flood = false;
+        	$object->req_flood = false;
 		}
 		else
 		{
-			$property->req_flood = true;
+			$object->req_flood = true;
 		}
 		if ($sheet->valueByindex($index . '.Workers-Comp') != 'Yes')
 		{
-        	$property->req_workers_comp = false;
+        	$object->req_workers_comp = false;
 		}
 		else
 		{
-			$property->req_workers_comp = true;
+			$object->req_workers_comp = true;
 		}
 		if ($sheet->valueByindex($index . '.Business-Interruption') != 'Yes')
 		{
-    	    $property->req_business_interruption = false;
+    	    $object->req_business_interruption = false;
 		}
 		else
 		{
-			$property->req_business_interruption = true;
+			$object->req_business_interruption = true;
 		}
 		if ($sheet->valueByindex($index . '.Waiver-of-Subrogation') != 'Yes')
 		{
-	        $property->req_waiver_of_subrogation = false;
+	        $object->req_waiver_of_subrogation = false;
 		}
 		else
 		{
-			$property->req_waiver_of_subrogation = true;
+			$object->req_waiver_of_subrogation = true;
 		}
-        $property->save();
+        $object->save();
 
 		return true;	
 	}

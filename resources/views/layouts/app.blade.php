@@ -336,6 +336,10 @@
                                         <input type="radio" name="importType" value="insreq">
                                         Insurance Requirements
                                     </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="lease">
+                                        Lease Summary
+                                    </label>
                                 </div>
                             </div>
                             <br>
