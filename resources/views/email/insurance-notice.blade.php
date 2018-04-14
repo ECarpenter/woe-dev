@@ -142,8 +142,7 @@ style='font-family:"Arial","sans-serif";color:black'>Insurance Administrator</sp
 style='font-size:8.0pt;mso-bidi-font-size:11.0pt;line-height:115%;font-family:
 "Arial","sans-serif";color:#6D6E71'><br>
 </span><span style='font-size:8.0pt;mso-bidi-font-size:11.0pt;line-height:115%;
-font-family:"Arial","sans-serif";color:black'>949.752.2066 off | 949.752.8776
-fax<br>
+font-family:"Arial","sans-serif";color:black'>949.752.2066 off<br>
 insurance@davispartners.com<br>
 1420 BRISTOL STREET NORTH, #100, NEWPORT BEACH, CA 92660<o:p></o:p></span></p>
 

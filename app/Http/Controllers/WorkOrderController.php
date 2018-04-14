@@ -251,11 +251,11 @@ class WorkOrderController extends Controller
 
         
         
-        $date=date('ymd-His', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
+        $date=date('mdy', strtotime(\Carbon\Carbon::now(\Auth::user()->timezone)));
         $workorder->amount_billed =$request->amount_billed;
         $workorder->billing_description = $request->billing_description;
         $workorder->job_cost = $request->job_cost;
-        $workorder->cos_filename = 'cos-'.$date.'.pdf';
+        $workorder->cos_filename = 'COS_'.str_replace(' ','',$workorder->Tenant->company_name).'_'.$workorder->Tenant->Property->property_system_id.'_'.$date.'.pdf';
         $workorder->tenant_invoice_filename = 'tenant-'.$date.'.pdf';
         $workorder->billed = true;
         $workorder->status = 'Closed';
@@ -357,7 +357,7 @@ class WorkOrderController extends Controller
 
         Mail::queue('email.accounting',compact('workorder'), function ($message) use ($ar_file, $cos_accountingname) {
             $message->from(Auth::user()->email, Auth::user()->name);
-            $message->subject('COS');
+            $message->subject($workorder->cos_filename);
             $message->attach($ar_file, ['as' => $cos_accountingname]);
             $message->to(AR_EMAIL);
         });   
