@@ -15,7 +15,7 @@ class AddInsReqToTenantsTable extends Migration
         Schema::table('tenants', function (Blueprint $table) {
             
             $table->string('req_cgl')->nullable();
-            $table->string('req_cgl_deducatible')->nullable();
+            $table->string('req_cgl_deductible')->nullable();
             $table->string('req_excess')->nullable();
             $table->string('req_excess_coverage')->nullable();
             $table->string('req_umbrella')->nullable();

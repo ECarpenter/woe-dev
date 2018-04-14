@@ -15,7 +15,7 @@ class AddNewInsuranceRequirementsToPropertiesTable extends Migration
         Schema::table('properties', function (Blueprint $table) {
             //New Values
             $table->string('req_cgl')->nullable();
-            $table->string('req_cgl_deducatible')->nullable();
+            $table->string('req_cgl_deductible')->nullable();
             $table->string('req_excess')->nullable();
             $table->string('req_excess_coverage')->nullable();
             $table->string('req_umbrella')->nullable();

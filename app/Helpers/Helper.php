@@ -441,9 +441,9 @@ class Helper
 			$object->req_cgl = $sheet->valueByindex($index . '.CGL-Other');
 		}
         $object->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible');
-        if ($object->req_cgl_deducatible == 'Other')
+        if ($object->req_cgl_deductible == 'Other')
 		{
-			$object->req_cgl_deducatible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
+			$object->req_cgl_deductible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
 		}
         $object->req_excess = $sheet->valueByindex($index . '.Excess');
         $object->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage');
