@@ -128,7 +128,7 @@
 		</div>
 
 		<div class="col-xs-2 ">
-			@if ($workorder->tenant_id == 0)
+			@if ($workorder->tenant_id == 0 || $workorder->billed)
 			<button class="btn btn-primary open-billing-modal" value="{{$workorder->id}}" disabled>Billing</button>
 			@else
 			<button class="btn btn-primary open-billing-modal" value="{{$workorder->id}}">Billing</button>
