@@ -35,6 +35,7 @@ class AddNewInsuranceRequirementsToPropertiesTable extends Migration
             $table->boolean('req_workers_comp')->default(false);
             $table->boolean('req_business_interruption')->default(false);
             $table->boolean('req_waiver_of_subrogation')->default(false);
+            $table->boolean('req_data_endorsement')->default(false);
             $table->text('req_cause_of_loss_detail')->nullable();
             $table->text('note')->nullable();
         });
