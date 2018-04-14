@@ -15,8 +15,9 @@ class AddDetailToInsuranceTable extends Migration
         Schema::table('insurance', function (Blueprint $table) {
             //
             $table->text('note')->nullable();;
-            $table->string('form-type')->nullable();;
+            $table->boolean('combined_file')->default(false);;
             $table->string('new_filename2')->nullable();
+            $table->string('tempfil2')->nullable();
             $table->boolean('Auto_notice')->default(false);
 
 

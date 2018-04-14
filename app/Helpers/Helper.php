@@ -574,131 +574,25 @@ class Helper
 		$insurance = $tenant->Insurance;
 		$insurance->compliant = true;
 		$state = array(
-			"lfile" => "success",
-			"ufile" => "success",
-			"afile" => "success",
-			"wfile" => "success",
-			"efile" => "success",
-			"lexpire" => "success",
-			"uexpire" => "success",
-			"aexpire" => "success",
-			"wexpire" => "success",
-			"llimit" => "success",
-			"ulimit" => "success",
-			"alimit" => "success",
-			"wlimit" => "success",
+			"expire" => "success",
 			"elink" => "",
 			"llink" => "",
-			"ulink" => "",
-			"alink" => "",
-			"wlink" => "",
 			"manual_notice" => "valid"
 			);
 
 		$today = date("Y-m-d");
 		
-		if ($tenant->Insurance->endorsement_filename == null) {
-			$state["efile"] = "danger";
-		}
-		else {
-			
+		if ($tenant->Insurance->endorsement_filename != null) {			
 			$state["elink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->endorsement_filename)."')";
 		} 
-		if ($tenant->Insurance->liability_filename == null) {
-			$state["lfile"] = "danger";
-			$insurance->compliant = false;
-		}
-		else {
-			
+		if ($tenant->Insurance->liability_filename != null) {
 			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
 		}    
-		if ($tenant->Insurance->umbrella_filename == null) {
-			$state["ufile"] = "danger";
-			//$insurance->compliant = false;
-		}
-		else {
-			$state["ulink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->umbrella_filename)."')";
-		} 
-		if ($tenant->insurance->auto_filename == null) {
-			$state["afile"] = "danger";
-			//$insurance->compliant = false;
-		}
-		else {
-			$state["alink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->auto_filename)."')";
-		} 
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wfile"] = "";
-		}
-		elseif ($tenant->insurance->workerscomp_filename == null) {
-			$state["wfile"] = "danger";
-			//$insurance->compliant = false;
-		}
-		else {
-			$state["wlink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->workerscomp_filename)."')";
-		}    
+		
 		if ($tenant->insurance->liability_end < $today) {
-			$state["lexpire"] = "danger";
+			$state["expire"] = "danger";
 			$insurance->compliant = false;
 		}  
-		if ($tenant->insurance->umbrella_end < $today) {
-			$state["uexpire"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if ($tenant->insurance->auto_end < $today) {
-			$state["aexpire"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wexpire"] = "";
-		}
-		elseif ($tenant->insurance->workerscomp_end < $today) {
-			$state["wexpire"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if ($tenant->req_liability_single_limit > 0 &&  $tenant->req_liability_combined_limit > 0  ) {
-			if ( $tenant->req_liability_single_limit > $tenant->insurance->liability_single_limit || $tenant->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
-				$state["llimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_liability_single_limit > $tenant->insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
-			$state["llimit"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if ($tenant->req_umbrella_limit > 0){
-			if ($tenant->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
-				$state["ulimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
-			$state["ulimit"] = "danger";
-			//$insurance->compliant = false;
-		}
-
-		if ($tenant->req_auto_limit > 0){
-			if ($tenant->req_auto_limit > $tenant->insurance->auto_limit) {
-				$state["alimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_auto_limit > $tenant->insurance->auto_limit) {
-			$state["alimit"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wlimit"] = "disabled";
-		}
-		elseif ($tenant->req_workerscomp_limit > 0){
-			if ($tenant->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
-				$state["wlimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
-			$state["wlimit"] = "danger";
-			//$insurance->compliant = false;
-		}
 
 		if ($insurance->compliant){
 			$state['manual_notice'] = "invalid";

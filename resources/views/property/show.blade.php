@@ -81,23 +81,9 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-3 col-xs-offset-2">
-			<ul class="nav nav-pills nav-stacked">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-					  Insurance Requirements<span class="caret"></span>
-					</a>
-
-					<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Liability Single - {{ number_format($property->req_liability_single_limit) }}</a></li>
-							<li><a href="#">Liability Combined - {{ number_format($property->req_liability_combined_limit) }}</a></li>
-							<li><a href="#">Umbrella - {{ number_format($property->req_umbrella_limit) }}</a></li>
-							<li><a href="#">Auto - {{ number_format($property->req_auto_limit) }}</a></li>
-							<li><a href="#">Workers Comp - {{ number_format($property->req_workerscomp_limit) }}</a></li>
-							<li class="button-color"><a href="#" class="open-property-req-insurance-modal" value="">Edit Requirements</a></li>
-					</ul>
-				</li>
-			</ul>
+		<div class="col-xs-3 col-xs-offset-2 col-md-3 col-md-offset-2">
+			<button class="btn btn-primary open-property-req-insurance-modal btn-xs" value="{{$property->id}}">Property Insurance Requirements</button>
+			
 		</div>
 		<div class="col-xs-3 col-xs-offset-1">
 			<ul class="nav nav-pills nav-stacked">
@@ -239,63 +225,114 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-					<h4 class="modal-title" id="EditModalLabel">Edit Insurance Requirements</h4>
+					<h4 class="modal-title" id="EditModalLabel">Insurance Requirements</h4>
 				</div>
 				<div class="modal-body">
-					<form method="POST" action="/insurance/requirements" >
-						{{ csrf_field() }}
-						{{ method_field('PATCH') }}
+					<div class="table-responsive" id="limitstable">
+						<table class="table table-hover">
+			    			<tr class="info"><th>Insurance Requirements</th></tr>
+			    			
+			    			@if ($property->req_cgl != null)
+			    				<tr><td>
+			    				CGL - {{$property->req_cgl}} {{$property->req_cgl_deductible != null ? '- Deductible - '.$property->req_cgl_deductible : ''}}
+			    				</td></tr>
+			    			@endif
+			    			@if ($property->req_excess != null)
+			    				<tr><td>	
+			    				Excess - {{$property->req_excess}} {{$property->req_excess_coverage != null ? '- Coverage - '.$property->req_excess_coverage : ''}}
+			    				</td></tr>
+			    			@endif
+			    			@if ($property->req_umbrella != null)
+				    			<tr><td>
+				    			Umbrella - {{$property->req_umbrella}} {{$property->req_umbrella_coverage != null ? '- Coverage - '.$property->req_umbrella_coverage : ''}}
+				    			<tr><td>
+			    			@endif
+			    			
+			    			@if ($property->req_cause_of_loss != null)
+			    				<tr><td>
+			    				Cause of Loss - {{$property->req_cause_of_loss}} {{$property->req_cause_of_loss_detail != null ? '- Detail - '.$property->req_cause_of_loss_detail : ''}}
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_pollution != null)
+				    			<tr><td>
+				    			Pollution Liability - {{$property->req_pollution}} 
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_employers_liability != null)
+			    				<tr><td>
+			    				Employers Liability - {{$property->req_employers_liability}} 
+			    				</td></tr>
+			    			@endif
+			    			@if ($property->req_auto_liability != null)
+			    				<tr><td>
+			    				Auto Liability - {{$property->req_auto_liability}} {{$property->req_auto_liability_coverage != null ? '- Coverage - '.$property->req_auto_liability_coverage : ''}}
+				    			</td></tr>
+			    			@endif
+			    		</table>
+			    	</div>
+					<div class="table-responsive" id="coveragestable">
+		    			<table class="table table-hover">
+							<tr class="info">
+		    					<th>Rquired Coverages</th>
+		    				</tr>
 
-						<input type="hidden" name="type" value="property">
-						<input type="hidden" name="id" value="{{$property->id}}">
-
-						<div class="row">
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Liability Single</label>
-								<div class="col-xs-6">
-									<input type="number" class="form-control" name="req_liability_single_limit" id="req_liability_single_limit" step="100000" value="{{ $property->req_liability_single_limit }}">
-								</div>
-							</div>   
-						</div>
-
-						<div class="row">
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Liability Combined</label>
-								<div class="col-xs-6">
-									<input type="number" class="form-control" name="req_liability_combined_limit" id="req_liability_combined_limit" step="100000" value="{{ $property->req_liability_combined_limit }}">
-								</div>
-							</div>   
-						</div>
-
-						<div class="row">
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Umbrella</label>
-								<div class="col-xs-6">
-									<input type="number" class="form-control" name="req_umbrella_limit" id="req_umbrella_limit" step="100000" value="{{ $property->req_umbrella_limit }}">
-								</div>
-							</div>   
-						</div>
-
-						<div class="row">
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Auto</label>
-								<div class="col-xs-6">
-									<input type="number" class="form-control" name="req_auto_limit" id="req_auto_limit" step="100000" value="{{ $property->req_auto_limit }}">
-								</div>
-							</div>   
-						</div>
-
-						<div class="row">
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Workers Comp</label>
-								<div class="col-xs-6">
-									<input type="number" class="form-control" name="req_workerscomp_limit" id="req_workerscomp_limit" step="100000" value="{{ $property->req_workerscomp_limit }}">
-								</div>
-							</div>   
-						</div>
-						<input class="btn btn-primary" type="submit">
-
-					</form>
+			    			@if ($property->req_pollution_amend)
+				    			<tr><td>
+				    			Amendment of the Pollution Exclusion
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_additional_ins_endorsement)
+				    			<tr><td>
+				    			Additional Insured-Managers and Landlords of Premises Endorsement
+				    			</td></tr>
+			    			@endif
+							@if ($property->req_tenants_pp)
+				    			<tr><td>
+				    			Tenant's Personal Property
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_tenant_improvements)
+				    			<tr><td>
+				    			Tenant Improvements
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_tenant_fixtures)
+				    			<tr><td>
+				    			Tenant's trade fixtures and other property
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_data_endorsement)
+				    			<tr><td>
+				    			Endorsements to insure against lossess to valuable papers, records and computer equipment, recovering lost data
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_earthquake)
+				    			<tr><td>
+				    			Earthquake
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_flood)
+				    			<tr><td>
+				    			Flood
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_workers_comp)
+				    			<tr><td>
+				    			Workers Comp
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_business_interruption)
+				    			<tr><td>
+				    			Business Interruption
+				    			</td></tr>
+			    			@endif
+			    			@if ($property->req_waiver_of_subrogation)
+				    			<tr><td>
+				    			Waiver of Subrogation
+				    			</td></tr>
+			    			@endif
+			    		</table>
+		    		</div>
 				</div>
 			</div>
 		</div>
