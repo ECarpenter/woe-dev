@@ -194,10 +194,38 @@
 					<div class="container">
 						<div class="col-lg-12 col-centered">
 
-							@if ($tenant->Insurance->tempfile == null) 
+							@if ($tenant->Insurance->tempfile == null && $tenant->Insurance->tempfile2 == null) 
 								<input type="file" accept=".pdf" name="insurance_cert">
+								<h4>Type of Upload</h4>
+				    			<div class="col-xs-3">
+					    			<div class="radio">
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="a25" checked>
+					    					ACORD 25 - Certificate of Liability
+					    				</label>
+					    				<br>
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="a28">
+					    					ACORD 28 - Evidence of Commercial Property Insurance
+					    				</label>
+					    				<br>
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="both">
+					    					Both
+					    				</label>
+					    			</div>
+					    		</div>
 							@else
-								<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Insurance Certificate </button>
+								@if ($tenant->Insurance->tempfile !=null)
+									@if($tenant->Insurance->combined_file)
+										<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Certificate Evidence of Insurance</button>
+									@else
+										<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Insurance Certificate </button>
+									@endif
+								@endif
+								@if ($tenant->Insurance->tempfile2 != null)
+									<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfile2url }}" > View Evidence of Property Insurance </button>
+								@endif
 								<br>
 								<h4>Accept tenant's upload</h4>
 								<div class="radio">
@@ -219,27 +247,9 @@
 			    			@endif
 			    			<br>
 			    			<div id="insurancedata">
-				    			<h4>Type of Upload</h4>
-				    			<div class="col-xs-3">
-					    			<div class="radio">
-					    				<label>
-					    					<input type="radio" name="typeSelect" value="a25" checked>
-					    					ACORD 25 - Certificate of Liability
-					    				</label>
-					    				<br>
-					    				<label>
-					    					<input type="radio" name="typeSelect" value="a28">
-					    					ACORD 28 - Evidence of Commercial Property Insurance
-					    				</label>
-					    				<br>
-					    				<label>
-					    					<input type="radio" name="typeSelect" value="both">
-					    					Both
-					    				</label>
-					    			</div>
-					    		</div>
+				    			
 				    			<br>
-				    			<div class="col-xs-3 col-xs-offset-2">
+				    			<div class="col-xs-3 {{($tenant->Insurance->tempfile == null) && ($tenant->Insurance->tempfile2 == null) ? "col-xs-offset-2" : ""}}">
 				    				<label>Expiration Date</label>
 		                            <input type="date" name="liability_end" id="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}">
 		                        </div>
@@ -256,6 +266,9 @@
 		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->compliant ? "checked" : ""}}>Insurance Certificate is Compliant <br>
 		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->auto_notice ? "checked" : ""}}>Send Automatic Expiration Notice <br>
 		                        </div>
+		                        <label>Notes</label>
+								<br>
+								<textarea name=note rows="6" cols="50">{{$tenant->Insurance->note}}</textarea>
 				    			
 							</div>
 						</div>
@@ -388,9 +401,7 @@
 								@endif
 						</table>
 					</div>
-						<label>Notes</label>
-						<br>
-						<textarea name=note rows="6" cols="50">{{$tenant->Insurance->note}}</textarea>
+						
 						<br>
         				<input class="btn btn-primary" type="submit">
         		

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem;
+use Illuminate\Support\Facades\Session;
 
 use Log;
 use Storage;
@@ -32,19 +33,39 @@ class InsuranceController extends Controller
 			'liability_end' => 'required'
 			]);        
 
-		if ($insurance->tempfile != null) {
+		if ($insurance->tempfile != null || $insurance->tempfile2 != null) {
 			if ($request->tenantUpload == 'accept') {
-				
-				(InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request)); 
+
+				if ($insurance->tempfile != null)
+				{
+					if ($insurance->combined_file)
+					{
+					$request->typeSelect = 'both';
+					}
+					else
+					{
+					$request->typeSelect = 'a25';
+					}
+					InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request); 
+				}
+				if ($insurance->tempfile2 != null)
+				{
+					$request->typeSelect = 'a28';
+					InsuranceController::processInsuranceFile($insurance->tempfile2, $insurance, $request); 
+				}
+
+
 			}
 			//Reject tenant original upload need add a message back to the tenant.
 			else {
 				$insurance->rejection_msg = $request->rejection_msg;
+				$insurance->combined = false;
 				$insurance->save();
 				Helper::sendInsuranceNotice($insurance->Tenant, 'reject');
 				Storage::delete($insurance->filepath.$insurance->tempfile);
 			}
 			$insurance->tempfile = null;
+			$insurance->tempfile2 = null;
 			$insurance->rejection_msg = null;
 		}
 		else if ($request->insurance_cert != null) {
@@ -97,7 +118,8 @@ class InsuranceController extends Controller
 	{
 		$this->validate($request, [ 
 			'insurance_cert' => 'required|mimes:pdf', 
-			'tenant_system_id' => 'required'
+			'tenant_system_id' => 'required',
+			'form_type' => 'required'
 			]);
 
 		$tenant = Tenant::where('tenant_system_id', $request->tenant_system_id)->first();
@@ -106,9 +128,22 @@ class InsuranceController extends Controller
 			$fname = 'ins-'.$tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
 			$file = $request->file('insurance_cert');
 			Storage::put($tenant->insurance->filepath.$fname, file_get_contents($file));
-			$tenant->Insurance->tempfile = $fname;
+			if ($request->form_type == 'a25')
+			{
+				$tenant->Insurance->tempfile = $fname;
+				
+			}
+			elseif ($request->form_type == 'a28') 
+			{
+				$tenant->Insurance->tempfile2 = $fname;
+			}
+			else
+			{
+				$tenant->Insurance->tempfile = $fname;
+				$tenant->Insurance->combined_file = true;
+			}
 			$tenant->Insurance->save();
-			 
+
 			$role = Role::where('name','insurance-admin')->first();
 			if ($role != null) 
 			{
@@ -129,7 +164,8 @@ class InsuranceController extends Controller
 				});
 			}
 
-			return view('insurance.thankyou');
+            Session::flash('success', 'Thank You, Your upload was successful');
+			return redirect('upload/insurance/'.$tenant->Insurance->upload_token.'?tenant_system_id='.$tenant->tenant_system_id);
 		}
 		return view('errors.upload');
 	}
