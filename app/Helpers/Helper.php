@@ -572,9 +572,8 @@ class Helper
 	public static function insuranceCheck(Tenant $tenant)
 	{
 		$insurance = $tenant->Insurance;
-		$insurance->compliant = true;
 		$state = array(
-			"expire" => "success",
+			"status" => "success",
 			"elink" => "",
 			"llink" => "",
 			"manual_notice" => "valid"
@@ -587,16 +586,18 @@ class Helper
 		} 
 		if ($tenant->Insurance->liability_filename != null) {
 			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
-		}    
-		
+		}   
+
+		if (!$insurance->compliant){
+			$state['manual_notice'] = "invalid";
+			$state["status"] = "warning";
+		}
 		if ($tenant->insurance->liability_end < $today) {
-			$state["expire"] = "danger";
-			$insurance->compliant = false;
+			$state["status"] = "danger";
+			$insurance->expired = true;
 		}  
 
-		if ($insurance->compliant){
-			$state['manual_notice'] = "invalid";
-		}
+		
 		if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) {
 			$state['manual_notice'] = "invalid";
 		}

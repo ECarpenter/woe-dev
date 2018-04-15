@@ -124,16 +124,16 @@
 								</tr>
 								@if ($state['llink'] != "")
 								<tr onclick="{{$state['llink']}}">
-									<td class="{{$state['expire']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Property Insurance' : 'Certificate of Liability Insurance'}}</td>
+									<td class="{{$state['status']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Property Insurance' : 'Certificate of Liability Insurance'}}</td>
 									
-									<td class="{{$state['expire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
 								@endif
 								@if ($state['elink'] != "")
 								<tr onclick="{{$state['elink']}}">
-									<td class="{{$state['expire']}}">Evidence of Commercial Property Insurance</td>
+									<td class="{{$state['status']}}">Evidence of Commercial Property Insurance</td>
 									
-									<td class="{{$state['expire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
 								@endif
 								
@@ -244,6 +244,18 @@
 		                            <input type="date" name="liability_end" id="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}">
 		                        </div>
 		                        <br>
+		                        <br>
+		                        <br>
+		                        <br>
+		                        <br>
+				    			<div>
+				    				<label>Additional Insured: Davis Partners LLC - {{$tenant->Property->insured_name}}</label>
+		                        </div>
+		                        <br>
+		                        <div>
+		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->compliant ? "checked" : ""}}>Insurance Certificate is Compliant <br>
+		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->auto_notice ? "checked" : ""}}>Send Automatic Expiration Notice <br>
+		                        </div>
 				    			
 							</div>
 						</div>
@@ -362,23 +374,23 @@
 								</tr>
 								@if ($state['llink'] != "")
 								<tr onclick="{{$state['llink']}}">
-									<td class="{{$state['expire']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Insurance' : 'Certificate of Liability Insurance'}}</td>
+									<td class="{{$state['status']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Insurance' : 'Certificate of Liability Insurance'}}</td>
 									
-									<td class="{{$state['expire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
 								@endif
 								@if ($state['elink'] != "")
 								<tr onclick="{{$state['elink']}}">
-									<td class="{{$state['expire']}}">Evidence of Commercial Property Insurance</td>
+									<td class="{{$state['status']}}">Evidence of Commercial Property Insurance</td>
 									
-									<td class="{{$state['expire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
 								@endif
 						</table>
 					</div>
 						<label>Notes</label>
 						<br>
-						<textarea name=note>{{$tenant->Insurance->note}}</textarea>
+						<textarea name=note rows="6" cols="50">{{$tenant->Insurance->note}}</textarea>
 						<br>
         				<input class="btn btn-primary" type="submit">
         		

@@ -64,8 +64,25 @@ class InsuranceController extends Controller
 
 		$insurance->liability_end = $request->liability_end;
 		$insurance->note = $request->note;
-		$insurance->compliant = true;
-
+		if ($insurance->liability_end > date("Y-m-d")) {
+			$insurance->expired = false;
+		} 
+		if ($request->compliant == 'on')
+		{
+			$insurance->compliant = true;
+		}
+		else
+		{
+			$insurance->compliant = false;
+		}
+		if ($request->auto_notice == 'on')
+		{
+			$insurance->auto_notice = true;
+		}
+		else
+		{
+			$insurance->auto_notice = false;
+		}
 		$insurance->save();
 
 		return back();

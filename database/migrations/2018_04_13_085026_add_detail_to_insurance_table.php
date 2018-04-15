@@ -18,7 +18,8 @@ class AddDetailToInsuranceTable extends Migration
             $table->boolean('combined_file')->default(false);;
             $table->string('new_filename2')->nullable();
             $table->string('tempfil2')->nullable();
-            $table->boolean('Auto_notice')->default(false);
+            $table->boolean('auto_notice')->default(false);
+            $table->boolean('expired')->default(true);
 
 
         });
