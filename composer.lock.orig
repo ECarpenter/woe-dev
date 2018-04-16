@@ -4,6 +4,23 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
+    "hash": "3e2b29c7597bf5ee07f3baea6f51a123",
+    "content-hash": "f166ca8c61e478919bb8fdc05fa7f87d",
+    "packages": [
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.19.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "b7daaf43bad94416cb8a2a9700ac5ff484a779e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b7daaf43bad94416cb8a2a9700ac5ff484a779e5",
+                "reference": "b7daaf43bad94416cb8a2a9700ac5ff484a779e5",
+=======
     "hash": "a6a0b369e94944e4c2338453c2908b3c",
     "content-hash": "f3a8c194e134be2a1f03e83114873bed",
     "packages": [
@@ -19,6 +36,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6642a13df7ddcccf19e66c744c5bfae5b61e9e85",
                 "reference": "6642a13df7ddcccf19e66c744c5bfae5b61e9e85",
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
                 "shasum": ""
             },
             "require": {
@@ -85,7 +103,11 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
+            "time": "2016-11-15 22:26:28"
+=======
             "time": "2018-04-10 22:11:31"
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -3729,6 +3751,18 @@
         },
         {
             "name": "phpunit/php-token-stream",
+<<<<<<< HEAD
+            "version": "1.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/php-token-stream.git",
+                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/3b402f65a4cc90abf6e1104e388b896ce209631b",
+                "reference": "3b402f65a4cc90abf6e1104e388b896ce209631b",
+=======
             "version": "1.4.12",
             "source": {
                 "type": "git",
@@ -3739,6 +3773,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/1ce90ba27c42e4e44e6d8458241466380b51fa16",
                 "reference": "1ce90ba27c42e4e44e6d8458241466380b51fa16",
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
                 "shasum": ""
             },
             "require": {
@@ -3774,6 +3809,22 @@
             "keywords": [
                 "tokenizer"
             ],
+<<<<<<< HEAD
+            "time": "2016-11-15 14:06:22"
+        },
+        {
+            "name": "phpunit/phpunit",
+            "version": "4.8.28",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "558a3a0d28b4cb7e4a593a4fbd2220e787076225"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/558a3a0d28b4cb7e4a593a4fbd2220e787076225",
+                "reference": "558a3a0d28b4cb7e4a593a4fbd2220e787076225",
+=======
             "time": "2017-12-04 08:55:13"
         },
         {
@@ -3788,6 +3839,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/46023de9a91eec7dfb06cc56cb4e260017298517",
                 "reference": "46023de9a91eec7dfb06cc56cb4e260017298517",
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
                 "shasum": ""
             },
             "require": {
@@ -3846,7 +3898,11 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD
+            "time": "2016-11-14 06:25:28"
+=======
             "time": "2017-06-21 08:07:12"
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4190,6 +4246,18 @@
         },
         {
             "name": "sebastian/recursion-context",
+<<<<<<< HEAD
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/recursion-context.git",
+                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/938df7a6478e72795e5f8266cff24d06e3136f2e",
+                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e",
+=======
             "version": "1.0.5",
             "source": {
                 "type": "git",
@@ -4200,6 +4268,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/b19cc3298482a335a95f3016d2f8a6950f0fbcd7",
                 "reference": "b19cc3298482a335a95f3016d2f8a6950f0fbcd7",
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
                 "shasum": ""
             },
             "require": {
@@ -4239,7 +4308,11 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
+<<<<<<< HEAD
+            "time": "2016-11-15 06:55:36"
+=======
             "time": "2016-10-03 07:41:43"
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
         },
         {
             "name": "sebastian/version",

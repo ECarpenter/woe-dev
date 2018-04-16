@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use Log;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -79,28 +80,39 @@ class HomeController extends Controller
     {
 
         $file = $request->importFile;
-        $file->move('tmp/','import.xls');
+        $extension = $request->importFile->getClientOriginalExtension();
+        $file->move('tmp/','import.' . $extension);
+        $filename = 'tmp/import.' . $extension;
 
         if ($request->importType == 'property')
         {
-            Helper::importProperty('tmp/import.xls');
+            Helper::importProperty($filename);
         }
         elseif ($request->importType == 'tenant')
         {
-            Helper::importTenant('tmp/import.xls');
+            Helper::importTenant($filename);
         }
         elseif ($request->importType == 'past')
         {
-            Helper::importPastTenant('tmp/import.xls');
+            Helper::importPastTenant($filename);
         }
         elseif ($request->importType == 'sold')
         {
-            Helper::importSoldProperties('tmp/import.xls');
+            Helper::importSoldProperties($filename);
         }
-        elseif ($request->importType == 'transfer');
+        elseif ($request->importType == 'transfer')
         {
-            Helper::importTransfer('tmp/import.xls');
+            Helper::importTransfer($filename);
         }
+        elseif ($request->importType == 'insreq')
+        {
+            Helper::importInsuranceRequirements($filename);
+        }
+        elseif ($request->importType == 'lease')
+        {
+            Helper::importNewLease($filename);
+        }
+
         
         return redirect('/home');
     }

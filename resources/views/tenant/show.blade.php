@@ -51,22 +51,13 @@
 		</div>
 		@permission('manage-insurance')
 			<div class="col-xs-4">
-				<ul class="nav nav-pills nav-stacked">
-					<li class="dropdown">
-					    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-					    Insurance Requirements<span class="caret"></span>
-					    </a>
-
-					    <ul class="dropdown-menu" role="menu">
-							<li><a href="#">Liability Single - {{ $tenant->req_liability_single_limit == 0 ? number_format($tenant->property->req_liability_single_limit).' (property)' : number_format($tenant->req_liability_single_limit) }}</a></li>
-							<li><a href="#">Liability Combined - {{ $tenant->req_liability_combined_limit == 0 ? number_format($tenant->property->req_liability_combined_limit).' (property)' : number_format($tenant->req_liability_combined_limit) }}</a></li>
-							<li><a href="#">Excess/Umbrella - {{ $tenant->req_umbrella_limit == 0 ? number_format($tenant->property->req_umbrella_limit).' (property)' : number_format($tenant->req_umbrella_limit) }}</a></li>
-							<li><a href="#">Auto - {{ $tenant->req_auto_limit == 0 ? number_format($tenant->property->req_auto_limit).' (property)' : number_format($tenant->req_auto_limit) }}</a></li>
-							<li><a href="#">Workers Comp - {{ $tenant->req_workerscomp_limit == 0 ? number_format($tenant->property->req_workerscomp_limit).' (property)' : number_format($tenant->req_workerscomp_limit) }}</a></li>
-							<li><a href="#" class="open-tenant-req-insurance-modal">Edit Requirements</a></li>
-						</ul>
-					</li>
-				</ul>		
+				<h4> Ins. Notice Sent - <small>
+					@if ($tenant->insurance->last_notice_sent != null)		
+						{{date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone(Auth::user()->timezone)))}}
+					@else
+						None
+					@endif
+				</small></h4>
 			</div>
 		@endpermission
 	</div>
@@ -87,17 +78,7 @@
 				</li>
 			</ul>
 		</div>
-		@permission('manage-insurance')
-			<div class="col-xs-4 col-xs-offset-2">
-				<h4> Ins. Notice Sent - <small>
-					@if ($tenant->insurance->last_notice_sent != null)		
-						{{date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone(Auth::user()->timezone)))}}
-					@else
-						None
-					@endif
-				</small></h4>
-			</div>
-		@endpermission
+		
 	</div>
 
 	<div class="row">
@@ -138,41 +119,24 @@
 					<div class="col-xs-10 col-xs-offset-1 col-md-5 col-md-offset-3">	
 						<table class="table table-hover">
 								<tr class="info">
-									<th>Insurance Type</th>
-									<th>Start Date</th>
-									<th>End Date</th>
-									<th>Limit</th>
+									<th>Insurance Form</th>
+									<th>Expiration date</th>
 								</tr>
-								
+								@if ($state['llink'] != "")
 								<tr onclick="{{$state['llink']}}">
-									<td class="{{$state['lfile']}}">Liability</td>
-									<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_start))}}</td>
-									<td class="{{$state['lexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
-									<td class="{{$state['llimit']}}">{{number_format($tenant->Insurance->liability_single_limit)}} / {{number_format($tenant->Insurance->liability_combined_limit)}}</td>
-								</tr>
-								<tr onclick="{{$state['ulink']}}">
-									<td class="{{$state['ufile']}}">Excess/Umbrella</td>
-									<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_start))}}</td>
-									<td class="{{$state['uexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->umbrella_end))}}</td>
-									<td class="{{$state['ulimit']}}">{{number_format($tenant->Insurance->umbrella_limit)}}</td>
-								</tr>
-								<tr onclick="{{$state['alink']}}">
-									<td class="{{$state['afile']}}">Auto</td>
-									<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_start))}}</td>
-									<td class="{{$state['aexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->auto_end))}}</td>
-									<td class="{{$state['alimit']}}">{{number_format($tenant->Insurance->auto_limit)}}</td>
-								</tr>
-								@if ($tenant->insurance->workerscomp_applicable)
-								<tr onclick="{{$state['wlink']}}">
-									<td class="{{$state['wfile']}}">Workers Comp</td>
-									<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_start))}}</td>
-									<td class="{{$state['wexpire']}}">{{date('F d, Y', strtotime($tenant->Insurance->workerscomp_end))}}</td>
-									<td class="{{$state['wlimit']}}">{{number_format($tenant->Insurance->workerscomp_limit)}}</td>
+									<td class="{{$state['status']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Property Insurance' : 'Certificate of Liability Insurance'}}</td>
+									
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
 								@endif
+								@if ($state['elink'] != "")
 								<tr onclick="{{$state['elink']}}">
-									<td class="{{$state['efile']}} text-center" colspan="4" >Endorsement</td>
+									<td class="{{$state['status']}}">Evidence of Commercial Property Insurance</td>
+									
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								</tr>
+								@endif
+								
 						</table>
 					</div>
 				</div>
@@ -228,12 +192,40 @@
 					{{ method_field('PATCH') }}
 
 					<div class="container">
-						<div class="col-lg-8 col-centered">
+						<div class="col-lg-12 col-centered">
 
-							@if ($tenant->Insurance->tempfile == null) 
+							@if ($tenant->Insurance->tempfile == null && $tenant->Insurance->tempfile2 == null) 
 								<input type="file" accept=".pdf" name="insurance_cert">
+								<h4>Type of Upload</h4>
+				    			<div class="col-xs-3">
+					    			<div class="radio">
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="a25" checked>
+					    					ACORD 25 - Certificate of Liability
+					    				</label>
+					    				<br>
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="a28">
+					    					ACORD 28 - Evidence of Commercial Property Insurance
+					    				</label>
+					    				<br>
+					    				<label>
+					    					<input type="radio" name="typeSelect" value="both">
+					    					Both
+					    				</label>
+					    			</div>
+					    		</div>
 							@else
-								<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Insurance Certificate </button>
+								@if ($tenant->Insurance->tempfile !=null)
+									@if($tenant->Insurance->combined_file)
+										<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Certificate Evidence of Insurance</button>
+									@else
+										<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfileurl }}" > View Insurance Certificate </button>
+									@endif
+								@endif
+								@if ($tenant->Insurance->tempfile2 != null)
+									<button  class="btn btn-primary btn-xs file-btn" id="vendor-invoice-btn" href="{{ $tempfile2url }}" > View Evidence of Property Insurance </button>
+								@endif
 								<br>
 								<h4>Accept tenant's upload</h4>
 								<div class="radio">
@@ -255,80 +247,167 @@
 			    			@endif
 			    			<br>
 			    			<div id="insurancedata">
-				    			<h4>Type of Upload</h4>
-				    			<div class="radio">
-				    				<label>
-				    					<input type="radio" name="typeSelect" value="certificate" checked>
-				    					Certificate
-				    				</label>
-				    				<label>
-				    					<input type="radio" name="typeSelect" value="endorsement">
-				    					Endorsement
-				    				</label>
-				    			</div>
+				    			
 				    			<br>
-				    			<h4>Type of Certificate <small>- Check all that apply</small></h4>
-				    			<div class="checkbox" id="rejectnote" >
-				    				<label>
-				    					<input type="checkbox" name="liability" value="Y">
-				    					Liability
-				    				</label>
-				    				<label>
-				    					<input type="checkbox" name="umbrella" value="Y">
-				    					Excess/Umbrella
-				    				</label>
-				    				<label>
-				    					<input type="checkbox" name="auto" value="Y">
-				    					Auto
-				    				</label>
-				    				<label>
-				    					<input type="checkbox" name="workerscomp" value="Y">
-				    					Workers Comp
-				    				</label>
-				    			</div>
+				    			<div class="col-xs-3 {{($tenant->Insurance->tempfile == null) && ($tenant->Insurance->tempfile2 == null) ? "col-xs-offset-2" : ""}}">
+				    				<label>Expiration Date</label>
+		                            <input type="date" name="liability_end" id="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}">
+		                        </div>
+		                        <br>
+		                        <br>
+		                        <br>
+		                        <br>
+		                        <br>
+				    			<div>
+				    				<label>Additional Insured: Davis Partners LLC - {{$tenant->Property->insured_name}}</label>
+		                        </div>
+		                        <br>
+		                        <div>
+		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->compliant ? "checked" : ""}}>Insurance Certificate is Compliant <br>
+		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->auto_notice ? "checked" : ""}}>Send Automatic Expiration Notice <br>
+		                        </div>
+		                        <label>Notes</label>
+								<br>
+								<textarea name=note rows="6" cols="50">{{$tenant->Insurance->note}}</textarea>
+				    			
 							</div>
 						</div>
 					</div>
+
+					<div class="table-responsive" id="limitstable">
+						<table class="table table-hover">
+			    			<tr class="info"><th>Insurance Requirements</th></tr>
+			    			
+			    			@if ($tenant->property->req_cgl != null)
+			    				<tr><td>
+			    				CGL - {{$tenant->property->req_cgl}} {{$tenant->property->req_cgl_deductible != null ? '- Deductible - '.$tenant->property->req_cgl_deductible : ''}}
+			    				</td></tr>
+			    			@endif
+			    			@if ($tenant->property->req_excess != null)
+			    				<tr><td>	
+			    				Excess - {{$tenant->property->req_excess}} {{$tenant->property->req_excess_coverage != null ? '- Coverage - '.$tenant->property->req_excess_coverage : ''}}
+			    				</td></tr>
+			    			@endif
+			    			@if ($tenant->property->req_umbrella != null)
+				    			<tr><td>
+				    			Umbrella - {{$tenant->property->req_umbrella}} {{$tenant->property->req_umbrella_coverage != null ? '- Coverage - '.$tenant->property->req_umbrella_coverage : ''}}
+				    			</td></tr>
+			    			@endif
+			    			
+			    			@if ($tenant->property->req_cause_of_loss != null)
+			    				<tr><td>
+			    				Cause of Loss - {{$tenant->property->req_cause_of_loss}} {{$tenant->property->req_cause_of_loss_detail != null ? '- Detail - '.$tenant->property->req_cause_of_loss_detail : ''}}
+				    			</td></tr>
+			    			@endif
+			    			@if ($tenant->property->req_pollution != null)
+				    			<tr><td>
+				    			Pollution Liability - {{$tenant->property->req_pollution}} 
+				    			</td></tr>
+			    			@endif
+			    			@if ($tenant->property->req_employers_liability != null)
+			    				<tr><td>
+			    				Employers Liability - {{$tenant->property->req_employers_liability}} 
+			    				</td></tr>
+			    			@endif
+			    			@if ($tenant->property->req_auto_liability != null)
+			    				<tr><td>
+			    				Auto Liability - {{$tenant->property->req_auto_liability}} {{$tenant->property->req_auto_liability_coverage != null ? '- Coverage - '.$tenant->property->req_auto_liability_coverage : ''}}
+				    			</td></tr>
+			    			@endif
+			    		</table>
+			    	</div>
+        					<div class="table-responsive" id="coveragestable">
+				    			<table class="table table-hover">
+									<tr class="info">
+				    					<th>Rquired Coverages</th>
+				    				</tr>
+
+					    			@if ($tenant->property->req_pollution_amend)
+						    			<tr><td>
+						    			Amendment of the Pollution Exclusion
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_additional_ins_endorsement)
+						    			<tr><td>
+						    			Additional Insured-Managers and Landlords of Premises Endorsement
+						    			</td></tr>
+					    			@endif
+									@if ($tenant->property->req_tenants_pp)
+						    			<tr><td>
+						    			Tenant's Personal Property
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_tenant_improvements)
+						    			<tr><td>
+						    			Tenant Improvements
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_tenant_fixtures)
+						    			<tr><td>
+						    			Tenant's trade fixtures and other property
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_data_endorsement)
+						    			<tr><td>
+						    			Endorsements to insure against lossess to valuable papers, records and computer equipment, recovering lost data
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_earthquake)
+						    			<tr><td>
+						    			Earthquake
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_flood)
+						    			<tr><td>
+						    			Flood
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_workers_comp)
+						    			<tr><td>
+						    			Workers Comp
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_business_interruption)
+						    			<tr><td>
+						    			Business Interruption
+						    			</td></tr>
+					    			@endif
+					    			@if ($tenant->property->req_waiver_of_subrogation)
+						    			<tr><td>
+						    			Waiver of Subrogation
+						    			</td></tr>
+					    			@endif
+					    		</table>
+				    	</div>
         			<div class="table-responsive" id="insurancetable">
 						<table class="table table-hover">
 							<tr class="info">
-								<th>Insurance Type</th>
-								<th>Start Date</th>
-								<th>End Date</th>
-								<th>Limit</th>
-							</tr>
-							
-							<tr>
-								<td class="{{$state['lfile']}}">Liability</td>
-								<td class="{{$state['lexpire']}}"><input type="date" name="liability_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_start))}}"></td>
-								<td class="{{$state['lexpire']}}"><input type="date" name="liability_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->liability_end))}}"></td>
-								<td class="{{$state['llimit']}}"><input type="number" name="liability_single_limit" step="50000" value="{{$tenant->Insurance->liability_single_limit}}"> / <input type="number" name="liability_combined_limit" step="50000" value="{{$tenant->Insurance->liability_combined_limit}}"></td>
-							</tr>
-							<tr>
-								<td class="{{$state['ufile']}}">Excess/Umbrella</td>
-								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_start))}}"></td>
-								<td class="{{$state['uexpire']}}"><input type="date" name="umbrella_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->umbrella_end))}}"></td>
-								<td class="{{$state['ulimit']}}"><input type="number" name="umbrella_limit" step="50000" value="{{$tenant->Insurance->umbrella_limit}}"></td>
-							</tr>
-							<tr>
-								<td class="{{$state['afile']}}">Auto</td>
-								<td class="{{$state['aexpire']}}"><input type="date" name="auto_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_start))}}"></td>
-								<td class="{{$state['aexpire']}}"><input type="date" name="auto_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->auto_end))}}"></td>
-								<td class="{{$state['alimit']}}"><input type="number" name="auto_limit" step="50000" value="{{$tenant->Insurance->auto_limit}}"></td>
-							</tr>
-							<tr>
-								<td class="{{$state['wfile']}}">Workers Comp</td>
-								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_start" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_start))}}"></td>
-								<td class="{{$state['wexpire']}}"><input type="date" name="workerscomp_end" value="{{date('Y-m-d', strtotime($tenant->Insurance->workerscomp_end))}}"></td>
-								<td class="{{$state['wlimit']}}"><input type="number" name="workerscomp_limit" step="50000" value="{{$tenant->Insurance->workerscomp_limit}}"> - <input type="checkbox" id="workerscomp_applicable" name="workerscomp_applicable" value="N">
-				    					Not Applicable </td>
-							</tr>
-
+									<th>Insurance Form</th>
+									<th>Expiration date</th>
+								</tr>
+								@if ($state['llink'] != "")
+								<tr onclick="{{$state['llink']}}">
+									<td class="{{$state['status']}}">{{$tenant->Insurance->combined_file ?'Certificate and Evidence of Insurance' : 'Certificate of Liability Insurance'}}</td>
+									
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+								</tr>
+								@endif
+								@if ($state['elink'] != "")
+								<tr onclick="{{$state['elink']}}">
+									<td class="{{$state['status']}}">Evidence of Commercial Property Insurance</td>
+									
+									<td class="{{$state['status']}}">{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+								</tr>
+								@endif
 						</table>
 					</div>
-        			<input class="btn btn-primary" type="submit">
+						
+						<br>
+        				<input class="btn btn-primary" type="submit">
+        		
         				
     			</form>
+
                	</div>
             </div>
         </div>
@@ -350,50 +429,6 @@
 						<input type="hidden" name="type" value="tenant">
 						<input type="hidden" name="id" value="{{$tenant->id}}">
 
-						<div class="row">
-		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Liability Single</label>
-		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_liability_single_limit" id="req_liability_single_limit" step="50000" value="{{ $tenant->req_liability_single_limit }}">
-		                        </div>
-		                    </div>   
-	                    </div>
-
-	                    <div class="row">
-		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Liability Combined</label>
-		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_liability_combined_limit" id="req_liability_combined_limit" step="50000" value="{{ $tenant->req_liability_combined_limit }}">
-		                        </div>
-		                    </div>   
-	                    </div>
-
-						<div class="row">
-		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Excess/Umbrella</label>
-		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_umbrella_limit" id="req_umbrella_limit" step="50000" value="{{ $tenant->req_umbrella_limit }}">
-		                        </div>
-		                    </div>   
-	                    </div>
-
-	                    <div class="row">
-		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Auto</label>
-		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_auto_limit" id="req_auto_limit" step="50000" value="{{ $tenant->req_auto_limit }}">
-		                        </div>
-		                    </div>   
-	                    </div>
-
-	                    <div class="row">
-		                    <div class="form-group">
-		                        <label class="col-xs-4 control-label">Workers Comp</label>
-		                        <div class="col-xs-6">
-		                            <input type="number" class="form-control" name="req_workerscomp_limit" id="req_workerscomp_limit" step="50000" value="{{ $tenant->req_workerscomp_limit }}">
-		                        </div>
-		                    </div>   
-	                    </div>
 	                    <input class="btn btn-primary" type="submit">
 
 					</form>

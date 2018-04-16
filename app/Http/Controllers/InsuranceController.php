@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem;
+use Illuminate\Support\Facades\Session;
 
 use Log;
 use Storage;
@@ -28,22 +29,43 @@ class InsuranceController extends Controller
 	public function update(Insurance $insurance, Request $request)
 	{
 		$this->validate($request, [ 
-			'insurance_cert' => 'mimes:pdf'
+			'insurance_cert' => 'mimes:pdf',
+			'liability_end' => 'required'
 			]);        
 
-		if ($insurance->tempfile != null) {
+		if ($insurance->tempfile != null || $insurance->tempfile2 != null) {
 			if ($request->tenantUpload == 'accept') {
-				
-				(InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request)); 
+
+				if ($insurance->tempfile != null)
+				{
+					if ($insurance->combined_file)
+					{
+					$request->typeSelect = 'both';
+					}
+					else
+					{
+					$request->typeSelect = 'a25';
+					}
+					InsuranceController::processInsuranceFile($insurance->tempfile, $insurance, $request); 
+				}
+				if ($insurance->tempfile2 != null)
+				{
+					$request->typeSelect = 'a28';
+					InsuranceController::processInsuranceFile($insurance->tempfile2, $insurance, $request); 
+				}
+
+
 			}
 			//Reject tenant original upload need add a message back to the tenant.
 			else {
 				$insurance->rejection_msg = $request->rejection_msg;
+				$insurance->combined = false;
 				$insurance->save();
 				Helper::sendInsuranceNotice($insurance->Tenant, 'reject');
 				Storage::delete($insurance->filepath.$insurance->tempfile);
 			}
 			$insurance->tempfile = null;
+			$insurance->tempfile2 = null;
 			$insurance->rejection_msg = null;
 		}
 		else if ($request->insurance_cert != null) {
@@ -60,20 +82,28 @@ class InsuranceController extends Controller
 		else {
 			$insurance->workerscomp_applicable = true;
 		}
-		
-		$insurance->liability_start = $request->liability_start;
+
 		$insurance->liability_end = $request->liability_end;
-		$insurance->liability_single_limit = $request->liability_single_limit;
-		$insurance->liability_combined_limit = $request->liability_combined_limit;
-		$insurance->umbrella_start = $request->umbrella_start;
-		$insurance->umbrella_end = $request->umbrella_end;
-		$insurance->umbrella_limit = $request->umbrella_limit;
-		$insurance->auto_start = $request->auto_start;
-		$insurance->auto_end = $request->auto_end;
-		$insurance->auto_limit = $request->auto_limit;
-		$insurance->workerscomp_start = $request->workerscomp_start;
-		$insurance->workerscomp_end = $request->workerscomp_end;
-		$insurance->workerscomp_limit = $request->workerscomp_limit;
+		$insurance->note = $request->note;
+		if ($insurance->liability_end > date("Y-m-d")) {
+			$insurance->expired = false;
+		} 
+		if ($request->compliant == 'on')
+		{
+			$insurance->compliant = true;
+		}
+		else
+		{
+			$insurance->compliant = false;
+		}
+		if ($request->auto_notice == 'on')
+		{
+			$insurance->auto_notice = true;
+		}
+		else
+		{
+			$insurance->auto_notice = false;
+		}
 		$insurance->save();
 
 		return back();
@@ -88,7 +118,8 @@ class InsuranceController extends Controller
 	{
 		$this->validate($request, [ 
 			'insurance_cert' => 'required|mimes:pdf', 
-			'tenant_system_id' => 'required'
+			'tenant_system_id' => 'required',
+			'form_type' => 'required'
 			]);
 
 		$tenant = Tenant::where('tenant_system_id', $request->tenant_system_id)->first();
@@ -97,9 +128,22 @@ class InsuranceController extends Controller
 			$fname = 'ins-'.$tenant->tenant_system_id.'-'.date('ymd-His', strtotime(\Carbon\Carbon::now())).'.pdf';
 			$file = $request->file('insurance_cert');
 			Storage::put($tenant->insurance->filepath.$fname, file_get_contents($file));
-			$tenant->Insurance->tempfile = $fname;
+			if ($request->form_type == 'a25')
+			{
+				$tenant->Insurance->tempfile = $fname;
+				
+			}
+			elseif ($request->form_type == 'a28') 
+			{
+				$tenant->Insurance->tempfile2 = $fname;
+			}
+			else
+			{
+				$tenant->Insurance->tempfile = $fname;
+				$tenant->Insurance->combined_file = true;
+			}
 			$tenant->Insurance->save();
-			 
+
 			$role = Role::where('name','insurance-admin')->first();
 			if ($role != null) 
 			{
@@ -120,7 +164,8 @@ class InsuranceController extends Controller
 				});
 			}
 
-			return view('insurance.thankyou');
+            Session::flash('success', 'Thank You, Your upload was successful');
+			return redirect('upload/insurance/'.$tenant->Insurance->upload_token.'?tenant_system_id='.$tenant->tenant_system_id);
 		}
 		return view('errors.upload');
 	}
@@ -152,25 +197,17 @@ class InsuranceController extends Controller
 		// with the various possible insurance types.
 		// first determines file type
 		
-		if ($request->typeSelect == 'certificate') {
-			if ($request->liability == 'Y') {
-				$insurance->liability_filename = $fname;
-				$used = true;
-			}
-			if ($request->auto == 'Y') {
-				$insurance->auto_filename = $fname;
-				$used = true;
-			}
-			if ($request->workerscomp == 'Y') {
-				$insurance->workerscomp_filename = $fname;
-				$used = true;
-			}
-			if ($request->umbrella == 'Y') {
-				$insurance->umbrella_filename = $fname;
-				$used = true;
-			}
+		if ($request->typeSelect == 'a25') {
+			$insurance->liability_filename = $fname;
+			$insurance->combined_file = false;
+			$used = true;
 		}
-		elseif ($request->typeSelect == 'endorsement'){
+		elseif ($request->typeSelect == 'both'){
+			$insurance->liability_filename = $fname;
+			$insurance->combined_file = true;
+			$used = true;
+		}
+		elseif ($request->typeSelect == 'a28') {
 			$insurance->endorsement_filename = $fname;
 			$used = true;
 		}

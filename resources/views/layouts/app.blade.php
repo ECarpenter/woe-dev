@@ -331,14 +331,22 @@
                                         Sold Properties
                                     </label>
                                     <label>
-                                        <input type="radio" name="inportType" value="transfer">
+                                        <input type="radio" name="importType" value="transfer">
                                         Transfer Tenants
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="insreq">
+                                        Insurance Requirements
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="lease">
+                                        Lease Summary
                                     </label>
                                 </div>
                             </div>
                             <br>
                             <div class="col-xs-3" >
-                                <input type="file" accept=".xls" name="importFile">
+                                <input type="file" accept=".xls,.xlsx" name="importFile">
                             </div>
                             <br>
                             <br>

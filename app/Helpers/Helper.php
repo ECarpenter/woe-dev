@@ -8,6 +8,9 @@ use Excel;
 use Mail;
 use Storage;
 use DB;
+use PHPExcel;
+use Config;
+use Response;
 
 use Illuminate\Support\Str;
 use App\Group;
@@ -21,6 +24,7 @@ use App\WorkOrder;
 use App\User;
 use App\Vendor;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Session;
 
 class Helper
 {
@@ -319,72 +323,152 @@ class Helper
 		});
 	}
 
-	//Check for insurance compliance
-	//each key gets either success or danger depending on situation
-	public static function insuranceCheck(Tenant $tenant)
+	public static function importNewLease($fname)
 	{
-		$insurance = $tenant->Insurance;
-		$insurance->compliant = true;
-		$state = array(
-			"lfile" => "success",
-			"ufile" => "success",
-			"afile" => "success",
-			"wfile" => "success",
-			"efile" => "success",
-			"lexpire" => "success",
-			"uexpire" => "success",
-			"aexpire" => "success",
-			"wexpire" => "success",
-			"llimit" => "success",
-			"ulimit" => "success",
-			"alimit" => "success",
-			"wlimit" => "success",
-			"elink" => "",
-			"llink" => "",
-			"ulink" => "",
-			"alink" => "",
-			"wlink" => "",
-			"manual_notice" => "valid"
-			);
+		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
+			if ($sheet->sheetName == 'Lease Summary')
+			{
+				if ($sheet->valueByindex('lease_summary.Version') == config('excel.import.sheets.lease_summary.Desired-Version'))
+				{
+					$property_id = $sheet->valueByindex('lease_summary.Property-ID');
+					$property = Property::where('property_system_id', '=', $property_id)->first();
+					if ($property != null)
+					{
+						$tenant_id = $sheet->valueByindex('lease_summary.Tenant-ID');
+						if ($tenant_id != null)
+						{
+							
+							if ($sheet->valueByindex('lease_summary.Suite') == null)
+							{
+								Session::flash('warning', $tenant_id . ' - No suite entered');
+							}
+							elseif ($sheet->valueByIndex('lease_summary.Tenant-Name') == null)
+							{
+								Session::flash('warning', $tenant_id . ' - No name entered');
+							}
+							else
+							{
+								$newTenant = false;
+								$tenant = Tenant::where('tenant_system_id', '=', $tenant_id)->first();
+								if ($tenant == null)
+								{
+									$tenant = New Tenant;
+									$tenant->tenant_system_id = $tenant_id;
+									$newTenant = true;
+								}
+								
+								$tenant->company_name = $sheet->valueByindex('lease_summary.Tenant-Name');
+								$tenant->unit = $sheet->valueByindex('lease_summary.Suite');
+								$tenant->insurance_contact_email = $sheet->valueByindex('lease_summary.E-Mail');
+								$tenant->property_id = $property->id;
+								$tenant->save();
+								if ($newTenant)
+								{
+									$ins = new Insurance;
+									$ins->tenant_id = $tenant->id;
+									$ins->save();
+								}
 
-		$today = date("Y-m-d");
+								$success = Helper::readInsuranceRequirements($tenant, $sheet, 'lease_summary');
+								if ($success)
+								{
+									Session::flash('success', ' New Tenant Created and Saved');
+								}
+							}
+						}
+						else
+						{
+							Session::flash('warning', 'No tenant id entered');
+						}
+		 			}
+					else
+					{
+						Session::flash('warning', $property_id . ' - Not found in system');	 
+					}
+				}
+				else
+				{
+					Session::flash('warning', 'Wrong version of lease summary please use version - ' . config('excel.import.sheets.lease_summary.Desired-Version'));
+				}
+			}
+		});
+	}
+
+	public static function importInsuranceRequirements($fname)
+	{
+
+		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
+			$property_id = $sheet->valueByindex('general-ins-req.Property-ID');
+			$property = Property::where('property_system_id', '=', $property_id)->first();
+			if ($property != null)
+			{
+				$property->insured_name = $sheet->valueByindex('general-ins-req.Additional-Insured');
+				$property->save();
+				$lease = $sheet->valueByindex('general-ins-req.Lease-to-Use');
+				if ($lease != null)
+				{
+					$success = Helper::readInsuranceRequirements($property, $sheet, 'lease_' . $lease);
+					if ($success)
+					{
+						log::info($property_id . ' - Success');
+					}
+					else
+					{
+						log::info($property_id . '- Failure on lease data');
+					}
+				}
+				else
+				{
+					log::info($property_id . ' - No Lease Selected');
+				}
+				
+			}
+			else
+			{
+				log::info($property_id . ' - Not found in system');
+			}
+		});
+	}
+
+	protected static function readInsuranceRequirements( $object, $sheet, $index)
+	{
+
 		
-		if ($tenant->Insurance->endorsement_filename == null) {
-			$state["efile"] = "danger";
+		
+		$object->req_cgl = $sheet->valueByindex($index . '.CGL');
+		if ($object->req_cgl == 'Other')
+		{
+			$object->req_cgl = $sheet->valueByindex($index . '.CGL-Other');
 		}
-		else {
-			
-			$state["elink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->endorsement_filename)."')";
-		} 
-		if ($tenant->Insurance->liability_filename == null) {
-			$state["lfile"] = "danger";
-			$insurance->compliant = false;
+        $object->req_cgl_deductible = $sheet->valueByindex($index . '.CGL-Deductible');
+        if ($object->req_cgl_deductible == 'Other')
+		{
+			$object->req_cgl_deductible = $sheet->valueByindex($index . '.CGL-Deductible-Other');
 		}
-		else {
-			
-			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
-		}    
-		if ($tenant->Insurance->umbrella_filename == null) {
-			$state["ufile"] = "danger";
-			//$insurance->compliant = false;
+        $object->req_excess = $sheet->valueByindex($index . '.Excess');
+        $object->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage');
+        if ($object->req_excess_coverage == 'Other')
+		{
+			$object->req_excess_coverage = $sheet->valueByindex($index . '.Excess-Coverage-Other');
 		}
-		else {
-			$state["ulink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->umbrella_filename)."')";
-		} 
-		if ($tenant->insurance->auto_filename == null) {
-			$state["afile"] = "danger";
-			//$insurance->compliant = false;
+        $object->req_umbrella = $sheet->valueByindex($index . '.Umbrella');
+        $object->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage');
+        if ($object->req_umbrella_coverage == 'Other')
+		{
+			$object->req_umbrella_coverage = $sheet->valueByindex($index . '.Umbrella-Coverage-Other');
 		}
-		else {
-			$state["alink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->auto_filename)."')";
-		} 
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wfile"] = "";
+        $object->req_cause_of_loss = $sheet->valueByindex($index . '.Cause-of-Loss');
+        $object->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability');
+        if ($object->req_pollution == 'Other')
+		{
+			$object->req_pollution = $sheet->valueByindex($index . '.Pollution-Liability-Other');
 		}
-		elseif ($tenant->insurance->workerscomp_filename == null) {
-			$state["wfile"] = "danger";
-			//$insurance->compliant = false;
+        $object->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability');
+        if ($object->req_employers_liability == 'Other')
+		{
+			$object->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability-Other');
 		}
+<<<<<<< HEAD
 		else {
 			$state["wlink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->workerscomp_filename)."')";
 		}    
@@ -395,66 +479,138 @@ class Helper
 		if ($tenant->insurance->umbrella_end < $today) {
 			$state["uexpire"] = "danger";
 			//$insurance->compliant = false;
+=======
+        $object->req_auto_liability = $sheet->valueByindex($index . '.Auto-Liability');
+        $object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage');
+        if ($object->req_auto_liability_coverage == 'Other')
+		{
+			$object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage-Other');
+>>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
 		}
-		if ($tenant->insurance->auto_end < $today) {
-			$state["aexpire"] = "danger";
-			//$insurance->compliant = false;
+		if ($sheet->valueByindex($index . '.Pollution-Exclusion') != 'Yes')
+		{
+        	$object->req_pollution_amend = false;
 		}
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wexpire"] = "";
+		else
+		{
+			$object->req_pollution_amend = true;
 		}
-		elseif ($tenant->insurance->workerscomp_end < $today) {
-			$state["wexpire"] = "danger";
-			//$insurance->compliant = false;
+		if ($sheet->valueByindex($index . '.Additional-Insured-Managers') != 'Yes')
+		{
+        	$object->req_additional_ins_endorsement = false;
 		}
-		if ($tenant->req_liability_single_limit > 0 &&  $tenant->req_liability_combined_limit > 0  ) {
-			if ( $tenant->req_liability_single_limit > $tenant->insurance->liability_single_limit || $tenant->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
-				$state["llimit"] = "danger";
-				//$insurance->compliant = false;
-			}
+		else
+		{
+			$object->req_additional_ins_endorsement = true;
 		}
-		elseif ($tenant->Property->req_liability_single_limit > $tenant->insurance->liability_single_limit  || $tenant->Property->req_liability_combined_limit > $tenant->insurance->liability_combined_limit) {
-			$state["llimit"] = "danger";
-			//$insurance->compliant = false;
+		if ($sheet->valueByindex($index . '.TPP') != 'Yes')
+		{
+       		$object->req_tenants_pp = false;
 		}
-		if ($tenant->req_umbrella_limit > 0){
-			if ($tenant->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
-				$state["ulimit"] = "danger";
-				//$insurance->compliant = false;
-			}
+		else
+		{
+			$object->req_tenants_pp = true;
 		}
-		elseif ($tenant->Property->req_umbrella_limit > $tenant->insurance->umbrella_limit) {
-			$state["ulimit"] = "danger";
-			//$insurance->compliant = false;
+		if ($sheet->valueByindex($index . '.TI') != 'Yes')
+		{
+        	$object->req_tenant_improvements = false;
 		}
+		else
+		{
+			$object->req_tenant_improvements = true;
+		}
+		if ($sheet->valueByindex($index . '.Tenants-fixtures') != 'Yes')
+		{
+        	$object->req_tenant_fixtures = false;
+		}
+		else
+		{
+			$object->req_tenant_fixtures = true;
+		}
+		if ($sheet->valueByindex($index . '.Earthquake') != 'Yes')
+		{
+        	$object->req_earthquake = false;
+		}
+		else
+		{
+			$object->req_earthquake = true;
+		}
+		if ($sheet->valueByindex($index . '.Flood') != 'Yes')
+		{
+        	$object->req_flood = false;
+		}
+		else
+		{
+			$object->req_flood = true;
+		}
+		if ($sheet->valueByindex($index . '.Workers-Comp') != 'Yes')
+		{
+        	$object->req_workers_comp = false;
+		}
+		else
+		{
+			$object->req_workers_comp = true;
+		}
+		if ($sheet->valueByindex($index . '.Business-Interruption') != 'Yes')
+		{
+    	    $object->req_business_interruption = false;
+		}
+		else
+		{
+			$object->req_business_interruption = true;
+		}
+		if ($sheet->valueByindex($index . '.Waiver-of-Subrogation') != 'Yes')
+		{
+	        $object->req_waiver_of_subrogation = false;
+		}
+		else
+		{
+			$object->req_waiver_of_subrogation = true;
+		}
+		if ($sheet->valueByindex($index . '.Data-Endorsement') != 'Yes')
+		{
+	        $object->req_data_endorsement = false;
+		}
+		else
+		{
+			$object->req_data_endorsement = true;
+		}
+        $object->save();
 
-		if ($tenant->req_auto_limit > 0){
-			if ($tenant->req_auto_limit > $tenant->insurance->auto_limit) {
-				$state["alimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_auto_limit > $tenant->insurance->auto_limit) {
-			$state["alimit"] = "danger";
-			//$insurance->compliant = false;
-		}
-		if (!$tenant->insurance->workerscomp_applicable) {
-			$state["wlimit"] = "disabled";
-		}
-		elseif ($tenant->req_workerscomp_limit > 0){
-			if ($tenant->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
-				$state["wlimit"] = "danger";
-				//$insurance->compliant = false;
-			}
-		}
-		elseif ($tenant->Property->req_workerscomp_limit > $tenant->insurance->workerscomp_limit) {
-			$state["wlimit"] = "danger";
-			//$insurance->compliant = false;
-		}
+		return true;	
+	}
 
-		if ($insurance->compliant){
+	//Check for insurance compliance
+	//each key gets either success or danger depending on situation
+	public static function insuranceCheck(Tenant $tenant)
+	{
+		$insurance = $tenant->Insurance;
+		$state = array(
+			"status" => "success",
+			"elink" => "",
+			"llink" => "",
+			"manual_notice" => "valid"
+			);
+
+		$today = date("Y-m-d");
+		
+		if ($tenant->Insurance->endorsement_filename != null) {			
+			$state["elink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->endorsement_filename)."')";
+		} 
+		if ($tenant->Insurance->liability_filename != null) {
+			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
+		}   
+
+		if (!$insurance->compliant){
 			$state['manual_notice'] = "invalid";
+			$state["status"] = "warning";
 		}
+		if ($tenant->insurance->liability_end < $today) {
+			$state["status"] = "danger";
+			$insurance->expired = true;
+		}  
+
+		
 		if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) {
 			$state['manual_notice'] = "invalid";
 		}

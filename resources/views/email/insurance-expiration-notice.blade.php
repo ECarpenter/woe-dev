@@ -124,11 +124,7 @@ Hi,<br><br>
 {{$tenant->insurance->rejection_msg}}
 @else
 
-<<<<<<< HEAD
-Our records indicate that we do not have Certificate of Insurance for the above referenced premises on file.  Please note that we must receive a current Certificate of Insurance within the next five (5) business days evidencing proof of the required coverage and amount outlined in your Lease.  In order to expedite the process, we suggest submitting the insurance section of your lease to your insurance agent.  Said Certificate must include {{($tenant->property->insured_name != null) ? $tenant->property->insured_name.' and ' : ''}}Davis Partners, LLC as additional insured.  Please reference the premise address and suite number on the certificate.    
-=======
-Our records indicate that we do not have a current Certificate of Insurance for the above referenced premises on file.  Please note that we must receive a current Certificate of Insurance within the next five (5) business days evidencing proof of the required coverage and amount outlined in your Lease.  In order to expedite the process, we suggest submitting the insurance section of your lease to your insurance agent, and ask for both an ACORD 25 and ACORD 28 form from them.  Said Certificate must include {{($tenant->property->insured_name != null) ? $tenant->property->insured_name.' and ' : ''}}Davis Partners, LLC as additional insured.  Please reference the premise address and suite number on the certificate.    
->>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
+Our records indicate that your Certificate of Insurance for the above referenced premises on file is about to expire.  Please note that we must receive a new Certificate of Insurance before the current one expires evidencing proof of the required coverage and amount outlined in your Lease.  In order to expedite the process, we suggest submitting the insurance section of your lease to your insurance agent, and ask for both an ACORD 25 and ACORD 28 form from them.  Said Certificate must include {{($tenant->property->insured_name != null) ? $tenant->property->insured_name.' and ' : ''}}Davis Partners, LLC as additional insured.  Please reference the premise address and suite number on the certificate.    
 
 @endif
 <br>
