@@ -468,24 +468,11 @@ class Helper
 		{
 			$object->req_employers_liability = $sheet->valueByindex($index . '.Employers-Liability-Other');
 		}
-<<<<<<< HEAD
-		else {
-			$state["wlink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->workerscomp_filename)."')";
-		}    
-		if ($tenant->insurance->liability_end < $today) {
-			$state["lexpire"] = "danger";
-			//$insurance->compliant = false;
-		}  
-		if ($tenant->insurance->umbrella_end < $today) {
-			$state["uexpire"] = "danger";
-			//$insurance->compliant = false;
-=======
         $object->req_auto_liability = $sheet->valueByindex($index . '.Auto-Liability');
         $object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage');
         if ($object->req_auto_liability_coverage == 'Other')
 		{
 			$object->req_auto_liability_coverage = $sheet->valueByindex($index . '.Auto-Liability-Coverage-Other');
->>>>>>> 999e15a2b628795bccf3ed9984b06a29e9daa6f5
 		}
 		if ($sheet->valueByindex($index . '.Pollution-Exclusion') != 'Yes')
 		{
