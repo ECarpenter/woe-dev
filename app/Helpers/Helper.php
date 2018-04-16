@@ -576,7 +576,7 @@ class Helper
 			"status" => "success",
 			"elink" => "",
 			"llink" => "",
-			"manual_notice" => "valid"
+			"manual_notice" => "invalid"
 			);
 
 		$today = date("Y-m-d");
@@ -589,10 +589,11 @@ class Helper
 		}   
 
 		if (!$insurance->compliant){
-			$state['manual_notice'] = "invalid";
+			$state['manual_notice'] = "valid";
 			$state["status"] = "warning";
 		}
 		if ($tenant->insurance->liability_end < $today) {
+			$state['manual_notice'] = "valid";
 			$state["status"] = "danger";
 			$insurance->expired = true;
 		}  
