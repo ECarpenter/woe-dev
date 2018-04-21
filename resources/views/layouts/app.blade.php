@@ -41,6 +41,14 @@
         .table-hover > tbody > tr.ejc-inactive:hover > th {
             background-color: #E29A9A;
         } 
+        .insurance-table {
+            background-color: white;
+            border: 2px solid black;
+
+        }
+        .insurance-missing {
+            text-align: center;
+        }
 
         .button-color {
             background-color: #5bc0de;           

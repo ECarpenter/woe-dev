@@ -121,25 +121,35 @@
 	</div>
 	@permission('manage-insurance')
 	<div class="row">
-		<div class="col-md-5 col-md-offset-3 text-center">
-			<h4> Insurance Non-Compliance </h4>
+		<div class="col-md-5 col-md-offset-2 text-center">
+			<h4>Tenant Insurance</h4>
 		</div>	
 	</div>
 
 
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">	
-			<table class="table table-hover">
+		<div class="col-md-6 col-md-offset-2">	
+			<table class="table table-hover insurance-table">
 					<tr>
 						<th>Tenant</th>
 						<th>ID</th>
+						<th>Expiration Date</th>
+						<th>Compliant</th>
+						<th>Note</th>
 					</tr>
 
 				@foreach ($tenants as $tenant)
-					@if (!$tenant->insurance->compliant)
-						<tr class="{{$tenant->active ? '' : 'ejc-inactive'}}" onclick = "location.href='/tenant/{{$tenant->id}}'">
+					@if ($tenant->active)
+						<tr class="success {{$tenant->Insurance->compliant ? '' : 'warning'}} {{$tenant->Insurance->expired ? 'danger' : ''}}" onclick = "location.href='/tenant/{{$tenant->id}}'">
 							<td>{{$tenant->company_name}}</td>
 							<td>{{$tenant->tenant_system_id}}</td>
+							@if ($tenant->Insurance->liability_filename == null && $tenant->Insurance->endorsement_filename == null)
+							<th class="insurance-missing" colspan="3">No Insurance Certificate</th>
+							@else
+								<td>{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+								<td>{{$tenant->Insurance->compliant ? 'Complaint' : 'Not Complaint'}}</td>
+								<td>{{$tenant->Insurance->note}}</td>
+							@endif
 						</tr>
 					@endif
 				@endforeach
@@ -225,7 +235,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-					<h4 class="modal-title" id="EditModalLabel">Insurance Requirements</h4>
+					<h4 class="modal-title" id="EditModalLabel">{{$property->name}} - Insurance Requirements</h4>
 				</div>
 				<div class="modal-body">
 					<div class="table-responsive" id="limitstable">
