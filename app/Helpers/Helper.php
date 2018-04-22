@@ -13,6 +13,7 @@ use Config;
 use Response;
 
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use App\Group;
 use App\Insurance;
 use App\Owner;
@@ -326,9 +327,19 @@ class Helper
 	public static function importNewLease($fname)
 	{
 		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
-			if ($sheet->sheetName == 'Lease Summary')
+			$summary_type = $sheet->valueByindex('lease_summary.Summary-Type');
+			if ($summary_type == 'New Lease' || $summary_type == 'Renewal')
 			{
-				if ($sheet->valueByindex('lease_summary.Version') == config('excel.import.sheets.lease_summary.Desired-Version'))
+
+				if($summary_type == 'New Lease')
+				{
+					$index = 'lease_normal';
+				}
+				else
+				{
+					$index = 'lease_renewal';
+				}
+				if ($sheet->valueByindex($index . '.Version') == config('excel.import.sheets.' . $index . '.Desired-Version'))
 				{
 					$property_id = $sheet->valueByindex('lease_summary.Property-ID');
 					$property = Property::where('property_system_id', '=', $property_id)->first();
@@ -360,7 +371,10 @@ class Helper
 								$tenant->company_name = $sheet->valueByindex('lease_summary.Tenant-Name');
 								$tenant->unit = $sheet->valueByindex('lease_summary.Suite');
 								$tenant->insurance_contact_email = $sheet->valueByindex('lease_summary.E-Mail');
+								$date_aux = Carbon::create(1900, 01, 01, 0);
+								$tenant->lease_expiration = $date_aux->addDays($sheet->valueByindex('lease_summary.Lease-Expiration')- 2);
 								$tenant->property_id = $property->id;
+								$tenant->use_default_ins_req = false;
 								$tenant->save();
 								if ($newTenant)
 								{
@@ -369,10 +383,17 @@ class Helper
 									$ins->save();
 								}
 
-								$success = Helper::readInsuranceRequirements($tenant, $sheet, 'lease_summary');
+								$success = Helper::readInsuranceRequirements($tenant, $sheet, $index);
 								if ($success)
 								{
-									Session::flash('success', ' New Tenant Created and Saved');
+									if($summary_type == 'New Lease')
+									{
+										Session::flash('success', ' New Tenant - '. $tenant->company_name . ' - Created and Saved');
+									}
+									else
+									{
+										Session::flash('success', $tenant->company_name . ' Updated and Saved');
+									}
 								}
 							}
 						}
@@ -388,7 +409,7 @@ class Helper
 				}
 				else
 				{
-					Session::flash('warning', 'Wrong version of lease summary please use version - ' . config('excel.import.sheets.lease_summary.Desired-Version'));
+					Session::flash('warning', 'Wrong version of lease summary please use version - ' . config('excel.import.sheets.' . $index . '.Desired-Version'));
 				}
 			}
 		});
