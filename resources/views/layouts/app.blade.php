@@ -103,63 +103,64 @@
                     </li>
                     @endpermission          
                     @permission('general')
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Properties<span class="caret"></span>
-                        </a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Properties<span class="caret"></span>
+                            </a>
 
-                        <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu" role="menu">
 
-                            <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
-                            <li><a href="/property/list">All Properties</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#InsuranceReportModal">Insurance Report</a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#PropIDModal">View Property</a></li>
+                                <li><a href="/property/list">All Properties</a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#InsuranceReportModal">Insurance Report</a></li>
+                                </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Tenants<span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+
+                                <li><a href="#" data-toggle="modal" data-target="#TenantIDModal">View Tenants</a></li>
+                                <li><a href="/tenant/list">Tenant List</a></li>
+                                <li><a href="/tenant/unverifiedlist">Unverified Tenant List</a></li>
+                                @permission('manage-insurance')
+                                    <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
+                                    <li><a href="/tenant/noncompliancelist">Insurance Noncompliance List</a></li>
+                                @endpermission
                             </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Tenants<span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-
-                            <li><a href="#" data-toggle="modal" data-target="#TenantIDModal">View Tenants</a></li>
-                            <li><a href="/tenant/list">Tenant List</a></li>
-                            <li><a href="/tenant/unverifiedlist">Unverified Tenant List</a></li>
-                            @permission('manage-insurance')
-                            <li><a href="/tenant/uploadlist">Pending Uploads</a></li>
-                            <li><a href="/tenant/noncompliancelist">Insurance Noncompliance List</a></li>
-                            @endpermission
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Setup<span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-toggle="modal" data-target="#AddRemitModal">Add Remitance Info</a></li>
-                            <li><a herf="#" data-toggle="modal" data-target="#AddOwnerModal">Add Owner</a></li>
-                            <li><a href="#">Edit Problem Types</a></li>
-                            <li><a href="/tenant/add">Add Tenant</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#importModal">Import from Excel</a></li>
-                            <li><a href="/property/add">Add Property</a></li>
-                            <li><a href="/group/add">Add Property Group</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
-                        
-                        </ul>
-                    </li>
+                        </li>
+                        @permission('advanced-setup')
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Setup<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-toggle="modal" data-target="#importModal">Import from Excel</a></li>
+                                    <li><a herf="#" data-toggle="modal" data-target="#AddOwnerModal">Add Owner</a></li>
+                                    <li><a href="#">Edit Problem Types</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#AddRemitModal">Add Remitance Info</a></li>
+                                    <li><a href="/tenant/add">Add Tenant</a></li>
+                                    <li><a href="/property/add">Add Property</a></li>
+                                    <li><a href="/group/add">Add Property Group</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#GroupIDModal">Manage Property Group</a></li>
+                                </ul>
+                            </li>
+                        @endpermission
                     @endpermission
                     @role('admin')
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Users<span class="caret"></span>
-                        </a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Users<span class="caret"></span>
+                            </a>
 
-                        <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu" role="menu">
 
-                            <li><a href="/user/list">View Users</a></li>
-                            <li><a href="/user/add">Add Users</a></li>
-                        </ul>
-                    </li>
+                                <li><a href="/user/list">View Users</a></li>
+                                <li><a href="/user/add">Add Users</a></li>
+                            </ul>
+                        </li>
                     @endrole
                 </ul>
 

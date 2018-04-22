@@ -45,6 +45,11 @@ class RolesTableSeeder extends Seeder
         $general->name = 'general';
         $general->display_name = 'General Access';
         $general->save();
+
+        $setup = new App\Permission;
+        $setup->name = 'advanced-setup';
+        $setup->display_name = 'Advanced Setup Access';
+        $setup->save();
         
         $all = new App\Permission;
         $all->name = 'view-all';
@@ -55,8 +60,10 @@ class RolesTableSeeder extends Seeder
         $admin->attachPermission($insurance);
         $admin->attachPermission($all);
         $admin->attachPermission($general);
+        $admin->attachPermission($setup);
         $manager->attachPermission($manage);
         $manager->attachPermission($general);
+        $manager->attachPermission($insurance);        
         $accountant->attachPermission($manage);
         $accountant->attachPermission($general);
         $insuranceadmin->attachPermission($insurance);
