@@ -582,13 +582,18 @@ return array(
             ),
 
             'lease_summary' => array(
-                'Desired-Version' => '4.11.18',
+                'Summary-Type' => 'G6',
                 'Property-ID' =>'C6',
-                'Version' => 'B159',
-                'Tenant-ID' => 'C12',
+                'Tenant-ID' => 'C13',
                 'Tenant-Name' => 'C11',
                 'Suite' => 'C8',
                 'E-Mail' => 'C21',
+                'Lease-Expiration' => 'C30',
+                
+            ),
+            'lease_normal' => array(
+                'Desired-Version' => '4.21.18',
+                'Version' => 'B159',
                 'CGL' => 'B130',
                 'CGL-Other' => 'D130',
                 'CGL-Deductible' => 'F130',
@@ -620,6 +625,40 @@ return array(
                 'Business-Interruption' => 'B155',
                 'Waiver-of-Subrogation' => 'B157'
             ),
+            'lease_renewal' => array(
+                'Desired-Version' => '4.17.18',
+                'Version' => 'B114',
+                'CGL' => 'B85',
+                'CGL-Other' => 'D85',
+                'CGL-Deductible' => 'F85',
+                'CGL-Deductible-Other' => 'H85',
+                'Excess' => 'B87', 
+                'Excess-Coverage' => 'D87',
+                'Excess-Coverage-Other' => 'F87',
+                'Umbrella' => 'B88',
+                'Umbrella-Coverage' => 'D88',
+                'Umbrella-Coverage-Other' => 'F88',
+                'Pollution-Exclusion' => 'C91',
+                'Additional-Insured-Managers' => 'D92',
+                'Cause-of-Loss' => 'B94',
+                'TPP' => 'D94',
+                'TI' => 'F94',
+                'Tenants-fixtures' => 'H94',
+                'Cause-of-Loss-Detail' => 'F95',
+                'Data-Endorsement' => 'H96',
+                'Earthquake' => 'B98',
+                'Flood' => 'B100',
+                'Pollution-Liability' => 'B102',
+                'Pollution-Liability-Other' => 'D102',
+                'Workers-Comp' => 'B104',
+                'Employers-Liability' => 'B106',
+                'Employers-Liability-Other' => 'D106',
+                'Auto-Liability' => 'B108',
+                'Auto-Liability-Coverage' => 'D108',
+                'Auto-Liability-Coverage-Other' => 'F108',
+                'Business-Interruption' => 'B110',
+                'Waiver-of-Subrogation' => 'B12'
+            )
 
         )
     ),

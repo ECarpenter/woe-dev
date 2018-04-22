@@ -150,7 +150,7 @@ class WorkOrderController extends Controller
             if ($workorder->status != $request->status)
             {
                 $workorder->status = $request->status;
-                if ($workorder->status = 'Closed')
+                if ($workorder->status == 'Closed')
                 {
                     WorkOrderController::closeout($workorder);
                 }

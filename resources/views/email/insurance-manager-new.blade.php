@@ -113,23 +113,11 @@ div.WordSection1
 
 <body lang=EN-US style='tab-interval:.5in'>
 
-{{$tenant->company_name}} <br>
-{{$tenant->property->name}}<br>
-{{$tenant->property->address}}<br>
-{{$tenant->property->city}} {{$tenant->property->state}}, {{$tenant->property->zip}}<br> <br>
+<br>
 Hi,<br><br>
 
-@if ($type == 'reject')
- your insurance upload was rejected for the following reason:<br>
-{{$tenant->insurance->rejection_msg}}
-@else
+A new lease for {{$tenant->company_name}} has been activated. <a href="{{env('APP_URL')}}/tenant/{{$tenant->id}}">Please go here to review and upload their Insurance Certificate.</a> 
 
-Our records indicate that we do not have a current Certificate of Insurance for the above referenced premises on file.  Please note that we must receive a current Certificate of Insurance within the next five (5) business days evidencing proof of the required coverage and amount outlined in your Lease.  In order to expedite the process, we suggest submitting the insurance section of your lease to your insurance agent, and ask for both an ACORD 25 and ACORD 28 form from them.  Said Certificate must include {{($tenant->property->insured_name != null) ? $tenant->property->insured_name.' and ' : ''}}Davis Realty Partners, LLC as additional insured.  Please reference the premise address and suite number on the certificate.    
-
-@endif
-<br>
-<br>
-Click here to upload a new insurance certificate: <a href="{{ $link = url('upload/insurance', $token).'?tenant_system_id='.urlencode($tenant->tenant_system_id) }}"> {{ $link }} </a>
 
 <br><br>
 Thank you,<br><br>
