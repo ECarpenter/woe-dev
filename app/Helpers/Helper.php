@@ -386,6 +386,13 @@ class Helper
 								$success = Helper::readInsuranceRequirements($tenant, $sheet, $index);
 								if ($success)
 								{
+									$manageremail = $tenant->Property->PrimaryManager()->email;
+									log::info($manageremail);
+									Mail::send('email.insurance-manager-new',compact('tenant'), function ($message) use ($tenant, $manageremail) {
+										$message->from('insurance@davispartners.com', 'Insurance Administrator');
+										$message->subject($tenant->company_name . ' - Lease Activaed');
+										$message->to($manageremail);
+									});
 									if($summary_type == 'New Lease')
 									{
 										Session::flash('success', ' New Tenant - '. $tenant->company_name . ' - Created and Saved');
