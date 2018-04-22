@@ -108,9 +108,17 @@ class TenantController extends Controller
 			return TenantController::tenantlist();
 		}
 		$tenant->load('workorder', 'workorder.problemtype','user','insurance');
+		$property = $tenant->property;
 
 		$state = Helper::insuranceCheck($tenant);
-		
+		if($tenant->use_default_ins_req)
+		{
+			$insurance_requirements = 'property';
+		}
+		else
+		{
+			$insurance_requirements = 'tenant';
+		}
 		$tempfileurl = '';
 		$tempfile2url = '';
 		if ($tenant->insurance->tempfile != null)
@@ -122,7 +130,7 @@ class TenantController extends Controller
 			$tempfile2url = Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->tempfile2);
 		}
 
-		return view('tenant.show', compact('tenant','state','tempfileurl','tempfile2url'));
+		return view('tenant.show', compact('tenant','state','tempfileurl','tempfile2url','insurance_requirements','property'));
 	}
 
 	public function tenantlist()

@@ -278,40 +278,40 @@
 						<table class="table table-hover">
 			    			<tr class="info"><th>Insurance Requirements</th></tr>
 			    			
-			    			@if ($tenant->property->req_cgl != null)
+			    			@if ($$insurance_requirements->req_cgl != null)
 			    				<tr><td>
-			    				CGL - {{$tenant->property->req_cgl}} {{$tenant->property->req_cgl_deductible != null ? '- Deductible - '.$tenant->property->req_cgl_deductible : ''}}
+			    				CGL - {{$$insurance_requirements->req_cgl}} {{$$insurance_requirements->req_cgl_deductible != null ? '- Deductible - '.$$insurance_requirements->req_cgl_deductible : ''}}
 			    				</td></tr>
 			    			@endif
-			    			@if ($tenant->property->req_excess != null)
+			    			@if ($$insurance_requirements->req_excess != null)
 			    				<tr><td>	
-			    				Excess - {{$tenant->property->req_excess}} {{$tenant->property->req_excess_coverage != null ? '- Coverage - '.$tenant->property->req_excess_coverage : ''}}
+			    				Excess - {{$$insurance_requirements->req_excess}} {{$$insurance_requirements->req_excess_coverage != null ? '- Coverage - '.$$insurance_requirements->req_excess_coverage : ''}}
 			    				</td></tr>
 			    			@endif
-			    			@if ($tenant->property->req_umbrella != null)
+			    			@if ($$insurance_requirements->req_umbrella != null)
 				    			<tr><td>
-				    			Umbrella - {{$tenant->property->req_umbrella}} {{$tenant->property->req_umbrella_coverage != null ? '- Coverage - '.$tenant->property->req_umbrella_coverage : ''}}
+				    			Umbrella - {{$$insurance_requirements->req_umbrella}} {{$$insurance_requirements->req_umbrella_coverage != null ? '- Coverage - '.$$insurance_requirements->req_umbrella_coverage : ''}}
 				    			</td></tr>
 			    			@endif
 			    			
-			    			@if ($tenant->property->req_cause_of_loss != null)
+			    			@if ($$insurance_requirements->req_cause_of_loss != null)
 			    				<tr><td>
-			    				Cause of Loss - {{$tenant->property->req_cause_of_loss}} {{$tenant->property->req_cause_of_loss_detail != null ? '- Detail - '.$tenant->property->req_cause_of_loss_detail : ''}}
+			    				Cause of Loss - {{$$insurance_requirements->req_cause_of_loss}} {{$$insurance_requirements->req_cause_of_loss_detail != null ? '- Detail - '.$$insurance_requirements->req_cause_of_loss_detail : ''}}
 				    			</td></tr>
 			    			@endif
-			    			@if ($tenant->property->req_pollution != null)
+			    			@if ($$insurance_requirements->req_pollution != null)
 				    			<tr><td>
-				    			Pollution Liability - {{$tenant->property->req_pollution}} 
+				    			Pollution Liability - {{$$insurance_requirements->req_pollution}} 
 				    			</td></tr>
 			    			@endif
-			    			@if ($tenant->property->req_employers_liability != null)
+			    			@if ($$insurance_requirements->req_employers_liability != null)
 			    				<tr><td>
-			    				Employers Liability - {{$tenant->property->req_employers_liability}} 
+			    				Employers Liability - {{$$insurance_requirements->req_employers_liability}} 
 			    				</td></tr>
 			    			@endif
-			    			@if ($tenant->property->req_auto_liability != null)
+			    			@if ($$insurance_requirements->req_auto_liability != null)
 			    				<tr><td>
-			    				Auto Liability - {{$tenant->property->req_auto_liability}} {{$tenant->property->req_auto_liability_coverage != null ? '- Coverage - '.$tenant->property->req_auto_liability_coverage : ''}}
+			    				Auto Liability - {{$$insurance_requirements->req_auto_liability}} {{$$insurance_requirements->req_auto_liability_coverage != null ? '- Coverage - '.$$insurance_requirements->req_auto_liability_coverage : ''}}
 				    			</td></tr>
 			    			@endif
 			    		</table>
@@ -322,57 +322,57 @@
 				    					<th>Rquired Coverages</th>
 				    				</tr>
 
-					    			@if ($tenant->property->req_pollution_amend)
+					    			@if ($$insurance_requirements->req_pollution_amend)
 						    			<tr><td>
 						    			Amendment of the Pollution Exclusion
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_additional_ins_endorsement)
+					    			@if ($$insurance_requirements->req_additional_ins_endorsement)
 						    			<tr><td>
 						    			Additional Insured-Managers and Landlords of Premises Endorsement
 						    			</td></tr>
 					    			@endif
-									@if ($tenant->property->req_tenants_pp)
+									@if ($$insurance_requirements->req_tenants_pp)
 						    			<tr><td>
 						    			Tenant's Personal Property
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_tenant_improvements)
+					    			@if ($$insurance_requirements->req_tenant_improvements)
 						    			<tr><td>
 						    			Tenant Improvements
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_tenant_fixtures)
+					    			@if ($$insurance_requirements->req_tenant_fixtures)
 						    			<tr><td>
 						    			Tenant's trade fixtures and other property
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_data_endorsement)
+					    			@if ($$insurance_requirements->req_data_endorsement)
 						    			<tr><td>
 						    			Endorsements to insure against lossess to valuable papers, records and computer equipment, recovering lost data
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_earthquake)
+					    			@if ($$insurance_requirements->req_earthquake)
 						    			<tr><td>
 						    			Earthquake
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_flood)
+					    			@if ($$insurance_requirements->req_flood)
 						    			<tr><td>
 						    			Flood
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_workers_comp)
+					    			@if ($$insurance_requirements->req_workers_comp)
 						    			<tr><td>
 						    			Workers Comp
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_business_interruption)
+					    			@if ($$insurance_requirements->req_business_interruption)
 						    			<tr><td>
 						    			Business Interruption
 						    			</td></tr>
 					    			@endif
-					    			@if ($tenant->property->req_waiver_of_subrogation)
+					    			@if ($$insurance_requirements->req_waiver_of_subrogation)
 						    			<tr><td>
 						    			Waiver of Subrogation
 						    			</td></tr>
