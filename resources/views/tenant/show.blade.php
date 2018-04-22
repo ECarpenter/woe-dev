@@ -264,7 +264,7 @@
 		                        <br>
 		                        <div>
 		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->compliant ? "checked" : ""}}>Insurance Certificate is Compliant <br>
-		                        	<input type="checkbox" name="compliant" {{$tenant->Insurance->auto_notice ? "checked" : ""}}>Send Automatic Expiration Notice <br>
+		                        	<input type="checkbox" name="auto_notice" {{$tenant->Insurance->auto_notice ? "checked" : ""}}>Send Automatic Expiration Notice <br>
 		                        </div>
 		                        <label>Notes</label>
 								<br>
