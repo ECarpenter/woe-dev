@@ -112,6 +112,10 @@ class HomeController extends Controller
         {
             Helper::importNewLease($filename);
         }
+        elseif ($request->importType == 'remit')
+        {
+            Helper::importRemit($filename);
+        }
 
         
         return redirect('/home');

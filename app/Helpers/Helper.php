@@ -150,7 +150,7 @@ class Helper
 								$user = new User;
 								$user->name = $row->first.' '.$row->last;
 								$user->email = $row->email;
-								$user->password = bcrypt($row->last);
+								$user->password = bcrypt($row->last . '2018');
 								$user->timezone = "America/Los_Angeles";
 								$user->phone = $row->phone;
 								$user->fax = $row->fax;
