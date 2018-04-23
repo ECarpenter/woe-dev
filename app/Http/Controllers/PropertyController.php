@@ -91,6 +91,7 @@ class PropertyController extends Controller
 			$workorders = collect();
 			foreach ($tenants as $tenant)
 			{
+				$state = Helper::insuranceCheck($tenant);
 				foreach ($tenant->WorkOrder as $workorder)
 				{
 					$workorders->prepend($workorder);

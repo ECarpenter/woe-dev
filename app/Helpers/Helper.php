@@ -630,10 +630,13 @@ class Helper
 		if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) {
 			$state['manual_notice'] = "invalid";
 		}
-		
+
 		if ($insurance->liability_end > date("Y-m-d")) {
 			$insurance->expired = false;
-		} 
+		}
+		else{
+			$insurance->expired = true;
+		}
 
 
 		$insurance->save();
