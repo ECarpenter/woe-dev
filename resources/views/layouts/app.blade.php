@@ -322,6 +322,10 @@
                             <div class="col-xs-3" >
                                 <div class="radio">
                                     <label>
+                                        <input type="radio" name="importType" value="lease">
+                                        Lease Summary
+                                    </label>
+                                    <label>
                                         <input type="radio" name="importType" value="property">
                                         Properties
                                     </label>
@@ -346,8 +350,8 @@
                                         Insurance Requirements
                                     </label>
                                     <label>
-                                        <input type="radio" name="importType" value="lease">
-                                        Lease Summary
+                                        <input type="radio" name="importType" value="remit">
+                                        Remitance Info
                                     </label>
                                 </div>
                             </div>
