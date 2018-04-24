@@ -355,6 +355,10 @@
                                         <input type="radio" name="importType" value="remit">
                                         Remitance Info
                                     </label>
+                                    <label>
+                                        <input type="radio" name="importType" value="manager">
+                                        Update Managers
+                                    </label>
                                 </div>
                             </div>
                             <br>
