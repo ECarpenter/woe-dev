@@ -115,6 +115,10 @@ class HomeController extends Controller
         {
             Helper::importRemit($filename);
         }
+        elseif ($request->importType == 'manager')
+        {
+            Helper::importManager($filename);
+        }
 
         
         return redirect('/home');
