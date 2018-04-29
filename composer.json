@@ -26,7 +26,8 @@
         "barryvdh/laravel-dompdf": "0.6.*",
         "lynx39/lara-pdf-merger": "dev-woe",
         "maatwebsite/excel":"dev-woe",
-        "league/flysystem-aws-s3-v3":"~1.0"
+        "league/flysystem-aws-s3-v3":"~1.0",
+        "spatie/laravel-backup": "^3.0.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
