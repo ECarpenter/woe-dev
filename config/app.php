@@ -164,6 +164,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         LynX39\LaraPdfMerger\PdfMergerServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Spatie\Backup\BackupServiceProvider::class,
 
     ],
 
