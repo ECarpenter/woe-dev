@@ -198,7 +198,7 @@ class Helper
 		   
 			$reader->each(function($sheet){
 				$sheet->each(function($row){
-					$property = Property::where('property_system_id', '=', $row->property)->first();
+					$property = Helper::getProperty($row->property);
 					if ( $property != null)
 					{
 						$tenants = Helper::filterbyproperty($property->property_system_id);
@@ -342,7 +342,7 @@ class Helper
 				if ($sheet->valueByindex($index . '.Version') == config('excel.import.sheets.' . $index . '.Desired-Version'))
 				{
 					$property_id = $sheet->valueByindex('lease_summary.Property-ID');
-					$property = Property::where('property_system_id', '=', $property_id)->first();
+					$property = Helper::getProperty($property_id);
 					if ($property != null)
 					{
 						$tenant_id = $sheet->valueByindex('lease_summary.Tenant-ID');
@@ -427,7 +427,7 @@ class Helper
 
 		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
 			$property_id = $sheet->valueByindex('general-ins-req.Property-ID');
-			$property = Property::where('property_system_id', '=', $property_id)->first();
+			$property = Helper::getProperty($property_id);
 			if ($property != null)
 			{
 				$property->insured_name = $sheet->valueByindex('general-ins-req.Additional-Insured');
@@ -806,6 +806,16 @@ class Helper
 		}
 
 
+	}
+
+	public static function getProperty($property_id)
+	{
+		$property = Property::where('property_system_id', '=', $property_id)->first();
+		if ($property == null) //if no property is found try search again with leading 0
+		{
+			$property = Property::where('property_system_id', '=', '0'.$property_id)->first();
+		}
+		return $property;
 	}
 
 }
