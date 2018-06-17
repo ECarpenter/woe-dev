@@ -124,6 +124,8 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
+    //old report now broken left behind to guide implementation of the new reporting package
+    //current report returns all active tenants
     public function insurancereport(Request $request)
     {
         
@@ -132,7 +134,6 @@ class HomeController extends Controller
                 return $tenant->active;
             });
 
-        $tenants = Helper::processInsuranceChecks($tenants);
         Excel::create('Filename', function($excel) use($tenants) {
 
             $excel->sheet('Insurance', function($sheet) use($tenants) {
