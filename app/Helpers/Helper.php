@@ -682,7 +682,7 @@ class Helper
 				$noncompliant->push($tenant);
 			}
 		}
-		return $tenants;
+		return $noncompliant;
 	}
 
 	public static function collectExpired($tenants)
@@ -690,12 +690,12 @@ class Helper
 		$expired = collect();
 		foreach ($tenants as $tenant) 
 		{
-			if ($tenant->Insurance->expired) 
+			if ($tenant->Insurance->expired && ($tenant->Insurance->liability_filename != null || $tenant->Insurance->endorsement_filename != null)) 
 			{
 				$expired->push($tenant);
 			}
 		}
-		return $tenants;
+		return $expired;
 	}
 
 
@@ -709,7 +709,7 @@ class Helper
 		$issues = Helper::processInsuranceChecks($tenants);
 		$expired = $issues->get('expired');
 
-		
+
 
 		foreach ($expired as $tenant)
 		{

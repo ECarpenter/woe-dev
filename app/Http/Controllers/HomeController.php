@@ -134,14 +134,20 @@ class HomeController extends Controller
                 return $tenant->active;
             });
 
-        Excel::create('Filename', function($excel) use($tenants) {
+        $issues = collect();
+        $issues = Helper::processInsuranceChecks($tenants);
 
-            $excel->sheet('Insurance', function($sheet) use($tenants) {
 
+        Excel::create('Filename', function($excel) use($issues) {
+
+            $excel->sheet('Insurance', function($sheet) use($issues) {
+
+                $sheet->appendRow(array('Expired'));
                 $sheet->appendRow(array('Property ID','Property Name','Tenant ID', 'Tenant Name'));
-                foreach($tenants as $tenant)
+                $expired = $issues->get('expired');
+                foreach($expired as $tenant)
                 {
-                    $sheet->appendRow(array($tenant->Property->property_system_id,$tenant->Property->name,$tenant->tenant_system_id, $tenant->company_name));
+                    $sheet->appendRow(array($tenant->Property->property_system_id,$tenant->Property->name,$tenant->tenant_system_id, $tenant->company_name,$tenant->Insurance->liability_filename, $tenant->Insurance->endorsement_filename));
                 }
 
             });
