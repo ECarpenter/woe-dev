@@ -144,7 +144,10 @@
 							<td>{{$tenant->company_name}}</td>
 							<td>{{$tenant->tenant_system_id}}</td>
 							@if ($tenant->Insurance->liability_filename == null && $tenant->Insurance->endorsement_filename == null)
-							<th class="insurance-missing" colspan="3">No Insurance Certificate</th>
+							<th class="insurance-missing" colspan="3">No Insurance Certificate{{$tenant->Insurance->last_notice_sent != null ? ' - Notice Sent: '.date('F d, Y', strtotime($tenant->Insurance->last_notice_sent)) : ''}}</th>
+							@elseif ($tenant->Insurance->expired && $tenant->Insurance->last_notice_sent != null)
+								<td>{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
+								<th class="insurance-missing" colspan="2"> Notice Sent: {{date('F d, Y', strtotime($tenant->Insurance->last_notice_sent))}}</th>
 							@else
 								<td>{{date('F d, Y', strtotime($tenant->Insurance->liability_end))}}</td>
 								<td>{{$tenant->Insurance->compliant ? 'Complaint' : 'Not Complaint'}}</td>
