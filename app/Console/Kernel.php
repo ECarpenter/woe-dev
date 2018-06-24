@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Helpers\Helper;
+
 
 class Kernel extends ConsoleKernel
 {
@@ -25,6 +27,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('backup:clean')->daily()->at('07:00');
-        $schedule->command('backup:run')->daily()->at('11:00');
+        $schedule->command('backup:run')->daily()->at('8:00');
+        
+        //Run Expiration Chceks and sends notices
+        $schedule->call(function() {
+            Helper::automaticNotices();
+        })->daily()->at('6:00');
     }
 }
