@@ -95,7 +95,7 @@
 	@permission('manage-insurance')
 		<div class="row">
 			<div class="col-xs-3 col-xs-offset-3 col-md-3 col-md-offset-3">
-				<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant->insurance->id}}"}}">	Manage Insurance Information</button>
+				<button class="btn btn-primary open-manage-insurance-modal btn-xs" value="{{$tenant->insurance->id}}">	Manage Insurance Information</button>
 			</div>
 			<div class="col-xs-3  col-md-3 ">
 				@if ($state['manual_notice'] == "valid")
