@@ -39,6 +39,7 @@ class Helper
 		 	$user->Properties()->attach($property->id);
 		}        
 	}
+
 	public static function importProperty($fname)
 	{
 		Excel::load($fname, function($reader) {
@@ -198,7 +199,7 @@ class Helper
 		   
 			$reader->each(function($sheet){
 				$sheet->each(function($row){
-					$property = Property::where('property_system_id', '=', $row->property)->first();
+					$property = Helper::getProperty($row->property);
 					if ( $property != null)
 					{
 						$tenants = Helper::filterbyproperty($property->property_system_id);
@@ -342,7 +343,7 @@ class Helper
 				if ($sheet->valueByindex($index . '.Version') == config('excel.import.sheets.' . $index . '.Desired-Version'))
 				{
 					$property_id = $sheet->valueByindex('lease_summary.Property-ID');
-					$property = Property::where('property_system_id', '=', $property_id)->first();
+					$property = Helper::getProperty($property_id);
 					if ($property != null)
 					{
 						$tenant_id = $sheet->valueByindex('lease_summary.Tenant-ID');
@@ -427,7 +428,7 @@ class Helper
 
 		Excel::load($fname)->byConfig('excel.import.sheets', function($sheet) {
 			$property_id = $sheet->valueByindex('general-ins-req.Property-ID');
-			$property = Property::where('property_system_id', '=', $property_id)->first();
+			$property = Helper::getProperty($property_id);
 			if ($property != null)
 			{
 				$property->insured_name = $sheet->valueByindex('general-ins-req.Additional-Insured');
@@ -609,32 +610,39 @@ class Helper
 
 		$today = date("Y-m-d");
 		
-		if ($tenant->Insurance->endorsement_filename != null) {			
+		if ($tenant->Insurance->endorsement_filename != null) 
+		{			
 			$state["elink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->endorsement_filename)."')";
 		} 
-		if ($tenant->Insurance->liability_filename != null) {
+		if ($tenant->Insurance->liability_filename != null) 
+		{
 			$state["llink"] = "window.open('".Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)."')";
 		}   
 
-		if (!$insurance->compliant){
+		if (!$insurance->compliant)
+		{
 			$state['manual_notice'] = "valid";
 			$state["status"] = "warning";
 		}
-		if ($tenant->insurance->liability_end < $today) {
+		if ($tenant->insurance->liability_end < $today) 
+		{
 			$state['manual_notice'] = "valid";
 			$state["status"] = "danger";
 			$insurance->expired = true;
 		}  
 
 		
-		if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) {
+		if ($insurance->last_notice_sent != null && $insurance->last_notice_sent->addDay()->gt(\Carbon\Carbon::now())) 
+		{
 			$state['manual_notice'] = "invalid";
 		}
 
-		if ($insurance->liability_end > date("Y-m-d")) {
+		if ($insurance->liability_end > date("Y-m-d")) 
+		{
 			$insurance->expired = false;
 		}
-		else{
+		else
+		{
 			$insurance->expired = true;
 		}
 
@@ -645,15 +653,74 @@ class Helper
 
 	public static function processInsuranceChecks($tenants)
 	{
-		$noncompliancecollection = collect();
-		foreach ($tenants as $tenant) {
+		foreach ($tenants as $tenant) 
+		{
 			$state = Helper::insuranceCheck($tenant);
-			if (!$tenant->Insurance->compliant) {
+		}
+		
+
+		$noncompliant = collect();
+		$noncompliant = Helper::collectNonCompliant($tenants);
+
+
+		$expired = collect();
+		$expired = Helper::collectExpired($tenants);
+		
+
+		$issues = collect(["expired" => $expired, "noncompliant" => $noncompliant]);
 				
-				$noncompliancecollection->push($tenant);
+		return $issues;
+	}
+
+	public static function collectNonCompliant($tenants)
+	{
+		$noncompliant = collect();
+		foreach ($tenants as $tenant) 
+		{
+			if (!$tenant->Insurance->compliant) 
+			{
+				$noncompliant->push($tenant);
 			}
 		}
-		return $noncompliancecollection;
+		return $tenants;
+	}
+
+	public static function collectExpired($tenants)
+	{
+		$expired = collect();
+		foreach ($tenants as $tenant) 
+		{
+			if ($tenant->Insurance->expired) 
+			{
+				$expired->push($tenant);
+			}
+		}
+		return $tenants;
+	}
+
+
+	//Will run necesary functions to send all automatic notices
+	public static function automaticNotices()
+	{
+		//expiration notices to tenants
+		//
+		
+		$tenants = Tenant::where('active', true)->get();
+		$issues = Helper::processInsuranceChecks($tenants);
+		$expired = $issues->get('expired');
+
+		
+
+		foreach ($expired as $tenant)
+		{
+			if ($tenant->Insurance->auto_notice)
+			{
+				log::info($tenant->tenant_system_id);
+			}
+		}
+
+		//compliance notices to managers
+		//
 	}
 
 	public static function sendInsuranceNotice(Tenant $tenant, $type)
@@ -806,6 +873,16 @@ class Helper
 		}
 
 
+	}
+
+	public static function getProperty($property_id)
+	{
+		$property = Property::where('property_system_id', '=', $property_id)->first();
+		if ($property == null) //if no property is found try search again with leading 0
+		{
+			$property = Property::where('property_system_id', '=', '0'.$property_id)->first();
+		}
+		return $property;
 	}
 
 }

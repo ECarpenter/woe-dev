@@ -169,15 +169,8 @@ class TenantController extends Controller
 
 	public function tenantnoncompliancelist()
 	{
-		$insurances = Insurance::where('compliant', false)->get();
 		$tenants = collect();
-		foreach ($insurances as $insurance) {
-			if ($insurance->tenant->active) {
-				$tenants->prepend($insurance->tenant);
-			}
-		}
-		
-		$tenants = Helper::checkPermissions($tenants);
+		$tenants = Helper::collectNonCompliant();	
 
 		$tenants = $tenants->sortBy('company_name');
 
