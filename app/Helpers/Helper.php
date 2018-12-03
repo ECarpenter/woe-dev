@@ -672,6 +672,20 @@ class Helper
 		return $issues;
 	}
 
+	public static Function collectMissing($tenants)
+	{
+		$noInsurance = collect();
+		foreach ($tenants as $tenant)
+		{
+			if ($tenant->Insurance->liability_filename == null && $tenant->Insurance->endorsement_filename == null)
+			{
+				$noInsurance->push($tenant);
+			}
+		}
+
+		return $noInsurance;
+	}
+
 	public static function collectNonCompliant($tenants)
 	{
 		$noncompliant = collect();
@@ -696,6 +710,19 @@ class Helper
 			}
 		}
 		return $expired;
+	}
+
+	public static function collectCurrent($tenants)
+	{
+		$current = collect();
+		foreach ($tenants as $tenant) 
+		{
+			if (!$tenant->Insurance->expired && ($tenant->Insurance->liability_filename != null || $tenant->Insurance->endorsement_filename != null)) 
+			{
+				$current->push($tenant);
+			}
+		}
+		return $current;
 	}
 
 
