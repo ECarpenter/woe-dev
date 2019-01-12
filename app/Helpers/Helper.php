@@ -735,15 +735,50 @@ class Helper
 		$tenants = Tenant::where('active', true)->get();
 		$issues = Helper::processInsuranceChecks($tenants);
 		$expired = $issues->get('expired');
-
-
+		
+		$dailycounter = 1; 
 
 		foreach ($expired as $tenant)
 		{
+			$result = "result";
+			$now = new \DateTime();
 			if ($tenant->Insurance->auto_notice)
 			{
-				log::info($tenant->tenant_system_id);
+				if ($dailycounter <= 30)
+				{
+					if ($tenant->insurance_contact_email != null)
+					{
+						if ($tenant->insurance->last_notice_sent == null)
+						{
+							Helper::sendInsuranceNotice($tenant, 'Auto');
+							$result = "Sent";
+						}
+						else
+						{
+							//Testing for the future
+							if($tenant->insurance->last_notice_sent->diff($now)->days > 30)
+							{
+								$result = "Not Sent - WOULD RESEND - Last Notice Sent - ".date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone("America/Los_Angeles")));
+							}
+							else
+							{
+								$result = "Not Sent - Last Notice Sent - ".date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone("America/Los_Angeles")));
+							}
+						}
+					} 
+					else
+					{
+						$result = "Not Sent - No Email";
+					}
+				}
+				else
+				{
+					$result = "Not Sent - Daily Limit Reached";
+				}
+				
+				log::info($tenant->tenant_system_id." - ".$result);
 			}
+			
 		}
 
 		//compliance notices to managers
@@ -757,15 +792,15 @@ class Helper
 			$tenant->load('insurance','property');
 			$token = Str::random(60);
 			$tenant->insurance->upload_token = $token;
-			$tenant->insurance->last_notice_sent = \Carbon\Carbon::now();
-			$tenant->insurance->save();
-
-			Log::info('Insurance notification e-mail sent to '.$tenant->insurance_contact_email);
 			Mail::send('email.insurance-notice',compact('tenant', 'token','type'), function ($message) use ($tenant) {
 				$message->from('insurance@davispartners.com', 'Insurance Administrator');
 				$message->subject('Insurance Certificate Needs Update');
 				$message->to($tenant->insurance_contact_email);
 			});
+			$tenant->insurance->last_notice_sent = \Carbon\Carbon::now();
+			$tenant->insurance->save();
+
+			Log::info('Insurance notification e-mail sent to '.$tenant->insurance_contact_email);
 		}
 	}
 
