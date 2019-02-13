@@ -106,7 +106,7 @@ class InsuranceController extends Controller
 		}
 		$insurance->save();
 
-		return back();
+		return redirect('tenant/'.$insurance->Tenant->id);
 	}
 
 	public function upload($token)
