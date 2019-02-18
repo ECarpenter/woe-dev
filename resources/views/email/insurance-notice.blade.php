@@ -150,7 +150,7 @@ insurance@davispartners.com<br>
 style='font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:115%;font-family:
 "Palatino Linotype","serif";color:navy;mso-no-proof:yes'>
 
-<img width=816 height=124 src="{{ $message->embed('InsuranceSignature_files/image001.jpg')}}" v:shapes="Picture_x0020_1"></span></b><b
+<img width=816 height=124 src="{{ $message->embed(public_path()."/InsuranceSignature_files/image001.jpg")}}" v:shapes="Picture_x0020_1"></span></b><b
 style=mso-bidi-font-weight:normal'><span style='font-size:10.0pt;mso-bidi-font-size:
 11.0pt;line-height:115%;font-family:"Palatino Linotype","serif";color:navy'><o:p></o:p></span></b></p>
 

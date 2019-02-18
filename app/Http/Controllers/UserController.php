@@ -36,7 +36,7 @@ class UserController extends Controller
 
 	public function userlist()
 	{
-		$users = User::orderByRaw('name COLLATE NOCASE')->get();
+		$users = User::where('active',true)->orderBy('name')->get()->sortBy('name', SORT_NATURAL|SORT_FLAG_CASE);
 
 		return view('user.viewlist',compact('users'));
 	}
