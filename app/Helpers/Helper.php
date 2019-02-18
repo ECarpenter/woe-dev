@@ -729,10 +729,18 @@ class Helper
 	//Will run necesary functions to send all automatic notices
 	public static function automaticNotices()
 	{
-		//expiration notices to tenants
+		//expiration notices to tenants, only TA at the time
 		//
 		
-		$tenants = Tenant::where('active', true)->get();
+		$activetenants = Tenant::where('active', true)->get();
+		$tenants = collect();
+		foreach ($activetenants as $tenant)
+		{
+			if ($tenant->Property->Owner->name == 'TA')
+			{
+				$tenants->push($tenant);
+			}
+		}
 		$issues = Helper::processInsuranceChecks($tenants);
 		$expired = $issues->get('expired');
 		
@@ -750,7 +758,7 @@ class Helper
 					{
 						if ($tenant->insurance->last_notice_sent == null)
 						{
-							Helper::sendInsuranceNotice($tenant, 'Auto');
+							//Helper::sendInsuranceNotice($tenant, 'Auto');
 							$result = "Sent";
 						}
 						else
