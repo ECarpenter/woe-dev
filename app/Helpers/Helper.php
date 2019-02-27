@@ -752,13 +752,13 @@ class Helper
 			$now = new \DateTime();
 			if ($tenant->Insurance->auto_notice)
 			{
-				if ($dailycounter <= 30)
+				if ($dailycounter <= 40)
 				{
 					if ($tenant->insurance_contact_email != null)
 					{
 						if ($tenant->insurance->last_notice_sent == null)
 						{
-							//Helper::sendInsuranceNotice($tenant, 'Auto');
+							Helper::sendInsuranceNotice($tenant, 'Auto');
 							$result = "Sent";
 						}
 						else
