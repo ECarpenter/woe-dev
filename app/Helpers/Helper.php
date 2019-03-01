@@ -766,7 +766,8 @@ class Helper
 							//Testing for the future
 							if($tenant->insurance->last_notice_sent->diff($now)->days > 30)
 							{
-								$result = "Not Sent - WOULD RESEND - Last Notice Sent - ".date('F d, Y, g:i a', strtotime($tenant->insurance->last_notice_sent->timezone("America/Los_Angeles")));
+								Helper::sendInsuranceNotice($tenant, 'Auto');
+								$result = "Re-Sent Notice";
 							}
 							else
 							{
