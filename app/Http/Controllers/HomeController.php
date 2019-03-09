@@ -13,6 +13,7 @@ use App\WorkOrder;
 use App\User;
 use App\Tenant;
 
+
 class HomeController extends Controller
 {
     /**
@@ -143,7 +144,7 @@ class HomeController extends Controller
         $missing = Helper::collectMissing($tenants);
 
 
-        Excel::create('Filename', function($excel) use($issues, $current, $missing) {
+        Excel::create('Insurance Report', function($excel) use($issues, $current, $missing) {
 
             $excel->sheet('Insurance', function($sheet) use($issues, $current, $missing) {
 
@@ -170,6 +171,51 @@ class HomeController extends Controller
         })->export('xls');
         return redirect('/home');
     }
+
+
+    // adds all current notices for a properrty to a zip file
+    public function insurancedownload(Request $request) 
+    {
+        $tenants = Helper::filterbyproperty($request->property_system_id);
+        $tenants = $tenants->filter(function ($tenant) {
+                return $tenant->active;
+            });
+        log::info("hello");
+
+        $archive_file = storage_path('download.zip');
+        $archive = new \ZipArchive();
+        if($archive->open($archive_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE))
+        {
+            $archive->addFromString('ReadMe.txt','Hello');
+            foreach ($tenants as $tenant) {
+
+                if ($tenant->insurance->endorsement_filename != null)
+                {
+                    $archive->addFromString($tenant->property->property_system_id.'-'.$tenant->tenant_system_id.'-other.pdf', file_get_contents(Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)));
+
+                    log::info("add1");
+                }
+                if ($tenant->insurance->liability_filename != null)
+                {
+                    $archive->addFromString($tenant->property->property_system_id.'-'.$tenant->tenant_system_id.'-liability.pdf', file_get_contents(Helper::getS3URL($tenant->insurance->filepath.$tenant->insurance->liability_filename)));
+                   
+                    log::info("add2");
+                }
+            }
+            $archive->close();
+        }
+        else
+        {
+            log::info("FAIL");
+        }
+
+        //header('Content-disposition: attachment; filename=files.zip');
+        //header('Content-type: application/zip');
+        //readfile($archive_file);
+
+        return response()->download($archive_file)->deleteFileAfterSend(true);
+    }
+
 
     public function autoUpdate()
     {

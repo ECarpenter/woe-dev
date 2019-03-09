@@ -48,6 +48,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     //Misc Routes 
     Route::post('import', 'HomeController@import');
     Route::post('insurancereport', 'HomeController@insurancereport');
+    Route::post('insurancedownload', 'HomeController@insurancedownload');
 
 
     //Property Routes
