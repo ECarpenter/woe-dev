@@ -764,7 +764,7 @@ class Helper
 						else
 						{
 							//Testing for the future
-							if($tenant->insurance->last_notice_sent->diff($now)->days > 5)
+							if($tenant->insurance->last_notice_sent->diff($now)->days > 21)
 							{
 								Helper::sendInsuranceNotice($tenant, 'Auto');
 								$result = "Re-Sent Notice";
