@@ -99,6 +99,7 @@ Route::group(['middleware' => ['web', 'auth', 'permission:general']], function (
     Route::patch('user/verify/update', 'UserController@updateverifyuser');
     Route::get('user/verify/display/{user}', 'UserController@displayverifyuser');
     Route::get('user/{user}', 'UserController@show');
+    Route::get('user/activation/{user}', 'UserController@activation');
 
     //Vendor Routes
     Route::post('/vendor/add', 'VendorController@add');
