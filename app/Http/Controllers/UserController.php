@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 use App\Http\Requests;
 use App\Role;
@@ -21,17 +22,60 @@ class UserController extends Controller
 
 	public function save(Request $request)
 	{
-		$user = User::create([
-			'name' => $request['name'],
-			'email' => $request['email'],
-			'password' => bcrypt($request['password']),
-			'timezone' => "America/Los_Angeles"
-		]);
+		//Find user if exist, if active display error if inactive make active, change password and inform user
 
-		$role = Role::find($request->role);
-		$user->Roles()->attach($role);
+		$user = User::where('email', '=', $request->email)->first();
+		$response = '';
 
+		if ($user == null )
+		{ 
+			$user = User::create([
+				'name' => $request['name'],
+				'email' => $request['email'],
+				'password' => bcrypt($request['password']),
+				'timezone' => "America/Los_Angeles"
+			]);
+
+			$role = Role::find($request->role);
+			$user->Roles()->attach($role);
+			$response = 'New User '.$user->name.' Created!';
+
+		}
+		else if(!$user->active)
+		{
+			$user->active = true;
+			$user->password = bcrypt($request->password);
+			$user->save();
+			$response = 'User '.$user->name.' Re-Activated and password changed!';
+		}
+		else
+		{
+			$response = 'User '.$user->name.' already exists and is active.';
+		}
+
+		Session::flash('success', $response);
 		return redirect('/home');
+	}
+
+	public function activation(User $user)
+	{
+		if ($user != null)
+		{
+			if ($user->active)
+			{
+				$user->active = false;
+			}
+			else
+			{
+				$user->active = true;
+			}
+			$user->save();
+			return redirect('/user/'.$user->id);
+		}
+		else
+		{
+			return redirect('/home');
+		}
 	}
 
 	public function userlist()

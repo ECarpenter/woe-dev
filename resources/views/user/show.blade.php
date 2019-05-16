@@ -46,6 +46,11 @@
 			<h4> User E-Mail - <small><a href="mailto:
 			{{$user->email}}"> {{$user->email}}</a>
 			</small></h4>
+
+		</div>
+		<div class="col-xs-4">
+				<label>{{$user->active ? 'Active' : 'Inactive'}}</label>
+			<button onclick="location.href='/user/activation/{{$user->id}}'">{{$user->active ? 'De-Activate' : 'Re-Activate'}}</button>
 		</div>
 		
 	</div>
