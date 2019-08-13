@@ -734,6 +734,10 @@ class Helper
 		
 		$activetenants = Tenant::where('active', true)->get();
 		$tenants = collect();
+		
+		
+		//Owner Selection for statements
+		/*
 		foreach ($activetenants as $tenant)
 		{
 			if ($tenant->Property->Owner->name == 'TA')
@@ -741,6 +745,9 @@ class Helper
 				$tenants->push($tenant);
 			}
 		}
+		*/
+
+
 		$issues = Helper::processInsuranceChecks($tenants);
 		$expired = $issues->get('expired');
 		
@@ -752,22 +759,25 @@ class Helper
 			$now = new \DateTime();
 			if ($tenant->Insurance->auto_notice)
 			{
-				if ($dailycounter <= 40)
+				if ($dailycounter <= 20)
 				{
 					if ($tenant->insurance_contact_email != null)
 					{
 						if ($tenant->insurance->last_notice_sent == null)
 						{
-							Helper::sendInsuranceNotice($tenant, 'Auto');
-							$result = "Sent";
+							//Helper::sendInsuranceNotice($tenant, 'Auto');
+							$dailycounter = $dailycounter + 1;
+							$result = "Would send - ".$dailycounter;
 						}
 						else
 						{
 							//Testing for the future
 							if($tenant->insurance->last_notice_sent->diff($now)->days > 21)
+
 							{
-								Helper::sendInsuranceNotice($tenant, 'Auto');
-								$result = "Re-Sent Notice";
+								//Helper::sendInsuranceNotice($tenant, 'Auto');
+								$dailycounter = $dailycounter + 1;
+								$result = "Would send notice - ".$dailycounter;
 							}
 							else
 							{
