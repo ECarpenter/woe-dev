@@ -737,15 +737,13 @@ class Helper
 		
 		
 		//Owner Selection for statements
-		/*
+		
 		foreach ($activetenants as $tenant)
 		{
-			if ($tenant->Property->Owner->name == 'TA')
-			{
-				$tenants->push($tenant);
-			}
+			$tenants->push($tenant);
+
 		}
-		*/
+		
 
 
 		$issues = Helper::processInsuranceChecks($tenants);

@@ -32,6 +32,6 @@ class Kernel extends ConsoleKernel
         //Run Expiration Chceks and sends notices
         $schedule->call(function() {
             Helper::automaticNotices();
-        })->daily()->at('6:00');
+        })->daily()->at('6:15');
     }
 }
