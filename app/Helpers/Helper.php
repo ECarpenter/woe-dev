@@ -733,20 +733,11 @@ class Helper
 		//
 		
 		$activetenants = Tenant::where('active', true)->get();
-		$tenants = collect();
 		
-		
-		//Owner Selection for statements
-		
-		foreach ($activetenants as $tenant)
-		{
-			$tenants->push($tenant);
-
-		}
 		
 
 
-		$issues = Helper::processInsuranceChecks($tenants);
+		$issues = Helper::processInsuranceChecks($activetenants);
 		$expired = $issues->get('expired');
 		
 		$dailycounter = 1; 
@@ -763,19 +754,19 @@ class Helper
 					{
 						if ($tenant->insurance->last_notice_sent == null)
 						{
-							//Helper::sendInsuranceNotice($tenant, 'Auto');
+							Helper::sendInsuranceNotice($tenant, 'Auto');
 							$dailycounter = $dailycounter + 1;
-							$result = "Would send - ".$dailycounter;
+							$result = "Sent - ".$dailycounter;
 						}
 						else
 						{
 							//Testing for the future
-							if($tenant->insurance->last_notice_sent->diff($now)->days > 21)
+							if($tenant->insurance->last_notice_sent->diff($now)->days > 45)
 
 							{
-								//Helper::sendInsuranceNotice($tenant, 'Auto');
+								Helper::sendInsuranceNotice($tenant, 'Auto');
 								$dailycounter = $dailycounter + 1;
-								$result = "Would send notice - ".$dailycounter;
+								$result = "Sent - ".$dailycounter;
 							}
 							else
 							{
