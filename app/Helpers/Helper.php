@@ -729,10 +729,20 @@ class Helper
 	//Will run necesary functions to send all automatic notices
 	public static function automaticNotices()
 	{
-		//expiration notices to tenants, only TA at the time
+		//expiration notices to tenants
 		//
 		
-		$activetenants = Tenant::where('active', true)->get();
+		$tenants = Tenant::where('active', true)->get();
+		$activetenants = collect();
+		
+		foreach ($tenants as $tenant) 
+		{
+			if ($tenant->Property->active)
+			{
+				$activetenants->push($tenant);
+			}
+		}
+		
 		
 		
 

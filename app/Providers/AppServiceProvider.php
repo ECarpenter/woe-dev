@@ -15,8 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (!$this->app->isLocal())
+        {
+            \URL::forceSchema('https');
+        }
         
-        \URL::forceSchema('https');
+
         if (\Schema::hasTable('properties')) 
         {
             $properties = Property::all();
